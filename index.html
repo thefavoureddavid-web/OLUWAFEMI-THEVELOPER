@@ -1,0 +1,3315 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Primary Meta Tags -->
+  <title>Oluwafemi David Adekanola | Full-Stack Web Developer in Ilorin, Nigeria</title>
+  <meta name="title" content="Oluwafemi David Adekanola | Full-Stack Web Developer in Ilorin, Nigeria" />
+  <meta name="description" content="Full-Stack Website Developer in Ilorin, Kwara State, Nigeria. I build fast, beautiful websites that turn visitors into customers. Frontend, Backend, E-commerce & APIs." />
+  <meta name="keywords" content="web developer ilorin, full stack developer nigeria, website designer kwara, frontend developer, backend developer, react developer nigeria, laravel developer ilorin, oluwafemi david adekanola" />
+  <meta name="author" content="Oluwafemi David Adekanola" />
+  <meta name="theme-color" content="#f97316" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://davidfemi.dev/" />
+  <meta property="og:title" content="Oluwafemi David Adekanola | Full-Stack Web Developer in Ilorin, Nigeria" />
+  <meta property="og:description" content="I build fast, beautiful websites that turn visitors into customers. Full-Stack Developer specializing in high-performance frontend and robust backends." />
+  <meta property="og:image" content="https://res.cloudinary.com/luf95toj/image/upload/v1792675401/IMG-20261022-WA2850.jpg" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://davidfemi.dev/" />
+  <meta property="twitter:title" content="Oluwafemi David Adekanola | Full-Stack Web Developer in Ilorin, Nigeria" />
+  <meta property="twitter:description" content="I build fast, beautiful websites that turn visitors into customers. Full-Stack Developer based in Ilorin, Kwara State." />
+  <meta property="twitter:image" content="https://res.cloudinary.com/luf95toj/image/upload/v1792675401/IMG-20261022-WA2850.jpg" />
+
+  <!-- Favicon (Emoji Favicon) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+
+  <!-- Google Fonts: VT323 (Bitmap/Pixel), Caveat (Handwritten), Space Mono (Monospace), Inter (Clean Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS Entry Point (Vite & Standalone Browser Support) -->
+  <link rel="stylesheet" href="/src/index.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* -------------------------------------------------------------
+       CSS VARIABLES & THEME SETUP
+       ------------------------------------------------------------- */
+    :root {
+      --bg-canvas: #f0f2f5;
+      --bg-paper: #fcfbf7;
+      --paper-line: rgba(148, 163, 184, 0.17);
+      --paper-margin: rgba(244, 63, 94, 0.28);
+      --ink-black: #111827;
+      --ink-muted: #4b5563;
+      --brand-orange: #f97316;
+      --brand-orange-dark: #ea580c;
+      --brand-blue: #2563eb;
+      --brand-blue-soft: #dbeafe;
+      --sticker-mint: #dcfce7;
+      --sticker-mint-ink: #14532d;
+      --sticker-yellow: #fef08a;
+      --sticker-yellow-ink: #713f12;
+      --sticker-pink: #ffe4e6;
+      --sticker-pink-ink: #881337;
+      --sticker-purple: #f3e8ff;
+      --sticker-purple-ink: #581c87;
+      --tape-color: rgba(254, 240, 138, 0.85);
+      --font-pixel: 'VT323', monospace;
+      --font-hand: 'Caveat', cursive;
+      --font-mono: 'Space Mono', monospace;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      color: var(--ink-black);
+      background-color: var(--bg-canvas);
+      /* Grid Pattern Canvas Backdrop with Continuous Sliding Animation */
+      background-image: 
+        linear-gradient(to right, rgba(148, 163, 184, 0.22) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.22) 1px, transparent 1px);
+      background-size: 28px 28px;
+      animation: moveCanvasGrid 20s linear infinite;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @keyframes moveCanvasGrid {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 28px 28px;
+      }
+    }
+
+    /* Selection */
+    ::selection {
+      background: #fed7aa;
+      color: #9a3412;
+    }
+
+    /* Scroll progress bar */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #f97316, #eab308, #2563eb);
+      width: 0%;
+      z-index: 9999;
+      transition: width 0.1s linear;
+    }
+
+    /* Centered Notebook Sheet Frame with Moving Ruling Lines */
+    .notebook-container {
+      max-width: 1160px;
+      margin: 20px auto 40px auto;
+      background-color: var(--bg-paper);
+      border-radius: 16px;
+      box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.05),
+        0 16px 36px -8px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(15, 23, 42, 0.08);
+      position: relative;
+      /* Continuous Moving Notebook Paper Ruling Lines from Header to Footer */
+      background-image: 
+        linear-gradient(to right, transparent 58px, var(--paper-margin) 58px, var(--paper-margin) 60px, transparent 60px),
+        repeating-linear-gradient(transparent, transparent 31px, var(--paper-line) 31px, var(--paper-line) 32px);
+      background-size: 100% 100%, 100% 32px;
+      animation: moveNotebookRuling 5s linear infinite;
+      overflow: hidden;
+    }
+
+    @keyframes moveNotebookRuling {
+      0% {
+        background-position: 0 0, 0 0;
+      }
+      100% {
+        background-position: 0 0, 0 32px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .notebook-container {
+        margin: 8px auto 20px auto;
+        border-radius: 8px;
+        background-image: 
+          repeating-linear-gradient(transparent, transparent 27px, var(--paper-line) 27px, var(--paper-line) 28px);
+        background-size: 100% 28px;
+        animation: moveNotebookRulingMobile 5s linear infinite;
+      }
+    }
+
+    @keyframes moveNotebookRulingMobile {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 0 28px;
+      }
+    }
+
+    /* Typography helper classes */
+    .font-pixel { font-family: var(--font-pixel); }
+    .font-hand { font-family: var(--font-hand); }
+    .font-mono { font-family: var(--font-mono); }
+
+    /* Sticky Navbar */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(252, 251, 247, 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px dashed #e2e8f0;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .sticky-nav.scrolled {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      border-bottom: 2px solid #cbd5e1;
+    }
+
+    /* Hand-drawn sketch border for hero name */
+    .sketch-box {
+      border: 3px solid var(--brand-orange);
+      border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+      padding: 6px 18px;
+      display: inline-block;
+      box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.08);
+      position: relative;
+      background: rgba(255, 237, 213, 0.4);
+    }
+
+    /* Washi tape graphic */
+    .washi-tape {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 90px;
+      height: 22px;
+      background-color: var(--tape-color);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      clip-path: polygon(4% 0%, 96% 0%, 100% 100%, 0% 100%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .washi-tape-slant-left {
+      transform: rotate(-14deg);
+    }
+    .washi-tape-slant-right {
+      transform: rotate(14deg);
+    }
+
+    /* Floating sticker badge */
+    .sticker-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.15);
+      border: 1.5px solid rgba(0, 0, 0, 0.12);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+      cursor: default;
+      user-select: none;
+    }
+    .sticker-badge:hover {
+      transform: translateY(-4px) scale(1.05) rotate(0deg) !important;
+      box-shadow: 4px 6px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Subtle Idle Floating Animation */
+    @keyframes floatGentle {
+      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+      50% { transform: translateY(-7px) rotate(calc(var(--rot, 0deg) + 1deg)); }
+    }
+    .idle-float {
+      animation: floatGentle 4.5s ease-in-out infinite;
+    }
+    .idle-float-delay {
+      animation: floatGentle 5.2s ease-in-out 1.2s infinite;
+    }
+
+    /* Stamp / Zig-zag Skill Chips */
+    .skill-chip {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 4px;
+      position: relative;
+      border: 2px dashed rgba(0, 0, 0, 0.18);
+      box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: default;
+    }
+    .skill-chip:hover {
+      transform: translateY(-3px) rotate(1deg);
+      box-shadow: 3px 5px 0px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Monospace black CTA button */
+    .btn-mono-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--ink-black);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: 2px solid #000000;
+      box-shadow: 3px 4px 0px rgba(0, 0, 0, 0.25);
+      text-decoration: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s;
+    }
+    .btn-mono-cta:hover {
+      transform: translateY(-3px) rotate(-0.5deg);
+      box-shadow: 5px 6px 0px rgba(0, 0, 0, 0.35);
+      background-color: #1f2937;
+    }
+    .btn-mono-cta .icon-square {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background-color: var(--brand-blue);
+      color: #ffffff;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    /* Outline Button */
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: transparent;
+      color: var(--ink-black);
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 9px 20px;
+      border-radius: 8px;
+      border: 2px solid var(--ink-black);
+      box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.15);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-outline:hover {
+      background-color: #f1f5f9;
+      transform: translateY(-2px);
+      box-shadow: 4px 5px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Infinite Marquee Ribbons */
+    .marquee-wrapper {
+      position: relative;
+      margin: 40px -20px;
+      overflow: hidden;
+      padding: 16px 0;
+    }
+    .marquee-ribbon {
+      display: flex;
+      white-space: nowrap;
+      user-select: none;
+      transform-origin: center;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-top: 2px solid #000;
+      border-bottom: 2px solid #000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .marquee-ribbon-1 {
+      background-color: #fef08a;
+      color: #111827;
+      transform: rotate(-1.5deg);
+      z-index: 2;
+    }
+    .marquee-ribbon-2 {
+      background-color: #111827;
+      color: #38bdf8;
+      transform: rotate(1.2deg);
+      margin-top: -10px;
+      z-index: 1;
+    }
+    .marquee-track {
+      display: flex;
+      flex-shrink: 0;
+      animation: scrollMarquee 26s linear infinite;
+    }
+    .marquee-track-reverse {
+      animation: scrollMarqueeReverse 28s linear infinite;
+    }
+    .marquee-wrapper:hover .marquee-track {
+      animation-play-state: paused;
+    }
+    @keyframes scrollMarquee {
+      from { transform: translateX(0%); }
+      to { transform: translateX(-50%); }
+    }
+    @keyframes scrollMarqueeReverse {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0%); }
+    }
+
+    /* Polaroid Photo Frame */
+    .polaroid-frame {
+      background-color: #ffffff;
+      padding: 12px 12px 28px 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e2e8f0;
+      position: relative;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+      display: inline-block;
+    }
+    .polaroid-frame:hover {
+      transform: translateY(-8px) rotate(0deg) scale(1.02) !important;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+      z-index: 20;
+    }
+    .polaroid-caption {
+      font-family: var(--font-hand);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #1f2937;
+      text-align: center;
+      margin-top: 10px;
+      line-height: 1.2;
+    }
+
+    /* Stacked Folder-Tab Project Cards */
+    .folder-card {
+      position: relative;
+      border-radius: 0 14px 14px 14px;
+      border: 2px solid #000000;
+      box-shadow: 5px 6px 0px rgba(0, 0, 0, 0.25);
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
+      background-color: #ffffff;
+    }
+    .folder-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 8px 10px 0px rgba(0, 0, 0, 0.3);
+    }
+    .folder-tab {
+      position: absolute;
+      top: -32px;
+      left: -2px;
+      height: 32px;
+      padding: 4px 18px;
+      border-top: 2px solid #000;
+      border-left: 2px solid #000;
+      border-right: 2px solid #000;
+      border-radius: 10px 10px 0 0;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Sticky Note Testimonial Cards */
+    .sticky-note {
+      position: relative;
+      padding: 24px;
+      border-radius: 2px;
+      box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .sticky-note:hover {
+      transform: translateY(-6px) rotate(0deg) scale(1.02) !important;
+      box-shadow: 6px 12px 20px rgba(0, 0, 0, 0.12);
+      z-index: 10;
+    }
+
+    /* Special Offer Discount Stamp */
+    .stamp-badge {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      border: 3px dashed #ef4444;
+      background: #fef2f2;
+      color: #b91c1c;
+      font-family: var(--font-pixel);
+      font-size: 1.5rem;
+      transform: rotate(-12deg);
+      box-shadow: 2px 3px 0px rgba(239, 68, 68, 0.2);
+      animation: pulseStamp 3s ease-in-out infinite;
+    }
+    @keyframes pulseStamp {
+      0%, 100% { transform: rotate(-12deg) scale(1); }
+      50% { transform: rotate(-8deg) scale(1.06); }
+    }
+
+    /* Portfolio Filter & Action Pills */
+    .filter-pill {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      border: 1.5px solid #000000;
+      background: #ffffff;
+      color: #1e293b;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+      white-space: nowrap;
+    }
+    .filter-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 3px 4px 0px rgba(0, 0, 0, 0.2);
+    }
+    .filter-pill.active {
+      background: var(--ink-black);
+      color: #ffffff;
+      box-shadow: 3px 3px 0px var(--brand-orange);
+    }
+
+    /* Modal Backdrop & Drawer */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content-box {
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(0.96) translateY(10px);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-overlay.active .modal-content-box {
+      transform: scale(1) translateY(0);
+    }
+
+    /* Floating Toast Notification */
+    #toast-notice {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      z-index: 999999;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #toast-notice.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Accordion FAQ */
+    .faq-item {
+      border: 2px solid #000000;
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15);
+      margin-bottom: 14px;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      padding: 18px 20px;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--ink-black);
+    }
+    .faq-question:hover {
+      background-color: #f8fafc;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
+      padding: 0 20px;
+      font-size: 0.95rem;
+      color: #374151;
+      border-top: 1px dashed transparent;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 400px;
+      padding: 6px 20px 18px 20px;
+      border-top-color: #e2e8f0;
+      transition: max-height 0.4s ease-in, padding 0.3s ease;
+    }
+    .faq-item.open .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    /* Floating WhatsApp Button */
+    .floating-whatsapp {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 990;
+      background-color: #22c55e;
+      color: #ffffff;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 22px rgba(34, 197, 94, 0.45), 2px 3px 0px rgba(0, 0, 0, 0.2);
+      border: 2px solid #ffffff;
+      text-decoration: none;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+    }
+    .floating-whatsapp:hover {
+      transform: scale(1.1) rotate(6deg);
+      box-shadow: 0 12px 28px rgba(34, 197, 94, 0.55);
+    }
+    .whatsapp-tooltip {
+      position: absolute;
+      right: 70px;
+      background: var(--ink-black);
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(8px);
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .floating-whatsapp:hover .whatsapp-tooltip {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Scroll Reveal Helper */
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-item.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Accessibility focus ring */
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid var(--brand-orange);
+      outline-offset: 2px;
+    }
+
+    /* prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .marquee-track {
+        animation: none !important;
+      }
+      .reveal-item {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll Progress Indicator -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- MAIN NOTEBOOK PAPER CONTAINER -->
+  <div class="notebook-container">
+
+    <!-- ============================================================
+         HEADER & STICKY NAVIGATION
+         ============================================================ -->
+    <header class="sticky-nav" id="navbar">
+      <div class="max-w-6xl mx-auto px-4 sm:px-8 py-3 flex items-center justify-between">
+        
+        <!-- Logo / Name Badge -->
+        <a href="#hero" class="flex items-center gap-2 group text-decoration-none">
+          <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-orange-500 shadow-sm bg-stone-900 flex-shrink-0">
+            <img 
+              src="https://res.cloudinary.com/luf95toj/image/upload/v1792675401/IMG-20261022-WA2850.jpg" 
+              alt="Oluwafemi David Adekanola" 
+              class="w-full h-full object-cover object-top"
+              onerror="this.onerror=null; this.src='./profile.jpg';"
+            />
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-gray-900 tracking-tight text-base sm:text-lg flex items-center gap-1 font-mono">
+              Femi.dev <span class="text-orange-500">✦</span>
+            </span>
+            <span class="text-[10px] text-gray-500 font-mono tracking-wider uppercase -mt-0.5">Ilorin, Nigeria</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-700" aria-label="Main Navigation">
+          <a href="#hero" class="hover:text-orange-600 transition-colors flex items-center gap-1">
+            <span class="text-orange-500">#</span> Home
+          </a>
+          <a href="#about" class="hover:text-orange-600 transition-colors flex items-center gap-1">
+            <span class="text-orange-500">#</span> About
+          </a>
+          <a href="#services" class="hover:text-orange-600 transition-colors flex items-center gap-1">
+            <span class="text-orange-500">#</span> Services
+          </a>
+          <a href="#projects" class="hover:text-orange-600 transition-colors flex items-center gap-1">
+            <span class="text-orange-500">#</span> Samples
+          </a>
+          <a href="#testimonials" class="hover:text-orange-600 transition-colors flex items-center gap-1">
+            <span class="text-orange-500">#</span> Reviews
+          </a>
+          <a href="#faq" class="hover:text-orange-600 transition-colors flex items-center gap-1">
+            <span class="text-orange-500">#</span> FAQ
+          </a>
+        </nav>
+
+        <!-- Right Side: Social Icons & Contact CTA -->
+        <div class="flex items-center gap-2.5">
+          <!-- Quick Storage / Showcase Manager Trigger -->
+          <button 
+            id="open-showcase-manager-btn"
+            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-dashed border-orange-500 bg-orange-50 hover:bg-orange-100 text-orange-950 font-mono text-xs font-bold transition-all shadow-sm"
+            title="Upload or update website samples & reviews"
+          >
+            <span>📂</span>
+            <span>Manage Showcase</span>
+          </button>
+
+          <!-- WhatsApp Icon Link (0911 574 2760) -->
+          <a 
+            href="https://wa.me/2349115742760" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:text-green-600 hover:border-green-500 hover:bg-green-50 transition-all"
+            title="Chat on WhatsApp (0911 574 2760)"
+            aria-label="WhatsApp"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          </a>
+
+          <!-- Facebook Link -->
+          <a 
+            href="https://www.facebook.com/david.oluwafemi.724920" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-700 hover:text-blue-600 hover:border-blue-500 hover:bg-blue-50 transition-all"
+            title="Oluwafemi on Facebook"
+            aria-label="Facebook"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+
+          <!-- Contact Button -->
+          <a href="#contact" class="btn-outline text-xs sm:text-sm py-1.5 px-3 sm:px-4">
+            <span>Contact</span>
+            <span class="text-orange-500">→</span>
+          </a>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button 
+            id="mobile-menu-btn" 
+            class="md:hidden w-9 h-9 flex flex-col items-center justify-center gap-1.5 border border-gray-300 rounded-md bg-white text-gray-800"
+            aria-label="Toggle navigation menu"
+            aria-expanded="false"
+          >
+            <span class="w-5 h-0.5 bg-gray-800 transition-transform"></span>
+            <span class="w-5 h-0.5 bg-gray-800 transition-opacity"></span>
+            <span class="w-5 h-0.5 bg-gray-800 transition-transform"></span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobile-menu" class="hidden md:hidden px-6 py-4 bg-amber-50 border-t border-b border-gray-300">
+        <nav class="flex flex-col gap-3 font-mono font-bold text-base">
+          <a href="#hero" class="mobile-nav-link text-gray-900 py-1">✦ Home</a>
+          <a href="#about" class="mobile-nav-link text-gray-900 py-1">✦ About Me</a>
+          <a href="#services" class="mobile-nav-link text-gray-900 py-1">✦ Services</a>
+          <a href="#projects" class="mobile-nav-link text-gray-900 py-1">✦ Website Samples</a>
+          <a href="#testimonials" class="mobile-nav-link text-gray-900 py-1">✦ Client Reviews</a>
+          <button id="mobile-open-manager-btn" class="text-left text-orange-700 py-1 font-bold">📂 Manage Showcase (Upload)</button>
+          <a href="#special-offer" class="mobile-nav-link text-orange-600 py-1">🎉 10% Discount</a>
+          <a href="#faq" class="mobile-nav-link text-gray-900 py-1">✦ FAQ</a>
+          <a href="#contact" class="mobile-nav-link text-blue-600 py-1">✦ Get in Touch</a>
+        </nav>
+      </div>
+    </header>
+
+
+    <!-- ============================================================
+         1. HERO SECTION
+         ============================================================ -->
+    <section id="hero" class="pt-12 sm:pt-16 pb-16 px-4 sm:px-8 relative overflow-hidden">
+      
+      <!-- Top Status Pill -->
+      <div class="flex items-center justify-center mb-6">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs sm:text-sm font-mono shadow-sm">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="font-bold">● Open to new work</span>
+          <span class="text-emerald-400">·</span>
+          <span>Ilorin, Kwara State, Nigeria</span>
+        </div>
+      </div>
+
+      <!-- Hero Visual Composition with Name & Stickers -->
+      <div class="relative max-w-4xl mx-auto text-center pt-4 pb-8">
+        
+        <!-- Floating circular orange-bordered Avatar #1 (Top Left) -->
+        <div class="absolute -top-3 left-2 sm:left-10 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-orange-500 shadow-lg overflow-hidden idle-float hidden xs:block z-10 bg-slate-900">
+          <img 
+            src="https://res.cloudinary.com/luf95toj/image/upload/v1792675401/IMG-20261022-WA2850.jpg" 
+            alt="Oluwafemi David Adekanola, full-stack web developer in Ilorin" 
+            class="w-full h-full object-cover object-top"
+            onerror="this.onerror=null; this.src='./profile.jpg';"
+          />
+        </div>
+
+        <!-- Floating circular orange-bordered Avatar #2 (Top Right) -->
+        <div class="absolute -bottom-2 right-2 sm:right-10 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-orange-500 shadow-lg overflow-hidden idle-float-delay hidden xs:block z-10 bg-slate-900">
+          <img 
+            src="https://res.cloudinary.com/luf95toj/image/upload/v1792675401/IMG-20261022-WA2850.jpg" 
+            alt="Oluwafemi David Adekanola, full-stack web developer in Ilorin" 
+            class="w-full h-full object-cover object-top"
+            onerror="this.onerror=null; this.src='./profile.jpg';"
+          />
+        </div>
+
+        <!-- Handwritten Annotation: "my name is ↘" -->
+        <div class="font-hand text-xl sm:text-2xl text-orange-600 font-bold mb-1 -rotate-3 select-none">
+          hey there! my name is ✍️ ↘
+        </div>
+
+        <!-- HERO NAME IN RETRO BITMAP / PIXEL FONT WITH HAND-DRAWN SKETCH BOX -->
+        <div class="inline-block relative my-3">
+          <div class="sketch-box">
+            <h1 class="font-pixel text-4xl sm:text-6xl md:text-7xl font-bold tracking-wider text-gray-900">
+              OLUWAFEMI
+            </h1>
+          </div>
+          <!-- Tiny hand-drawn star decoration -->
+          <span class="absolute -top-3 -right-4 text-orange-500 text-2xl font-bold select-none animate-spin" style="animation-duration: 10s;">✦</span>
+        </div>
+
+        <!-- Handwritten Annotation: "full-stack website developer ↙" -->
+        <div class="font-hand text-lg sm:text-2xl text-stone-700 font-bold mt-1 rotate-2 select-none">
+          ↙ Full-Stack Website Developer (Frontend + Backend) 🚀
+        </div>
+
+        <!-- FLOATING STICKER TAGS AROUND NAME (HIGH CONVERTING & SCROLL ENGAGING) -->
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 my-6 max-w-3xl mx-auto">
+          <!-- Sticker 1: High Converting Websites (Emerald) -->
+          <span class="sticker-badge bg-emerald-100 text-emerald-950 -rotate-3 hover:scale-105 transition-transform" style="--rot: -3deg;">
+            <span>🚀</span> High-Converting Websites
+          </span>
+          <!-- Sticker 2: Pixel Perfect & Lightning Fast (Yellow) -->
+          <span class="sticker-badge bg-yellow-100 text-yellow-950 rotate-2 hover:scale-105 transition-transform" style="--rot: 2deg;">
+            <span>⚡</span> Pixel-Perfect & Lightning-Fast
+          </span>
+          <!-- Sticker 3: Full-Stack Architecture (Indigo) -->
+          <span class="sticker-badge bg-indigo-100 text-indigo-950 -rotate-2 hover:scale-105 transition-transform" style="--rot: -2deg;">
+            <span>💎</span> Full-Stack Architecture
+          </span>
+          <!-- Sticker 4: Digital Growth (Purple) -->
+          <span class="sticker-badge bg-purple-100 text-purple-950 rotate-3 hover:scale-105 transition-transform" style="--rot: 3deg;">
+            <span>📈</span> Built To Turn Visitors Into Customers
+          </span>
+          <!-- Sticker 5: Direct Invitation to Scroll (Orange Pulse) -->
+          <a href="#projects" class="sticker-badge bg-orange-100 text-orange-950 -rotate-1 border-orange-400 font-extrabold hover:bg-orange-200 hover:scale-105 transition-transform text-decoration-none" style="--rot: -1deg;">
+            <span>👇</span> Scroll To See Live Website Proof & Reviews
+          </a>
+        </div>
+
+        <!-- LARGE CLEAN SANS-SERIF HEADLINE (Inter) -->
+        <div class="mt-4 max-w-3xl mx-auto">
+          <h2 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">
+            I build fast, beautiful websites that turn visitors into customers.
+          </h2>
+
+          <!-- Rotating Subhead / Typing Effect -->
+          <div class="mt-4 font-mono text-base sm:text-xl text-gray-700 font-semibold flex items-center justify-center gap-2">
+            <span>Specializing in:</span>
+            <span class="text-orange-600 bg-orange-100 px-2.5 py-0.5 rounded border border-orange-300" id="rotating-text">
+              Frontend & UI Design
+            </span>
+          </div>
+
+          <p class="mt-4 text-gray-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+            From modern responsive interfaces to high-performance databases and automated APIs — I handle the whole puzzle so you can focus on growing your business.
+          </p>
+        </div>
+
+        <!-- HERO BUTTONS -->
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <!-- Black Monospace CTA Button with small blue icon square -->
+          <a href="#contact" class="btn-mono-cta">
+            <span>Hire Me</span>
+            <span class="icon-square">↗</span>
+          </a>
+
+          <!-- View My Work Button -->
+          <a href="#projects" class="btn-outline">
+            <span>View My Work</span>
+            <span class="text-gray-500">📁</span>
+          </a>
+        </div>
+
+        <!-- Client Trust Badges / Key Specs -->
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs sm:text-sm font-mono text-gray-600">
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-600 font-bold">✓</span> 100% Mobile Responsive
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-600 font-bold">✓</span> Fast Turnaround Delivery
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-600 font-bold">✓</span> Local & International Clients
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         2. ENDLESS TEXT MOTION (DOUBLE MARQUEE RIBBONS)
+         ============================================================ -->
+    <div class="marquee-wrapper">
+      
+      <!-- Top Ribbon (Yellow, moves left, tilted -1.5deg) -->
+      <div class="marquee-ribbon marquee-ribbon-1 py-3 text-sm sm:text-base">
+        <div class="marquee-track">
+          <span class="mx-3">WEB DESIGN ✦ FRONTEND DEVELOPMENT ✦ BACKEND DEVELOPMENT ✦ E-COMMERCE ✦ API INTEGRATION ✦ SEO ✦ FAST DELIVERY ✦ PIXEL ACCURACY ✦</span>
+          <span class="mx-3">WEB DESIGN ✦ FRONTEND DEVELOPMENT ✦ BACKEND DEVELOPMENT ✦ E-COMMERCE ✦ API INTEGRATION ✦ SEO ✦ FAST DELIVERY ✦ PIXEL ACCURACY ✦</span>
+        </div>
+        <div class="marquee-track" aria-hidden="true">
+          <span class="mx-3">WEB DESIGN ✦ FRONTEND DEVELOPMENT ✦ BACKEND DEVELOPMENT ✦ E-COMMERCE ✦ API INTEGRATION ✦ SEO ✦ FAST DELIVERY ✦ PIXEL ACCURACY ✦</span>
+          <span class="mx-3">WEB DESIGN ✦ FRONTEND DEVELOPMENT ✦ BACKEND DEVELOPMENT ✦ E-COMMERCE ✦ API INTEGRATION ✦ SEO ✦ FAST DELIVERY ✦ PIXEL ACCURACY ✦</span>
+        </div>
+      </div>
+
+      <!-- Bottom Ribbon (Dark Charcoal, moves right in opposite direction, tilted 1.2deg) -->
+      <div class="marquee-ribbon marquee-ribbon-2 py-3 text-sm sm:text-base">
+        <div class="marquee-track marquee-track-reverse">
+          <span class="mx-3">CLEAN CODE ✦ TAILORED FOR CONVERSION ✦ 100% RESPONSIVE ✦ NIGERIA & WORLDWIDE ✦ FAST TURNAROUND ✦ ON-TIME DELIVERY ✦</span>
+          <span class="mx-3">CLEAN CODE ✦ TAILORED FOR CONVERSION ✦ 100% RESPONSIVE ✦ NIGERIA & WORLDWIDE ✦ FAST TURNAROUND ✦ ON-TIME DELIVERY ✦</span>
+        </div>
+        <div class="marquee-track marquee-track-reverse" aria-hidden="true">
+          <span class="mx-3">CLEAN CODE ✦ TAILORED FOR CONVERSION ✦ 100% RESPONSIVE ✦ NIGERIA & WORLDWIDE ✦ FAST TURNAROUND ✦ ON-TIME DELIVERY ✦</span>
+          <span class="mx-3">CLEAN CODE ✦ TAILORED FOR CONVERSION ✦ 100% RESPONSIVE ✦ NIGERIA & WORLDWIDE ✦ FAST TURNAROUND ✦ ON-TIME DELIVERY ✦</span>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         3. ABOUT ME SECTION
+         ============================================================ -->
+    <section id="about" class="py-16 px-4 sm:px-10 border-t-2 border-dashed border-gray-300">
+      
+      <!-- Section Header -->
+      <div class="max-w-4xl mx-auto text-center mb-12">
+        <div class="font-hand text-xl text-orange-600 font-bold mb-1">
+          a little background story 📖
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+          About Oluwafemi David
+        </h2>
+        <div class="w-20 h-1 bg-orange-500 mx-auto mt-3 rounded-full"></div>
+      </div>
+
+      <!-- Two-Column Layout: Polaroid Photos + Story & Skills -->
+      <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left: Polaroid Frames with Tape & Handwritten Captions -->
+        <div class="lg:col-span-5 flex flex-col sm:flex-row lg:flex-col items-center justify-center gap-8 pt-4">
+          
+          <!-- Polaroid 1: Profile Photo with Washi Tape -->
+          <div class="polaroid-frame -rotate-3" style="width: 250px;">
+            <!-- Washi tape at top -->
+            <div class="washi-tape washi-tape-slant-left"></div>
+            
+            <div class="w-full h-56 bg-stone-900 rounded-sm overflow-hidden border border-gray-200">
+              <img 
+                src="https://res.cloudinary.com/luf95toj/image/upload/v1792675401/IMG-20261022-WA2850.jpg" 
+                alt="Oluwafemi David Adekanola, full-stack web developer in Ilorin" 
+                class="w-full h-full object-cover object-top"
+                loading="lazy"
+                onerror="this.onerror=null; this.src='./profile.jpg';"
+              />
+            </div>
+            <div class="polaroid-caption">
+              me, Femi 📍 Ilorin
+            </div>
+          </div>
+
+          <!-- Polaroid 2: Workspace Photo (Only other placeholder, clearly marked) -->
+          <!-- EDIT: Workspace polaroid image URL -->
+          <div class="polaroid-frame rotate-2" style="width: 240px;">
+            <!-- Washi tape at top -->
+            <div class="washi-tape washi-tape-slant-right" style="background-color: rgba(191, 219, 254, 0.85);"></div>
+
+            <div class="w-full h-48 bg-stone-100 rounded-sm overflow-hidden border border-gray-200">
+              <img 
+                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80" 
+                alt="Developer workspace with clean laptop code editor and coffee" 
+                class="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div class="polaroid-caption">
+              workspace & coffee ☕
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Handwritten Narrative & Details -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <div class="bg-amber-50/70 p-6 sm:p-8 rounded-2xl border-2 border-amber-200 shadow-sm relative">
+            <!-- Pin decoration -->
+            <div class="absolute -top-3.5 right-8 w-7 h-7 rounded-full bg-red-500 border-2 border-white shadow-md flex items-center justify-center text-[10px] text-white font-bold">
+              📌
+            </div>
+
+            <h3 class="font-hand text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+              "Code should not just work — it should create real business momentum."
+            </h3>
+
+            <p class="text-gray-700 leading-relaxed font-sans text-sm sm:text-base">
+              Hi, I’m <strong>Oluwafemi David Adekanola</strong>, a full-stack website developer based in <strong>Ilorin, Kwara State, Nigeria</strong>. I have spent years honing the delicate balance between high-end frontend visual craft and rock-solid backend infrastructure.
+            </p>
+
+            <p class="text-gray-700 leading-relaxed font-sans text-sm sm:text-base mt-3">
+              Too many business websites look pretty but load like molasses, or fail to convert visitors into paying clients. My mission is simple: I design and code websites that are <strong>blazing fast</strong>, <strong>bulletproof on mobile devices</strong>, and <strong>built to convert</strong>. Whether you need an e-commerce platform for local Nigerian payments, a custom client dashboard, or an international business portal, I write clean, maintainable code you can be proud of.
+            </p>
+
+            <!-- Animated Counters (Editable placeholder numbers) -->
+            <!-- EDIT: Update your stats here -->
+            <div class="grid grid-cols-3 gap-3 sm:gap-4 mt-6 pt-6 border-t border-amber-200 text-center font-mono">
+              <div class="bg-white/80 p-3 rounded-lg border border-amber-200 shadow-xs">
+                <div class="text-2xl sm:text-3xl font-extrabold text-orange-600 stat-counter" data-target="34">0</div>
+                <div class="text-[11px] sm:text-xs text-gray-600 font-sans mt-0.5">Projects Completed</div>
+              </div>
+              <div class="bg-white/80 p-3 rounded-lg border border-amber-200 shadow-xs">
+                <div class="text-2xl sm:text-3xl font-extrabold text-blue-600 stat-counter" data-target="28">0</div>
+                <div class="text-[11px] sm:text-xs text-gray-600 font-sans mt-0.5">Happy Clients</div>
+              </div>
+              <div class="bg-white/80 p-3 rounded-lg border border-amber-200 shadow-xs">
+                <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600 stat-counter" data-target="4">0</div>
+                <div class="text-[11px] sm:text-xs text-gray-600 font-sans mt-0.5">Years Experience</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SKILL CHIPS WITH ZIG-ZAG / STAMP EDGES -->
+          <div>
+            <div class="text-xs font-mono uppercase tracking-wider text-gray-500 font-bold mb-3 flex items-center gap-2">
+              <span>🛠️ Core Tech Stack & Tools</span>
+              <span class="flex-1 h-px bg-gray-300"></span>
+            </div>
+
+            <div class="flex flex-wrap gap-2.5">
+              <!-- Yellow chips -->
+              <span class="skill-chip bg-yellow-100 text-yellow-950 border-yellow-400">HTML5 / CSS3</span>
+              <span class="skill-chip bg-yellow-100 text-yellow-950 border-yellow-400">JavaScript (ES6+)</span>
+              <!-- Green chips -->
+              <span class="skill-chip bg-emerald-100 text-emerald-950 border-emerald-400">React.js</span>
+              <span class="skill-chip bg-emerald-100 text-emerald-950 border-emerald-400">Node.js & Express</span>
+              <!-- Blue chips -->
+              <span class="skill-chip bg-blue-100 text-blue-950 border-blue-400">PHP / Laravel</span>
+              <span class="skill-chip bg-blue-100 text-blue-950 border-blue-400">MySQL & MongoDB</span>
+              <!-- Pink chips -->
+              <span class="skill-chip bg-rose-100 text-rose-950 border-rose-400">UI/UX & Figma</span>
+              <span class="skill-chip bg-rose-100 text-rose-950 border-rose-400">REST API Integration</span>
+              <!-- Purple chips -->
+              <span class="skill-chip bg-purple-100 text-purple-950 border-purple-400">WordPress</span>
+              <span class="skill-chip bg-purple-100 text-purple-950 border-purple-400">Technical SEO</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         4. SERVICES SECTION
+         ============================================================ -->
+    <section id="services" class="py-16 px-4 sm:px-10 border-t-2 border-dashed border-gray-300 bg-stone-50/50">
+      
+      <!-- Section Header -->
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <div class="font-hand text-xl text-orange-600 font-bold mb-1">
+          what i can build for you 🛠️
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+          Services Designed for Growth
+        </h2>
+        <p class="text-gray-600 mt-2 text-sm sm:text-base">
+          Every project is built custom with clean code, tailored branding, and zero bloat.
+        </p>
+      </div>
+
+      <!-- 6 Service Cards Grid -->
+      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Service 1: Business Websites -->
+        <div class="bg-white p-6 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-2 hover:shadow-[6px_6px_0px_#000000] transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-orange-100 border-2 border-orange-500 flex items-center justify-center text-2xl mb-4">
+              🏢
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2 font-mono">Business Websites</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Professional, modern websites for corporate brands, SMEs, agencies, and consultants. Designed to build high credibility and generate inbound leads.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-sm font-bold font-mono">
+            <span class="text-gray-500 text-xs">High Conversion</span>
+            <a href="#contact" data-service="Business Website" class="service-quote-btn text-orange-600 hover:text-orange-700 flex items-center gap-1">
+              Get a quote ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 2: E-commerce Stores -->
+        <div class="bg-white p-6 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-2 hover:shadow-[6px_6px_0px_#000000] transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-emerald-100 border-2 border-emerald-500 flex items-center justify-center text-2xl mb-4">
+              🛍️
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2 font-mono">E-Commerce Stores</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Full-featured online shops with payment gateways (Paystack, Flutterwave, Stripe), product variations, automated receipts, cart, and order tracking.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-sm font-bold font-mono">
+            <span class="text-gray-500 text-xs">Payment Ready</span>
+            <a href="#contact" data-service="E-Commerce Store" class="service-quote-btn text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+              Get a quote ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 3: Web Apps & Dashboards -->
+        <div class="bg-white p-6 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-2 hover:shadow-[6px_6px_0px_#000000] transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-blue-100 border-2 border-blue-500 flex items-center justify-center text-2xl mb-4">
+              📊
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2 font-mono">Web Apps & Dashboards</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Interactive single-page applications, SaaS client portals, and administrative back-offices with role-based access control and live charts.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-sm font-bold font-mono">
+            <span class="text-gray-500 text-xs">Interactive & Fast</span>
+            <a href="#contact" data-service="Web App or Dashboard" class="service-quote-btn text-blue-600 hover:text-blue-700 flex items-center gap-1">
+              Get a quote ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 4: Backend & API Development -->
+        <div class="bg-white p-6 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-2 hover:shadow-[6px_6px_0px_#000000] transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-purple-100 border-2 border-purple-500 flex items-center justify-center text-2xl mb-4">
+              ⚙️
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2 font-mono">Backend & APIs</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Secure RESTful APIs, database schema design, webhook listeners, user authentication (JWT/OAuth), and third-party integrations that scale.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-sm font-bold font-mono">
+            <span class="text-gray-500 text-xs">Secure & Scalable</span>
+            <a href="#contact" data-service="Backend & API Development" class="service-quote-btn text-purple-600 hover:text-purple-700 flex items-center gap-1">
+              Get a quote ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 5: Website Redesign -->
+        <div class="bg-white p-6 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-2 hover:shadow-[6px_6px_0px_#000000] transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-pink-100 border-2 border-pink-500 flex items-center justify-center text-2xl mb-4">
+              🎨
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2 font-mono">Website Redesign</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Transform slow, outdated, clunky websites into stunning modern experiences with responsive mobile layouts and immediate speed improvements.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-sm font-bold font-mono">
+            <span class="text-gray-500 text-xs">Revamp & Upgrade</span>
+            <a href="#contact" data-service="Website Redesign" class="service-quote-btn text-pink-600 hover:text-pink-700 flex items-center gap-1">
+              Get a quote ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- Service 6: Maintenance & Support -->
+        <div class="bg-white p-6 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000000] hover:-translate-y-2 hover:shadow-[6px_6px_0px_#000000] transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-yellow-100 border-2 border-yellow-500 flex items-center justify-center text-2xl mb-4">
+              🛡️
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2 font-mono">Maintenance & Care</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Continuous peace of mind: automated backups, security patches, plugin/framework updates, uptime monitoring, and prompt technical support.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-gray-200 flex items-center justify-between text-sm font-bold font-mono">
+            <span class="text-gray-500 text-xs">Peace of Mind</span>
+            <a href="#contact" data-service="Maintenance & Support" class="service-quote-btn text-yellow-700 hover:text-yellow-800 flex items-center gap-1">
+              Get a quote ↗
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         5. WHY ORDER MY SERVICE & PROCESS TIMELINE
+         ============================================================ -->
+    <section class="py-16 px-4 sm:px-10 border-t-2 border-dashed border-gray-300">
+      
+      <!-- Section Header -->
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <div class="font-hand text-xl text-orange-600 font-bold mb-1">
+          the femi difference 🏆
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+          Why Work With Me
+        </h2>
+        <p class="text-gray-600 mt-3 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+          You don't need a bloated agency with endless meetings and five different points of contact. You get direct access to one senior developer who genuinely cares about your bottom line.
+        </p>
+      </div>
+
+      <!-- 7 Benefit Cards -->
+      <div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        
+        <!-- Card 1 -->
+        <div class="p-5 rounded-lg border border-gray-300 bg-white/90 shadow-xs hover:border-black transition-all">
+          <div class="text-2xl mb-2">🎯</div>
+          <h4 class="font-bold text-gray-900 mb-1 font-mono text-base">Full-Stack Expertise</h4>
+          <p class="text-gray-600 text-xs sm:text-sm">One developer for everything. No blame games between UI designers and backend engineers. Seamless cohesion.</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="p-5 rounded-lg border border-gray-300 bg-white/90 shadow-xs hover:border-black transition-all">
+          <div class="text-2xl mb-2">💎</div>
+          <h4 class="font-bold text-gray-900 mb-1 font-mono text-base">Clean Professional Design</h4>
+          <p class="text-gray-600 text-xs sm:text-sm">Pixel-perfect craftsmanship. Polished typography, thoughtful spacing, and responsive aesthetics that build immediate trust.</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="p-5 rounded-lg border border-gray-300 bg-white/90 shadow-xs hover:border-black transition-all">
+          <div class="text-2xl mb-2">📱</div>
+          <h4 class="font-bold text-gray-900 mb-1 font-mono text-base">Mobile-First Responsive</h4>
+          <p class="text-gray-600 text-xs sm:text-sm">Over 80% of Nigerian visitors use smartphones. Your site will look and work effortlessly across every screen size.</p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="p-5 rounded-lg border border-gray-300 bg-white/90 shadow-xs hover:border-black transition-all">
+          <div class="text-2xl mb-2">⚡</div>
+          <h4 class="font-bold text-gray-900 mb-1 font-mono text-base">Fast Loading & SEO-Friendly</h4>
+          <p class="text-gray-600 text-xs sm:text-sm">Lightweight code, compressed assets, and semantic HTML that scores high on Google PageSpeed and ranks well in search.</p>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="p-5 rounded-lg border border-gray-300 bg-white/90 shadow-xs hover:border-black transition-all">
+          <div class="text-2xl mb-2">🔒</div>
+          <h4 class="font-bold text-gray-900 mb-1 font-mono text-base">Secure & Scalable Code</h4>
+          <p class="text-gray-600 text-xs sm:text-sm">Sanitized inputs, protected database queries, SSL configuration, and architecture ready to grow with your sales.</p>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="p-5 rounded-lg border border-gray-300 bg-white/90 shadow-xs hover:border-black transition-all">
+          <div class="text-2xl mb-2">🤝</div>
+          <h4 class="font-bold text-gray-900 mb-1 font-mono text-base">Clear Comms & Support</h4>
+          <p class="text-gray-600 text-xs sm:text-sm">Milestone demos on WhatsApp, quick responses, no disappearing acts, and comprehensive 30-day post-launch warranty.</p>
+        </div>
+
+        <!-- Card 7 (Spans 2 or centered) -->
+        <div class="p-5 rounded-lg border border-gray-300 bg-white/90 shadow-xs hover:border-black transition-all sm:col-span-2 lg:col-span-3">
+          <div class="flex items-start gap-3">
+            <div class="text-2xl">🌍</div>
+            <div>
+              <h4 class="font-bold text-gray-900 mb-1 font-mono text-base">Affordable for Nigerian & International Clients</h4>
+              <p class="text-gray-600 text-xs sm:text-sm">Transparent milestones. No hidden surcharges. High-grade international software engineering standard at competitive rates.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Process Timeline -->
+      <div class="max-w-5xl mx-auto mt-16 pt-10 border-t border-gray-200">
+        <div class="text-center mb-8">
+          <span class="font-mono text-xs font-bold uppercase tracking-widest text-orange-600 bg-orange-100 px-3 py-1 rounded">How We Work</span>
+          <h3 class="text-2xl font-extrabold text-gray-900 mt-2 font-mono">The 6-Step Delivery Roadmap</h3>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
+          <!-- Step 1 -->
+          <div class="p-3 bg-white rounded-lg border border-gray-200">
+            <div class="w-7 h-7 rounded-full bg-black text-white font-mono text-xs font-bold mx-auto flex items-center justify-center mb-2">1</div>
+            <div class="font-bold text-xs sm:text-sm text-gray-900 font-mono">Discovery</div>
+            <div class="text-[11px] text-gray-500 mt-1">Goals & Scope</div>
+          </div>
+          <!-- Step 2 -->
+          <div class="p-3 bg-white rounded-lg border border-gray-200">
+            <div class="w-7 h-7 rounded-full bg-black text-white font-mono text-xs font-bold mx-auto flex items-center justify-center mb-2">2</div>
+            <div class="font-bold text-xs sm:text-sm text-gray-900 font-mono">Design</div>
+            <div class="text-[11px] text-gray-500 mt-1">Wireframes & UI</div>
+          </div>
+          <!-- Step 3 -->
+          <div class="p-3 bg-white rounded-lg border border-gray-200">
+            <div class="w-7 h-7 rounded-full bg-black text-white font-mono text-xs font-bold mx-auto flex items-center justify-center mb-2">3</div>
+            <div class="font-bold text-xs sm:text-sm text-gray-900 font-mono">Development</div>
+            <div class="text-[11px] text-gray-500 mt-1">Clean Coding</div>
+          </div>
+          <!-- Step 4 -->
+          <div class="p-3 bg-white rounded-lg border border-gray-200">
+            <div class="w-7 h-7 rounded-full bg-black text-white font-mono text-xs font-bold mx-auto flex items-center justify-center mb-2">4</div>
+            <div class="font-bold text-xs sm:text-sm text-gray-900 font-mono">Testing</div>
+            <div class="text-[11px] text-gray-500 mt-1">QA & Speed Audit</div>
+          </div>
+          <!-- Step 5 -->
+          <div class="p-3 bg-white rounded-lg border border-gray-200">
+            <div class="w-7 h-7 rounded-full bg-black text-white font-mono text-xs font-bold mx-auto flex items-center justify-center mb-2">5</div>
+            <div class="font-bold text-xs sm:text-sm text-gray-900 font-mono">Launch</div>
+            <div class="text-[11px] text-gray-500 mt-1">DNS & Go Live</div>
+          </div>
+          <!-- Step 6 -->
+          <div class="p-3 bg-white rounded-lg border border-gray-200">
+            <div class="w-7 h-7 rounded-full bg-black text-white font-mono text-xs font-bold mx-auto flex items-center justify-center mb-2">6</div>
+            <div class="font-bold text-xs sm:text-sm text-gray-900 font-mono">Support</div>
+            <div class="text-[11px] text-gray-500 mt-1">30 Days Warranty</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         6. SPECIAL LAUNCH OFFER BANNER (VERY IMPORTANT)
+         ============================================================ -->
+    <section id="special-offer" class="py-12 px-4 sm:px-8 border-t-2 border-dashed border-gray-300">
+      <div class="max-w-4xl mx-auto bg-gradient-to-br from-amber-100 via-orange-100 to-yellow-50 rounded-2xl border-3 border-orange-500 p-6 sm:p-10 shadow-[6px_6px_0px_#ea580c] relative overflow-hidden">
+        
+        <!-- Washi tape at top left and top right -->
+        <div class="washi-tape" style="left: 15%; top: -10px; background-color: rgba(253, 224, 71, 0.9);"></div>
+        <div class="washi-tape" style="left: 85%; top: -10px; background-color: rgba(253, 224, 71, 0.9);"></div>
+
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+          
+          <!-- Left: Offer Details & Progress -->
+          <div class="flex-1 text-center md:text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-200/80 text-orange-900 font-mono text-xs font-bold mb-3">
+              <span>🎉</span> Exclusive Welcome Promotion
+            </div>
+
+            <h3 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
+              Launch Offer: <span class="text-orange-600 underline decoration-wavy decoration-orange-400">10% OFF</span> for my first 5 clients!
+            </h3>
+
+            <p class="text-gray-700 text-sm sm:text-base mt-2 max-w-lg">
+              Kickstart your digital presence at a special discounted rate. Available for any custom website, frontend, or full-stack project.
+            </p>
+
+            <!-- Dynamic Spots Left & Progress Bar (Controlled by SPOTS_LEFT variable) -->
+            <div class="mt-6 bg-white/90 p-4 rounded-xl border border-orange-300 max-w-md">
+              <div class="flex items-center justify-between text-xs font-mono font-bold text-gray-800 mb-1.5">
+                <span id="spots-display">🔥 5 spots available</span>
+                <span id="spots-claimed-text">0 claimed / 5 total</span>
+              </div>
+              <!-- Progress Bar -->
+              <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden border border-gray-300">
+                <div id="spots-progress-bar" class="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full transition-all duration-700" style="width: 10%;"></div>
+              </div>
+              <div class="text-[11px] text-gray-500 font-mono mt-2 flex items-center gap-1">
+                <span>⏱️</span> Offer valid for the first 5 clients only. Once filled, standard pricing applies.
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Decorative Stamp Badge & Claim Button -->
+          <div class="flex flex-col items-center gap-4 flex-shrink-0">
+            <!-- Stamp Badge -->
+            <div class="stamp-badge">
+              <span class="text-xs font-mono uppercase text-red-600">SAVE</span>
+              <span class="font-extrabold text-red-600 leading-none">10%</span>
+              <span class="text-[10px] font-mono text-red-700">OFF</span>
+            </div>
+
+            <!-- Pulsing Claim Button -->
+            <button 
+              id="claim-discount-btn" 
+              class="btn-mono-cta bg-orange-600 hover:bg-orange-700 border-black shadow-[4px_4px_0px_#000] text-white text-sm sm:text-base py-3 px-6 animate-bounce"
+              style="animation-duration: 2.5s;"
+            >
+              <span>Claim My Discount</span>
+              <span class="icon-square bg-black">🎁</span>
+            </button>
+            <span class="text-xs text-stone-500 font-mono">No promo code needed</span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         7. FEATURED PROJECTS (FOLDER-TAB CARDS)
+         ============================================================ -->
+    <section id="projects" class="py-16 px-4 sm:px-10 border-t-2 border-dashed border-gray-300">
+      
+      <!-- Section Header -->
+      <div class="max-w-4xl mx-auto text-center mb-10">
+        <div class="font-hand text-xl text-orange-600 font-bold mb-1">
+          live builds & client websites 📁
+        </div>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+          Featured Website Samples
+        </h2>
+        <p class="text-gray-600 mt-2 text-sm sm:text-base max-w-2xl mx-auto">
+          Explore real-world websites and web applications built for Nigerian businesses and international clients. You can also upload and manage your own live samples using the Storage Space below.
+        </p>
+
+        <!-- Category Filter Pills & Upload Trigger Bar -->
+        <div class="mt-8 flex flex-wrap items-center justify-between gap-4 p-3 bg-stone-100/90 rounded-2xl border-2 border-dashed border-gray-300">
+          <!-- Filter Pills -->
+          <div class="flex flex-wrap items-center gap-2" id="portfolio-filter-container">
+            <button class="filter-pill active" data-filter="all">All Samples</button>
+            <button class="filter-pill" data-filter="E-Commerce">E-Commerce</button>
+            <button class="filter-pill" data-filter="Web App">Web Apps & SaaS</button>
+            <button class="filter-pill" data-filter="Corporate">Corporate</button>
+            <button class="filter-pill" data-filter="FinTech">FinTech</button>
+          </div>
+
+          <!-- Upload / Manage Storage Space Action Button -->
+          <button 
+            id="upload-sample-cta-btn" 
+            class="btn-mono-cta text-xs py-2 px-3.5 bg-orange-600 hover:bg-orange-700 border-black shadow-[2px_2px_0px_#000] ml-auto"
+            title="Upload a new website sample to your showcase storage"
+          >
+            <span>+ Upload Website Sample</span>
+            <span class="icon-square bg-black text-white text-[11px]">📁</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Projects Container (Rendered via Storage Space) -->
+      <div id="projects-grid" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 pt-2">
+        <!-- Injected via JavaScript from localStorage / default showcase -->
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         8. CLIENT TESTIMONIALS & REVIEWS (STORAGE-BACKED & DYNAMIC)
+         ============================================================ -->
+    <section id="testimonials" class="py-16 px-4 sm:px-10 border-t-2 border-dashed border-gray-300 bg-amber-50/20">
+      
+      <!-- Section Header -->
+      <div class="max-w-4xl mx-auto text-center mb-10">
+        <div class="font-hand text-xl text-orange-600 font-bold mb-1">
+          kind words & verified feedback 💬
+        </div>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+          Client Reviews & Testimonials
+        </h2>
+        <p class="text-gray-600 mt-2 text-sm sm:text-base max-w-xl mx-auto">
+          Here is what clients say about working with me. You can easily add, update, and manage your client reviews right in your portfolio storage space.
+        </p>
+
+        <!-- Testimonial Actions Bar -->
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <button 
+            id="add-review-cta-btn" 
+            class="btn-outline font-mono text-xs py-2 px-4 border-2 border-black bg-white hover:bg-stone-100 font-bold flex items-center gap-2 shadow-[2px_2px_0px_#000]"
+          >
+            <span>✍️ Add Client Review</span>
+          </button>
+          <button 
+            id="quick-manage-showcase-btn" 
+            class="font-mono text-xs text-orange-700 hover:text-orange-800 underline font-semibold flex items-center gap-1"
+          >
+            <span>Open Storage Manager ↗</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Testimonials Container (Rendered via Storage Space) -->
+      <div id="testimonials-grid" class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+        <!-- Injected via JavaScript from localStorage / default showcase -->
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         10. FAQ ACCORDION SECTION
+         ============================================================ -->
+    <section id="faq" class="py-16 px-4 sm:px-10 border-t-2 border-dashed border-gray-300 bg-stone-50/50">
+      
+      <!-- Section Header -->
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <div class="font-hand text-xl text-orange-600 font-bold mb-1">
+          got questions? got answers ❓
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+          Frequently Asked Questions
+        </h2>
+        <p class="text-gray-600 mt-2 text-sm sm:text-base">
+          Everything you need to know before we get started.
+        </p>
+      </div>
+
+      <!-- Accordion Container -->
+      <div class="max-w-3xl mx-auto" id="faq-accordion">
+        
+        <!-- FAQ 1: Timeline -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>How long does a typical website take to complete?</span>
+            <span class="faq-icon text-xl font-mono text-orange-500 transition-transform font-bold">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>
+              Standard frontend websites or business landing pages typically take <strong>5 to 10 working days</strong>. Complete full-stack web applications with authentication, databases, and custom payment gateways take roughly <strong>2 to 4 weeks</strong> depending on complexity. I provide clear milestone dates upfront so you always know what to expect.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 2: Payment Structure -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>How do milestone payments work?</span>
+            <span class="faq-icon text-xl font-mono text-orange-500 transition-transform font-bold">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>
+              For standard projects, we use a transparent milestone model: <strong>50% upfront deposit</strong> to initiate design and architectural sprints, and the <strong>remaining 50% only after you approve the final working site</strong> on our staging server before deployment to your live domain. Local transfers (Naira) and international payments (USD/GBP via Wise or Stripe) are supported.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 3: Revisions -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>How many revisions do I get?</span>
+            <span class="faq-icon text-xl font-mono text-orange-500 transition-transform font-bold">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>
+              Every plan includes <strong>up to 3 rounds of comprehensive revisions</strong> during the design and staging stages. My goal is 100% client satisfaction, and because we review milestone previews together on WhatsApp, misalignment is caught early and fixed immediately.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 4: Hosting & Domain -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Can you handle domain registration and hosting setup?</span>
+            <span class="faq-icon text-xl font-mono text-orange-500 transition-transform font-bold">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>
+              Yes! If you already have hosting (Namecheap, Hostinger, Vercel, VPS), I will configure DNS, SSL certificates, and deployment pipelines. If you don't have hosting yet, I will recommend the most cost-effective provider for your traffic and set everything up for you from scratch.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ 5: Post-Launch Support -->
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>What kind of post-launch maintenance and support do you offer?</span>
+            <span class="faq-icon text-xl font-mono text-orange-500 transition-transform font-bold">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>
+              Every completed website includes <strong>30 days of complimentary bug-fixing and technical warranty</strong>. After the warranty period, I offer affordable monthly care packages starting at ₦25,000 / $20/month covering security audits, speed upkeep, automatic backups, and content updates.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         11. CONTACT SECTION
+         ============================================================ -->
+    <section id="contact" class="py-16 px-4 sm:px-10 border-t-2 border-dashed border-gray-300">
+      
+      <!-- Section Header -->
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <div class="font-hand text-xl text-orange-600 font-bold mb-1">
+          let's build something great 🤝
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+          Start Your Project Today
+        </h2>
+        <p class="text-gray-600 mt-2 text-sm sm:text-base">
+          Fill out the form below to immediately start a conversation on WhatsApp with all your requirements pre-loaded.
+        </p>
+      </div>
+
+      <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- Left: Direct Channels & Information (5 Cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-white p-6 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000000]">
+            <h3 class="font-mono font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
+              <span>⚡</span> Direct Contact Channels
+            </h3>
+
+            <div class="space-y-3 font-sans text-sm">
+              <!-- WhatsApp -->
+              <a 
+                href="https://wa.me/2349115742760" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-green-500 hover:bg-green-50/50 transition-all text-gray-800"
+              >
+                <span class="w-9 h-9 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">💬</span>
+                <div>
+                  <div class="font-bold text-xs uppercase text-gray-500 font-mono">Chat on WhatsApp</div>
+                  <div class="font-mono font-bold text-green-700">0911 574 2760</div>
+                </div>
+              </a>
+
+              <!-- Phone Call (Updated to 08054763626) -->
+              <a 
+                href="tel:+2348054763626" 
+                class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50/50 transition-all text-gray-800"
+              >
+                <span class="w-9 h-9 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-base flex-shrink-0">📞</span>
+                <div>
+                  <div class="font-bold text-xs uppercase text-gray-500 font-mono">Direct Phone Call</div>
+                  <div class="font-mono font-bold text-blue-700">0805 476 3626</div>
+                </div>
+              </a>
+
+              <!-- Facebook -->
+              <a 
+                href="https://www.facebook.com/david.oluwafemi.724920" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-blue-700 hover:bg-blue-50/50 transition-all text-gray-800"
+              >
+                <span class="w-9 h-9 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold text-base flex-shrink-0">f</span>
+                <div>
+                  <div class="font-bold text-xs uppercase text-gray-500 font-mono">Message on Facebook</div>
+                  <div class="font-semibold text-gray-700">david.oluwafemi.724920</div>
+                </div>
+              </a>
+
+              <!-- Email (Placeholder marked with EDIT) -->
+              <!-- EDIT: Replace with your preferred contact email if needed -->
+              <a 
+                href="mailto:davidbryght@gmail.com" 
+                class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-orange-500 hover:bg-orange-50/50 transition-all text-gray-800"
+              >
+                <span class="w-9 h-9 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-base flex-shrink-0">✉️</span>
+                <div>
+                  <div class="font-bold text-xs uppercase text-gray-500 font-mono">Send an Email</div>
+                  <div class="font-mono text-xs text-gray-700 font-semibold break-all">davidbryght@gmail.com</div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Location Note -->
+            <div class="mt-6 pt-4 border-t border-gray-200 flex items-center gap-2 text-xs font-mono text-gray-600">
+              <span>📍</span>
+              <span>Based in <strong>Ilorin, Kwara State, Nigeria</strong> (Serving clients worldwide)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Inquiry Form (7 Cols) -->
+        <div class="lg:col-span-7">
+          <div class="bg-white p-6 sm:p-8 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000000]">
+            <h3 class="font-mono font-bold text-xl text-gray-900 mb-2">
+              Send a Project Message
+            </h3>
+            <p class="text-xs text-gray-500 mb-6 font-mono">
+              Hit "Submit & Open WhatsApp" to connect directly with your pre-filled inquiry.
+            </p>
+
+            <form id="contact-form" class="space-y-4" novalidate>
+              
+              <!-- Name & Email Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="form-name" class="block text-xs font-mono font-bold text-gray-700 mb-1">
+                    Your Name *
+                  </label>
+                  <input 
+                    type="text" 
+                    id="form-name" 
+                    name="name" 
+                    required 
+                    placeholder="e.g. Adeola Johnson"
+                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                  />
+                  <span class="text-red-500 text-xs font-mono hidden error-msg" id="error-name">Please enter your name.</span>
+                </div>
+
+                <div>
+                  <label for="form-email" class="block text-xs font-mono font-bold text-gray-700 mb-1">
+                    Your Email *
+                  </label>
+                  <input 
+                    type="email" 
+                    id="form-email" 
+                    name="email" 
+                    required 
+                    placeholder="e.g. adeola@example.com"
+                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                  />
+                  <span class="text-red-500 text-xs font-mono hidden error-msg" id="error-email">Please enter a valid email address.</span>
+                </div>
+              </div>
+
+              <!-- Phone & Project Type Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="form-phone" class="block text-xs font-mono font-bold text-gray-700 mb-1">
+                    Phone / WhatsApp Number
+                  </label>
+                  <input 
+                    type="tel" 
+                    id="form-phone" 
+                    name="phone" 
+                    placeholder="e.g. 0805 123 4567"
+                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                  />
+                </div>
+
+                <div>
+                  <label for="form-project-type" class="block text-xs font-mono font-bold text-gray-700 mb-1">
+                    Project Type *
+                  </label>
+                  <select 
+                    id="form-project-type" 
+                    name="project_type" 
+                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                  >
+                    <option value="Business Website">Business Website</option>
+                    <option value="E-Commerce Store">E-Commerce Store</option>
+                    <option value="Web App or Dashboard">Web App or Dashboard</option>
+                    <option value="Frontend Development">Frontend Development</option>
+                    <option value="Full-Stack Web Application">Full-Stack Web Application</option>
+                    <option value="Website Redesign">Website Redesign</option>
+                    <option value="Backend & API Development">Backend & API Development</option>
+                    <option value="Maintenance & Support">Maintenance & Support</option>
+                    <option value="Custom Project">Other Custom Project</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Budget Range Dropdown -->
+              <div>
+                <label for="form-budget" class="block text-xs font-mono font-bold text-gray-700 mb-1">
+                  Estimated Scope / Budget Range
+                </label>
+                <select 
+                  id="form-budget" 
+                  name="budget" 
+                  class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                >
+                  <option value="Starter Website / Portfolio">Starter Website / Portfolio</option>
+                  <option value="Growing Business / E-Commerce Store" selected>Growing Business / E-Commerce Store</option>
+                  <option value="Custom Web Application / SaaS">Custom Web Application / SaaS</option>
+                  <option value="Enterprise / Large Architecture">Enterprise / Large Architecture</option>
+                  <option value="Flexible / Open to Consultation">Flexible / Let's Discuss</option>
+                </select>
+              </div>
+
+              <!-- Message Textarea -->
+              <div>
+                <label for="form-message" class="block text-xs font-mono font-bold text-gray-700 mb-1">
+                  Project Details / Message *
+                </label>
+                <textarea 
+                  id="form-message" 
+                  name="message" 
+                  rows="4" 
+                  required 
+                  placeholder="Tell me a bit about what you want to build, any reference sites you like, or questions..."
+                  class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                ></textarea>
+                <span class="text-red-500 text-xs font-mono hidden error-msg" id="error-message">Please enter your project message.</span>
+              </div>
+
+              <!-- Submit Button -->
+              <button 
+                type="submit" 
+                class="btn-mono-cta w-full justify-center text-center font-mono py-3 bg-emerald-600 hover:bg-emerald-700 border-black shadow-[4px_4px_0px_#000]"
+              >
+                <span>Submit & Open WhatsApp</span>
+                <span class="icon-square bg-white text-emerald-700 font-bold">💬</span>
+              </button>
+
+              <div class="text-center text-[11px] text-gray-500 font-mono">
+                🔒 Your contact info is strictly confidential and never shared with third parties.
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         12. FOOTER
+         ============================================================ -->
+    <footer class="pt-12 pb-8 px-4 sm:px-10 border-t-2 border-solid border-gray-300 bg-stone-900 text-white">
+      <div class="max-w-6xl mx-auto">
+        
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-stone-800">
+          
+          <!-- Col 1: Bio & Small Round Photo (5 Cols) -->
+          <div class="md:col-span-5 space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full border-2 border-orange-500 overflow-hidden flex-shrink-0 bg-stone-800">
+                <img 
+                  src="https://res.cloudinary.com/luf95toj/image/upload/v1792675401/IMG-20261022-WA2850.jpg" 
+                  alt="Oluwafemi David Adekanola, full-stack web developer in Ilorin" 
+                  class="w-full h-full object-cover object-top"
+                  loading="lazy"
+                  onerror="this.onerror=null; this.src='./profile.jpg';"
+                />
+              </div>
+              <div>
+                <div class="font-mono font-bold text-lg text-white">Oluwafemi David Adekanola</div>
+                <div class="text-xs text-orange-400 font-mono">Full-Stack Website Developer · Ilorin, Nigeria</div>
+              </div>
+            </div>
+
+            <p class="text-stone-400 text-xs sm:text-sm leading-relaxed max-w-sm pt-2">
+              Building fast, beautiful, and secure websites that help Nigerian enterprises and global companies turn online visitors into paying customers.
+            </p>
+          </div>
+
+          <!-- Col 2: Quick Links (3 Cols) -->
+          <div class="md:col-span-3 space-y-2">
+            <div class="font-mono text-xs uppercase tracking-wider text-stone-300 font-bold mb-3">
+              Quick Navigation
+            </div>
+            <ul class="space-y-1.5 text-xs sm:text-sm font-mono text-stone-400">
+              <li><a href="#hero" class="hover:text-white transition-colors">→ Home</a></li>
+              <li><a href="#about" class="hover:text-white transition-colors">→ About Femi</a></li>
+              <li><a href="#services" class="hover:text-white transition-colors">→ Services</a></li>
+              <li><a href="#projects" class="hover:text-white transition-colors">→ Website Samples</a></li>
+              <li><a href="#testimonials" class="hover:text-white transition-colors">→ Client Reviews</a></li>
+              <li><a href="#special-offer" class="hover:text-orange-400 transition-colors">→ 10% Discount</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Direct Connect & Back to Top (4 Cols) -->
+          <div class="md:col-span-4 space-y-3">
+            <div class="font-mono text-xs uppercase tracking-wider text-stone-300 font-bold mb-3">
+              Connect Directly
+            </div>
+            
+            <div class="flex items-center gap-2">
+              <!-- WhatsApp (0911 574 2760) -->
+              <a 
+                href="https://wa.me/2349115742760" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-stone-300 hover:text-green-400 hover:border-green-500 transition-colors"
+                title="WhatsApp (0911 574 2760)"
+              >
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+              </a>
+
+              <!-- Facebook -->
+              <a 
+                href="https://www.facebook.com/david.oluwafemi.724920" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-stone-300 hover:text-blue-400 hover:border-blue-500 transition-colors"
+                title="Facebook"
+              >
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+
+              <!-- GitHub Placeholder -->
+              <!-- EDIT: GitHub link -->
+              <a 
+                href="https://github.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-stone-300 hover:text-white hover:border-white transition-colors"
+                title="GitHub"
+              >
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              </a>
+
+              <!-- LinkedIn Placeholder -->
+              <!-- EDIT: LinkedIn link -->
+              <a 
+                href="https://linkedin.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="w-9 h-9 rounded-full bg-stone-800 border border-stone-700 flex items-center justify-center text-stone-300 hover:text-blue-400 hover:border-blue-400 transition-colors"
+                title="LinkedIn"
+              >
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              </a>
+            </div>
+
+            <!-- Back to Top Button -->
+            <div class="pt-3">
+              <button 
+                id="back-to-top-btn" 
+                class="inline-flex items-center gap-2 text-xs font-mono font-bold text-stone-300 hover:text-white bg-stone-800 hover:bg-stone-700 px-3 py-1.5 rounded border border-stone-700 transition-colors"
+              >
+                <span>↑ Back to top</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Copyright & Bottom Credit -->
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-2 text-center sm:text-left">
+          <div>
+            © 2026 Oluwafemi David Adekanola. All rights reserved.
+          </div>
+          <div>
+            Crafted with passion in Ilorin, Kwara State, Nigeria 🇳🇬
+          </div>
+        </div>
+
+      </div>
+    </footer>
+
+  </div> <!-- End notebook-container -->
+
+
+  <!-- ============================================================
+       SHOWCASE STORAGE SPACE & CONTENT MANAGER MODAL
+       ============================================================ -->
+  <div id="showcase-manager-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content-box bg-stone-50 w-full max-w-2xl rounded-2xl border-3 border-black shadow-[8px_8px_0px_#000] p-6 sm:p-8 relative">
+      
+      <!-- Washi tape at modal top -->
+      <div class="washi-tape" style="top: -12px; left: 40%; width: 90px; background-color: rgba(251, 146, 60, 0.9);"></div>
+
+      <!-- Close button -->
+      <button id="close-modal-btn" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white border-2 border-black flex items-center justify-center font-mono font-bold text-lg hover:bg-red-50 hover:text-red-600 transition-colors">
+        ✕
+      </button>
+
+      <!-- Modal Header -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 text-xs font-mono font-bold text-orange-600 uppercase tracking-wider">
+          <span>⚡</span> Portfolio Storage Space
+        </div>
+        <h3 id="modal-title" class="text-2xl sm:text-3xl font-extrabold text-gray-900 font-mono tracking-tight mt-1">
+          Showcase & Reviews Hub
+        </h3>
+        <p class="text-xs sm:text-sm text-gray-600 mt-1">
+          Upload, update, and manage your website samples and client testimonials. Stored directly in your browser with instant live updates!
+        </p>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="flex border-b-2 border-black gap-2 mb-6 font-mono text-xs sm:text-sm font-bold">
+        <button id="tab-btn-websites" class="px-4 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-500 text-white flex items-center gap-1.5">
+          <span>🌐</span> Website Samples (<span id="modal-website-count">4</span>)
+        </button>
+        <button id="tab-btn-testimonials" class="px-4 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1.5">
+          <span>💬</span> Client Reviews (<span id="modal-review-count">3</span>)
+        </button>
+        <button id="tab-btn-backup" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1.5 ml-auto">
+          <span>💾</span> Backup & Export
+        </button>
+      </div>
+
+      <!-- Tab 1: Websites Management Content -->
+      <div id="tab-content-websites" class="space-y-6">
+        <!-- Add Website Sample Form -->
+        <form id="website-sample-form" class="bg-white p-5 rounded-xl border-2 border-black shadow-[3px_3px_0px_#000] space-y-3">
+          <div class="font-mono font-bold text-sm text-gray-900 flex items-center justify-between">
+            <span id="form-website-heading">➕ Add New Website Sample</span>
+            <button type="button" id="reset-website-form-btn" class="text-[11px] text-gray-500 underline font-normal hidden">Cancel Editing</button>
+          </div>
+          <input type="hidden" id="edit-website-id" value="" />
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Website Title *</label>
+              <input type="text" id="sample-title" required placeholder="e.g. Bella Luxe Boutique" class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50" />
+            </div>
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Category *</label>
+              <select id="sample-category" class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50">
+                <option value="E-Commerce">E-Commerce</option>
+                <option value="Web App">Web App</option>
+                <option value="Corporate">Corporate</option>
+                <option value="FinTech">FinTech</option>
+                <option value="Custom">Custom</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Screenshot / Image Selection -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Website Screenshot URL</label>
+              <input type="url" id="sample-image-url" placeholder="Paste image link (Cloudinary, etc.)" class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50" />
+            </div>
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">OR Choose from Device</label>
+              <input type="file" id="sample-file-input" accept="image/*" class="w-full text-xs font-mono text-gray-600 file:mr-2 file:py-1 file:px-2.5 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-orange-100 file:text-orange-800 hover:file:bg-orange-200" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Live Website URL</label>
+              <input type="url" id="sample-live-url" placeholder="https://example.com" class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50" />
+            </div>
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Tech Stack (comma-separated)</label>
+              <input type="text" id="sample-tech" placeholder="React, Node.js, Paystack, Tailwind" class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Description / Results *</label>
+            <textarea id="sample-desc" rows="2" required placeholder="What problem this website solved, key features, performance metrics..." class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50"></textarea>
+          </div>
+
+          <button type="submit" id="save-website-btn" class="btn-mono-cta text-xs py-2 px-4 bg-orange-600 hover:bg-orange-700 border-black w-full justify-center">
+            <span>💾 Save Website Sample</span>
+          </button>
+        </form>
+
+        <!-- Current Uploaded Websites List -->
+        <div>
+          <div class="font-mono font-bold text-xs uppercase tracking-wider text-gray-600 mb-3">
+            Existing Website Samples in Storage:
+          </div>
+          <div id="modal-websites-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Testimonials Management Content -->
+      <div id="tab-content-testimonials" class="space-y-6 hidden">
+        <!-- Add Client Review Form -->
+        <form id="client-review-form" class="bg-white p-5 rounded-xl border-2 border-black shadow-[3px_3px_0px_#000] space-y-3">
+          <div class="font-mono font-bold text-sm text-gray-900 flex items-center justify-between">
+            <span id="form-review-heading">➕ Add New Client Review</span>
+            <button type="button" id="reset-review-form-btn" class="text-[11px] text-gray-500 underline font-normal hidden">Cancel Editing</button>
+          </div>
+          <input type="hidden" id="edit-review-id" value="" />
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Client Name *</label>
+              <input type="text" id="review-name" required placeholder="e.g. Alhaji Babatunde" class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50" />
+            </div>
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Role & Company *</label>
+              <input type="text" id="review-company" required placeholder="e.g. CEO, Babatunde Logistics" class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Rating (Stars)</label>
+              <select id="review-stars" class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50">
+                <option value="5" selected>★★★★★ (5 Stars)</option>
+                <option value="4">★★★★☆ (4 Stars)</option>
+                <option value="3">★★★☆☆ (3 Stars)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Sticky Note Color</label>
+              <select id="review-color" class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50">
+                <option value="yellow">Warm Yellow 🟡</option>
+                <option value="emerald">Mint Green 🟢</option>
+                <option value="rose">Soft Pink 🌸</option>
+                <option value="sky">Pastel Sky 🔵</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Client Review / Testimonial *</label>
+            <textarea id="review-quote" rows="3" required placeholder="Paste the client's review, recommendation, or testimonial message..." class="w-full px-3 py-2 rounded-lg border border-gray-300 font-sans text-xs bg-stone-50"></textarea>
+          </div>
+
+          <button type="submit" id="save-review-btn" class="btn-mono-cta text-xs py-2 px-4 bg-emerald-600 hover:bg-emerald-700 border-black w-full justify-center">
+            <span>💾 Save Client Review</span>
+          </button>
+        </form>
+
+        <!-- Current Uploaded Reviews List -->
+        <div>
+          <div class="font-mono font-bold text-xs uppercase tracking-wider text-gray-600 mb-3">
+            Existing Client Reviews in Storage:
+          </div>
+          <div id="modal-reviews-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Backup & JSON Export -->
+      <div id="tab-content-backup" class="space-y-5 hidden bg-white p-5 rounded-xl border-2 border-black">
+        <div>
+          <h4 class="font-mono font-bold text-sm text-gray-900 mb-1">💾 Export & Import Storage Data</h4>
+          <p class="text-xs text-gray-600">
+            Export your entire collection of website samples and testimonials as a JSON file or copy it directly into your VS Code project.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <button id="copy-json-btn" class="btn-outline font-mono text-xs py-2 px-3 border-black">
+            <span>📋 Copy All to Clipboard (JSON)</span>
+          </button>
+          <button id="download-json-btn" class="btn-mono-cta font-mono text-xs py-2 px-3 bg-stone-900">
+            <span>📥 Download .json File</span>
+          </button>
+          <button id="reset-defaults-btn" class="btn-outline font-mono text-xs py-2 px-3 text-red-700 border-red-300 hover:bg-red-50 ml-auto">
+            <span>🔄 Reset to Default Showcase</span>
+          </button>
+        </div>
+
+        <div class="pt-3 border-t border-gray-200">
+          <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Import from JSON:</label>
+          <textarea id="import-json-text" rows="3" placeholder="Paste your exported JSON here..." class="w-full p-2 text-xs font-mono border rounded bg-stone-50"></textarea>
+          <button id="apply-import-btn" class="mt-2 btn-mono-cta text-xs py-1.5 px-3 bg-blue-600 hover:bg-blue-700 border-black">
+            <span>Import Data into Storage</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Realtime Toast Notification -->
+  <div id="toast-notice" class="bg-black text-white font-mono text-xs px-4 py-2.5 rounded-full border-2 border-orange-500 shadow-xl flex items-center gap-2">
+    <span class="text-emerald-400 font-bold">✓</span>
+    <span id="toast-msg">Showcase updated successfully!</span>
+  </div>
+
+
+  <!-- ============================================================
+       FLOATING WHATSAPP BUTTON (BOTTOM-RIGHT CORNER)
+       ============================================================ -->
+  <a 
+    href="https://wa.me/2349115742760" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    class="floating-whatsapp" 
+    title="Chat with Femi on WhatsApp (0911 574 2760)"
+    aria-label="Direct WhatsApp Message"
+  >
+    <div class="whatsapp-tooltip">Chat with Femi 💬</div>
+    <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+  </a>
+
+
+  <!-- ============================================================
+       VANILLA JAVASCRIPT LOGIC
+       ============================================================ -->
+  <script>
+    /**
+     * ==============================================================
+     * DEFAULT SHOWCASE DATA (FALLBACK & SEED DATA)
+     * ==============================================================
+     */
+    const DEFAULT_WEBSITES = [
+      {
+        id: "proj-1",
+        title: "ApexMart Fashion Store",
+        category: "E-Commerce",
+        tag: "Live Case Study",
+        color: "amber",
+        tabBg: "bg-amber-200 text-amber-950",
+        cardBg: "bg-amber-50",
+        badgeColor: "text-emerald-700",
+        image: "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80",
+        liveUrl: "https://example.com/apexmart",
+        desc: "High-converting e-commerce storefront with instantaneous cart operations, Paystack payment gateway integration, automated order receipts, and WhatsApp checkout fallback.",
+        tech: ["React.js", "Node.js", "Paystack API", "TailwindCSS"],
+        highlight: "Speed: 98/100 Lighthouse"
+      },
+      {
+        id: "proj-2",
+        title: "MetricsHub Logistics Portal",
+        category: "Web App",
+        tag: "Custom Build",
+        color: "sky",
+        tabBg: "bg-sky-200 text-sky-950",
+        cardBg: "bg-sky-50",
+        badgeColor: "text-blue-700",
+        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+        liveUrl: "https://example.com/metricshub",
+        desc: "Real-time shipment tracking portal with interactive geographical mapping, delivery status automation, multi-role dispatch authentication, and customer SMS updates.",
+        tech: ["React", "Laravel REST", "MySQL", "JWT Auth"],
+        highlight: "Live Web App"
+      },
+      {
+        id: "proj-3",
+        title: "Kwara Legal Chambers",
+        category: "Corporate",
+        tag: "Client Success",
+        color: "emerald",
+        tabBg: "bg-emerald-200 text-emerald-950",
+        cardBg: "bg-emerald-50",
+        badgeColor: "text-emerald-700",
+        image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
+        liveUrl: "https://example.com/kwaralegal",
+        desc: "Distinguished corporate identity website featuring dynamic attorney directory, secure appointment scheduling calendar, bilingual document repository, and speed optimization.",
+        tech: ["WordPress / Headless", "PHP", "SEO Schema", "WhatsApp API"],
+        highlight: "Corporate & Legal"
+      },
+      {
+        id: "proj-4",
+        title: "SaveQuick Cooperative Portal",
+        category: "FinTech",
+        tag: "Full-Stack Solution",
+        color: "rose",
+        tabBg: "bg-rose-200 text-rose-950",
+        cardBg: "bg-rose-50",
+        badgeColor: "text-rose-700",
+        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+        liveUrl: "https://example.com/savequick",
+        desc: "Automated savings management platform allowing members to deposit funds, request collateral-free microloans, track interest accrual, and export ledger audits.",
+        tech: ["React", "Node/Express", "MongoDB", "Flutterwave"],
+        highlight: "Security Verified"
+      }
+    ];
+
+    const DEFAULT_TESTIMONIALS = [
+      {
+        id: "rev-1",
+        name: "Tunde Alabi",
+        company: "Founder, Apex Retailers (Lagos)",
+        rating: 5,
+        color: "yellow",
+        quote: "Femi delivered our store two days ahead of schedule! The Paystack checkout worked seamlessly on day one, and our mobile conversion rate literally doubled. Highly recommended!"
+      },
+      {
+        id: "rev-2",
+        name: "Dr. Sarah Jenkins",
+        company: "Director, Jenkins Global Health (UK)",
+        rating: 5,
+        color: "emerald",
+        quote: "As an overseas founder, communicating with remote developers can be a gamble. Oluwafemi sent daily updates, handled edge cases, and built our admin dashboard flawlessly."
+      },
+      {
+        id: "rev-3",
+        name: "Barrister K. Olumide",
+        company: "Principal Partner, Kwara Legal",
+        rating: 5,
+        color: "rose",
+        quote: "Femi is patient, responsive, and genuinely skilled. He took our clunky old website and transformed it into a lightning-fast showcase for our law firm in Ilorin."
+      }
+    ];
+
+    // Editable 10% promo spots left (0 to 5)
+    const SPOTS_LEFT = 5;
+
+    // Active Category Filter for Projects
+    let activeProjectFilter = 'all';
+
+
+    /**
+     * ==============================================================
+     * STORAGE SPACE HELPERS (LOCALSTORAGE + FALLBACK)
+     * ==============================================================
+     */
+    function getStoredWebsites() {
+      try {
+        const raw = localStorage.getItem('femi_portfolio_websites');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.warn('Could not read from localStorage', e);
+      }
+      return [...DEFAULT_WEBSITES];
+    }
+
+    function saveStoredWebsites(list) {
+      try {
+        localStorage.setItem('femi_portfolio_websites', JSON.stringify(list));
+      } catch (e) {
+        console.warn('Could not save to localStorage', e);
+      }
+      renderProjectsGrid(activeProjectFilter);
+      renderModalLists();
+    }
+
+    function getStoredTestimonials() {
+      try {
+        const raw = localStorage.getItem('femi_portfolio_testimonials');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.warn('Could not read from localStorage', e);
+      }
+      return [...DEFAULT_TESTIMONIALS];
+    }
+
+    function saveStoredTestimonials(list) {
+      try {
+        localStorage.setItem('femi_portfolio_testimonials', JSON.stringify(list));
+      } catch (e) {
+        console.warn('Could not save to localStorage', e);
+      }
+      renderTestimonialsGrid();
+      renderModalLists();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast-notice');
+      const text = document.getElementById('toast-msg');
+      if (!toast || !text) return;
+      text.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+
+    /**
+     * ==============================================================
+     * DYNAMIC RENDERING: PROJECTS / WEBSITE SAMPLES
+     * ==============================================================
+     */
+    function renderProjectsGrid(filter = 'all') {
+      const container = document.getElementById('projects-grid');
+      if (!container) return;
+
+      const websites = getStoredWebsites();
+      const filtered = filter === 'all' 
+        ? websites 
+        : websites.filter(p => (p.category || '').toLowerCase().includes(filter.toLowerCase()));
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-1 md:col-span-2 text-center py-12 bg-white rounded-2xl border-2 border-dashed border-gray-300 p-8">
+            <span class="text-4xl block mb-2">📁</span>
+            <h4 class="font-mono font-bold text-lg text-gray-800">No samples found in this category</h4>
+            <p class="text-sm text-gray-500 mt-1">Upload a website sample using the button above to showcase your work!</p>
+            <button onclick="openStorageModal('websites')" class="mt-4 btn-mono-cta text-xs py-2 px-4 bg-orange-600">
+              <span>+ Upload New Website Sample</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const colorThemes = {
+        amber: { bg: 'bg-amber-50', tab: 'bg-amber-200 text-amber-950', badge: 'text-emerald-700', border: 'border-amber-200/80', cta: 'text-orange-600 hover:text-orange-700' },
+        sky: { bg: 'bg-sky-50', tab: 'bg-sky-200 text-sky-950', badge: 'text-blue-700', border: 'border-sky-200/80', cta: 'text-blue-600 hover:text-blue-700' },
+        emerald: { bg: 'bg-emerald-50', tab: 'bg-emerald-200 text-emerald-950', badge: 'text-emerald-700', border: 'border-emerald-200/80', cta: 'text-emerald-700 hover:text-emerald-800' },
+        rose: { bg: 'bg-rose-50', tab: 'bg-rose-200 text-rose-950', badge: 'text-rose-700', border: 'border-rose-200/80', cta: 'text-rose-700 hover:text-rose-800' },
+        purple: { bg: 'bg-purple-50', tab: 'bg-purple-200 text-purple-950', badge: 'text-purple-700', border: 'border-purple-200/80', cta: 'text-purple-700 hover:text-purple-800' }
+      };
+
+      container.innerHTML = filtered.map((proj, idx) => {
+        const themeKey = proj.color || (['amber', 'sky', 'emerald', 'rose'][idx % 4]);
+        const theme = colorThemes[themeKey] || colorThemes.amber;
+        const projectNum = String(idx + 1).padStart(2, '0');
+        const imgUrl = proj.image || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80';
+        const liveLink = proj.liveUrl || '#contact';
+
+        const techChips = Array.isArray(proj.tech) 
+          ? proj.tech.map(t => `<span class="px-2 py-1 bg-white border border-gray-300 rounded font-semibold text-gray-800">${escapeHtml(t)}</span>`).join('')
+          : '';
+
+        return `
+          <div class="folder-card ${theme.bg}">
+            <!-- Folder Tab -->
+            <div class="folder-tab ${theme.tab}">
+              <span>📁</span> Project ${projectNum} · ${escapeHtml(proj.category || 'Website')}
+            </div>
+
+            <div class="p-6">
+              <!-- Mockup Preview Image with Washi Tape -->
+              <div class="relative mb-5 bg-white p-2 rounded border border-gray-300 shadow-sm overflow-hidden group">
+                <div class="washi-tape ${idx % 2 === 0 ? 'washi-tape-slant-left' : 'washi-tape-slant-right'}" style="top: -8px; ${idx % 2 === 0 ? 'left: 30px;' : 'right: 30px; left: auto;'} width: 70px;"></div>
+                
+                <div class="w-full h-52 bg-slate-800 rounded overflow-hidden">
+                  <img 
+                    src="${escapeHtml(imgUrl)}" 
+                    alt="${escapeHtml(proj.title)}" 
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80';"
+                  />
+                </div>
+              </div>
+
+              <!-- Project Meta -->
+              <div class="flex items-center justify-between text-xs font-mono text-gray-500 mb-2">
+                <div class="flex items-center gap-2">
+                  <span>${escapeHtml(proj.category || 'Web Application')}</span>
+                  <span>·</span>
+                  <span class="${theme.badge} font-bold">${escapeHtml(proj.tag || 'Live Build')}</span>
+                </div>
+                <button onclick="editWebsiteSample('${proj.id}')" class="text-[11px] text-gray-400 hover:text-black underline font-mono">
+                  ✏️ Edit
+                </button>
+              </div>
+
+              <h3 class="text-2xl font-bold text-gray-900 font-mono">
+                ${escapeHtml(proj.title)}
+              </h3>
+
+              <p class="text-gray-600 text-sm mt-2 leading-relaxed">
+                ${escapeHtml(proj.desc)}
+              </p>
+
+              <!-- Tech Badges -->
+              <div class="flex flex-wrap gap-2 mt-4 font-mono text-xs">
+                ${techChips}
+              </div>
+
+              <!-- CTA Link -->
+              <div class="mt-6 pt-4 border-t ${theme.border} flex items-center justify-between">
+                <span class="text-xs font-mono text-gray-500">${escapeHtml(proj.highlight || 'Client Verified')}</span>
+                <a href="${escapeHtml(liveLink)}" target="_blank" rel="noopener noreferrer" class="font-mono text-sm font-bold ${theme.cta} flex items-center gap-1 group">
+                  <span>View Project</span>
+                  <span class="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+
+    /**
+     * ==============================================================
+     * DYNAMIC RENDERING: TESTIMONIALS & REVIEWS
+     * ==============================================================
+     */
+    function renderTestimonialsGrid() {
+      const container = document.getElementById('testimonials-grid');
+      if (!container) return;
+
+      const testimonials = getStoredTestimonials();
+
+      const colorMap = {
+        yellow: { bg: 'bg-yellow-100', border: 'border-yellow-300', stars: 'text-yellow-600', tape: 'rgba(254, 240, 138, 0.9)', rot: '-rotate-2' },
+        emerald: { bg: 'bg-emerald-100', border: 'border-emerald-300', stars: 'text-emerald-600', tape: 'rgba(167, 243, 208, 0.9)', rot: 'rotate-1' },
+        rose: { bg: 'bg-rose-100', border: 'border-rose-300', stars: 'text-rose-600', tape: 'rgba(254, 205, 211, 0.9)', rot: '-rotate-1' },
+        sky: { bg: 'bg-sky-100', border: 'border-sky-300', stars: 'text-sky-600', tape: 'rgba(186, 230, 253, 0.9)', rot: 'rotate-2' }
+      };
+
+      container.innerHTML = testimonials.map((rev, idx) => {
+        const theme = colorMap[rev.color] || colorMap.yellow;
+        const starCount = Math.max(1, Math.min(5, rev.rating || 5));
+        const starsText = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
+
+        return `
+          <div class="sticky-note ${theme.bg} ${theme.rot}" style="border-color: ${theme.border};">
+            <div class="washi-tape" style="top: -10px; width: 60px; background-color: ${theme.tape};"></div>
+            
+            <div class="flex items-center justify-between mb-2">
+              <div class="${theme.stars} text-lg font-bold">${starsText}</div>
+              <button onclick="editClientReview('${rev.id}')" class="text-[10px] text-stone-400 hover:text-black underline font-mono">
+                ✏️ Edit
+              </button>
+            </div>
+
+            <p class="text-gray-800 text-sm italic font-sans leading-relaxed">
+              "${escapeHtml(rev.quote)}"
+            </p>
+
+            <div class="mt-5 pt-3 border-t border-black/10 font-mono text-xs">
+              <div class="font-bold text-gray-900">${escapeHtml(rev.name)}</div>
+              <div class="text-gray-600">${escapeHtml(rev.company || '')}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+
+    /**
+     * ==============================================================
+     * SHOWCASE STORAGE MANAGER (MODAL & FORMS)
+     * ==============================================================
+     */
+    function initShowcaseStorageManager() {
+      const modal = document.getElementById('showcase-manager-modal');
+      const closeBtn = document.getElementById('close-modal-btn');
+
+      // Modal open triggers
+      const openTriggers = [
+        document.getElementById('open-showcase-manager-btn'),
+        document.getElementById('mobile-open-manager-btn'),
+        document.getElementById('upload-sample-cta-btn'),
+        document.getElementById('add-review-cta-btn'),
+        document.getElementById('quick-manage-showcase-btn')
+      ];
+
+      openTriggers.forEach(btn => {
+        if (!btn) return;
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetTab = (btn.id === 'add-review-cta-btn') ? 'testimonials' : 'websites';
+          openStorageModal(targetTab);
+        });
+      });
+
+      if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => closeStorageModal());
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) closeStorageModal();
+        });
+      }
+
+      // Tab switcher in Modal
+      const tabWebsites = document.getElementById('tab-btn-websites');
+      const tabReviews = document.getElementById('tab-btn-testimonials');
+      const tabBackup = document.getElementById('tab-btn-backup');
+
+      const contentWebsites = document.getElementById('tab-content-websites');
+      const contentReviews = document.getElementById('tab-content-testimonials');
+      const contentBackup = document.getElementById('tab-content-backup');
+
+      function switchTab(name) {
+        [tabWebsites, tabReviews, tabBackup].forEach(t => {
+          if (!t) return;
+          t.className = "px-4 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1.5";
+        });
+        [contentWebsites, contentReviews, contentBackup].forEach(c => c && c.classList.add('hidden'));
+
+        if (name === 'websites') {
+          tabWebsites.className = "px-4 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-500 text-white flex items-center gap-1.5";
+          contentWebsites.classList.remove('hidden');
+        } else if (name === 'testimonials') {
+          tabReviews.className = "px-4 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-emerald-600 text-white flex items-center gap-1.5";
+          contentReviews.classList.remove('hidden');
+        } else if (name === 'backup') {
+          tabBackup.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-stone-900 text-white flex items-center gap-1.5 ml-auto";
+          contentBackup.classList.remove('hidden');
+        }
+      }
+
+      if (tabWebsites) tabWebsites.addEventListener('click', () => switchTab('websites'));
+      if (tabReviews) tabReviews.addEventListener('click', () => switchTab('testimonials'));
+      if (tabBackup) tabBackup.addEventListener('click', () => switchTab('backup'));
+
+      // File upload reader for website sample images
+      const fileInput = document.getElementById('sample-file-input');
+      const urlInput = document.getElementById('sample-image-url');
+      if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              if (urlInput) {
+                urlInput.value = event.target.result;
+                showToast("Image loaded from device!");
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // Website Sample Form Submit
+      const webForm = document.getElementById('website-sample-form');
+      if (webForm) {
+        webForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const editId = document.getElementById('edit-website-id').value;
+          const title = document.getElementById('sample-title').value.trim();
+          const category = document.getElementById('sample-category').value;
+          const image = document.getElementById('sample-image-url').value.trim() || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80';
+          const liveUrl = document.getElementById('sample-live-url').value.trim() || '#contact';
+          const techString = document.getElementById('sample-tech').value.trim();
+          const desc = document.getElementById('sample-desc').value.trim();
+
+          const techArray = techString 
+            ? techString.split(',').map(s => s.trim()).filter(Boolean)
+            : ['Web', 'Custom'];
+
+          const websites = getStoredWebsites();
+
+          if (editId) {
+            // Update
+            const index = websites.findIndex(w => w.id === editId);
+            if (index !== -1) {
+              websites[index] = { ...websites[index], title, category, image, liveUrl, tech: techArray, desc };
+              showToast(`Updated "${title}"!`);
+            }
+          } else {
+            // Add new
+            const newObj = {
+              id: 'proj-' + Date.now(),
+              title,
+              category,
+              tag: 'New Build',
+              color: ['amber', 'sky', 'emerald', 'rose', 'purple'][Math.floor(Math.random() * 5)],
+              image,
+              liveUrl,
+              desc,
+              tech: techArray,
+              highlight: 'Live Project'
+            };
+            websites.unshift(newObj);
+            showToast(`Added "${title}" to your website showcase!`);
+          }
+
+          saveStoredWebsites(websites);
+          resetWebsiteForm();
+          closeStorageModal();
+          
+          // Scroll to projects
+          const pSec = document.getElementById('projects');
+          if (pSec) pSec.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+
+      // Reset Website Form Cancel button
+      const resetWebBtn = document.getElementById('reset-website-form-btn');
+      if (resetWebBtn) resetWebBtn.addEventListener('click', resetWebsiteForm);
+
+      // Client Review Form Submit
+      const reviewForm = document.getElementById('client-review-form');
+      if (reviewForm) {
+        reviewForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const editId = document.getElementById('edit-review-id').value;
+          const name = document.getElementById('review-name').value.trim();
+          const company = document.getElementById('review-company').value.trim();
+          const rating = parseInt(document.getElementById('review-stars').value, 10) || 5;
+          const color = document.getElementById('review-color').value || 'yellow';
+          const quote = document.getElementById('review-quote').value.trim();
+
+          const testimonials = getStoredTestimonials();
+
+          if (editId) {
+            const index = testimonials.findIndex(r => r.id === editId);
+            if (index !== -1) {
+              testimonials[index] = { ...testimonials[index], name, company, rating, color, quote };
+              showToast(`Updated review from ${name}!`);
+            }
+          } else {
+            const newRev = {
+              id: 'rev-' + Date.now(),
+              name,
+              company,
+              rating,
+              color,
+              quote
+            };
+            testimonials.unshift(newRev);
+            showToast(`Added client review from ${name}!`);
+          }
+
+          saveStoredTestimonials(testimonials);
+          resetReviewForm();
+          closeStorageModal();
+
+          const tSec = document.getElementById('testimonials');
+          if (tSec) tSec.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
+
+      // Reset Review Form Cancel button
+      const resetRevBtn = document.getElementById('reset-review-form-btn');
+      if (resetRevBtn) resetRevBtn.addEventListener('click', resetReviewForm);
+
+      // Backup & JSON Export / Import buttons
+      const copyJsonBtn = document.getElementById('copy-json-btn');
+      if (copyJsonBtn) {
+        copyJsonBtn.addEventListener('click', () => {
+          const exportData = {
+            websites: getStoredWebsites(),
+            testimonials: getStoredTestimonials(),
+            exportedAt: new Date().toISOString()
+          };
+          const jsonString = JSON.stringify(exportData, null, 2);
+          navigator.clipboard.writeText(jsonString).then(() => {
+            showToast("Showcase JSON copied to clipboard!");
+          });
+        });
+      }
+
+      const downloadJsonBtn = document.getElementById('download-json-btn');
+      if (downloadJsonBtn) {
+        downloadJsonBtn.addEventListener('click', () => {
+          const exportData = {
+            websites: getStoredWebsites(),
+            testimonials: getStoredTestimonials(),
+            exportedAt: new Date().toISOString()
+          };
+          const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'oluwafemi-portfolio-showcase.json';
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast("Downloaded portfolio data .json!");
+        });
+      }
+
+      const applyImportBtn = document.getElementById('apply-import-btn');
+      if (applyImportBtn) {
+        applyImportBtn.addEventListener('click', () => {
+          const text = (document.getElementById('import-json-text').value || '').trim();
+          if (!text) return;
+          try {
+            const data = JSON.parse(text);
+            if (data.websites && Array.isArray(data.websites)) {
+              saveStoredWebsites(data.websites);
+            }
+            if (data.testimonials && Array.isArray(data.testimonials)) {
+              saveStoredTestimonials(data.testimonials);
+            }
+            showToast("Imported data successfully!");
+            document.getElementById('import-json-text').value = '';
+          } catch (err) {
+            alert("Invalid JSON format! Please check and try again.");
+          }
+        });
+      }
+
+      const resetDefaultsBtn = document.getElementById('reset-defaults-btn');
+      if (resetDefaultsBtn) {
+        resetDefaultsBtn.addEventListener('click', () => {
+          if (confirm("Reset showcase and reviews to default samples? Any custom items will be replaced.")) {
+            saveStoredWebsites([...DEFAULT_WEBSITES]);
+            saveStoredTestimonials([...DEFAULT_TESTIMONIALS]);
+            showToast("Reset to default showcase!");
+          }
+        });
+      }
+
+      // Setup Category Filter buttons on main page
+      const filterPills = document.querySelectorAll('#portfolio-filter-container .filter-pill');
+      filterPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          filterPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          activeProjectFilter = pill.getAttribute('data-filter') || 'all';
+          renderProjectsGrid(activeProjectFilter);
+        });
+      });
+
+      renderModalLists();
+    }
+
+    function openStorageModal(tab = 'websites') {
+      const modal = document.getElementById('showcase-manager-modal');
+      if (!modal) return;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Switch to requested tab
+      if (tab === 'testimonials') {
+        const btn = document.getElementById('tab-btn-testimonials');
+        if (btn) btn.click();
+      } else {
+        const btn = document.getElementById('tab-btn-websites');
+        if (btn) btn.click();
+      }
+
+      renderModalLists();
+    }
+
+    function closeStorageModal() {
+      const modal = document.getElementById('showcase-manager-modal');
+      if (!modal) return;
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function renderModalLists() {
+      const websites = getStoredWebsites();
+      const testimonials = getStoredTestimonials();
+
+      const countWeb = document.getElementById('modal-website-count');
+      const countRev = document.getElementById('modal-review-count');
+      if (countWeb) countWeb.textContent = websites.length;
+      if (countRev) countRev.textContent = testimonials.length;
+
+      // Render Websites in Modal
+      const webList = document.getElementById('modal-websites-list');
+      if (webList) {
+        if (websites.length === 0) {
+          webList.innerHTML = `<div class="text-xs text-gray-500 italic p-2">No website samples in storage.</div>`;
+        } else {
+          webList.innerHTML = websites.map(w => `
+            <div class="flex items-center justify-between p-2.5 bg-white rounded-lg border border-gray-200 text-xs font-mono">
+              <div class="flex items-center gap-2 overflow-hidden mr-2">
+                <img src="${escapeHtml(w.image || '')}" class="w-8 h-8 rounded object-cover flex-shrink-0 bg-slate-200" onerror="this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=100&q=80';" />
+                <div class="truncate">
+                  <div class="font-bold text-gray-900 truncate">${escapeHtml(w.title)}</div>
+                  <div class="text-[10px] text-gray-500">${escapeHtml(w.category)}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button onclick="editWebsiteSample('${w.id}')" class="px-2 py-1 rounded bg-stone-100 hover:bg-stone-200 text-gray-800 font-bold">Edit</button>
+                <button onclick="deleteWebsiteSample('${w.id}')" class="px-2 py-1 rounded bg-red-50 hover:bg-red-100 text-red-600 font-bold">Delete</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Render Reviews in Modal
+      const revList = document.getElementById('modal-reviews-list');
+      if (revList) {
+        if (testimonials.length === 0) {
+          revList.innerHTML = `<div class="text-xs text-gray-500 italic p-2">No client reviews in storage.</div>`;
+        } else {
+          revList.innerHTML = testimonials.map(r => `
+            <div class="flex items-center justify-between p-2.5 bg-white rounded-lg border border-gray-200 text-xs font-mono">
+              <div class="truncate mr-2">
+                <div class="font-bold text-gray-900 truncate">${escapeHtml(r.name)}</div>
+                <div class="text-[10px] text-gray-500 truncate">${escapeHtml(r.company || '')}</div>
+              </div>
+              <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button onclick="editClientReview('${r.id}')" class="px-2 py-1 rounded bg-stone-100 hover:bg-stone-200 text-gray-800 font-bold">Edit</button>
+                <button onclick="deleteClientReview('${r.id}')" class="px-2 py-1 rounded bg-red-50 hover:bg-red-100 text-red-600 font-bold">Delete</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    // Window-scoped Edit/Delete actions for inline onclick handlers
+    window.editWebsiteSample = function(id) {
+      const websites = getStoredWebsites();
+      const item = websites.find(w => w.id === id);
+      if (!item) return;
+
+      openStorageModal('websites');
+
+      document.getElementById('edit-website-id').value = item.id;
+      document.getElementById('sample-title').value = item.title || '';
+      document.getElementById('sample-category').value = item.category || 'E-Commerce';
+      document.getElementById('sample-image-url').value = item.image || '';
+      document.getElementById('sample-live-url').value = item.liveUrl || '';
+      document.getElementById('sample-tech').value = Array.isArray(item.tech) ? item.tech.join(', ') : '';
+      document.getElementById('sample-desc').value = item.desc || '';
+
+      document.getElementById('form-website-heading').textContent = `✏️ Edit "${item.title}"`;
+      document.getElementById('save-website-btn').innerHTML = `<span>💾 Update Sample</span>`;
+      document.getElementById('reset-website-form-btn').classList.remove('hidden');
+
+      document.getElementById('website-sample-form').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.deleteWebsiteSample = function(id) {
+      const websites = getStoredWebsites();
+      const item = websites.find(w => w.id === id);
+      if (!item) return;
+      if (confirm(`Are you sure you want to delete "${item.title}"?`)) {
+        const updated = websites.filter(w => w.id !== id);
+        saveStoredWebsites(updated);
+        showToast(`Deleted "${item.title}"`);
+      }
+    };
+
+    function resetWebsiteForm() {
+      document.getElementById('edit-website-id').value = '';
+      document.getElementById('website-sample-form').reset();
+      document.getElementById('form-website-heading').textContent = '➕ Add New Website Sample';
+      document.getElementById('save-website-btn').innerHTML = `<span>💾 Save Website Sample</span>`;
+      document.getElementById('reset-website-form-btn').classList.add('hidden');
+    }
+
+    window.editClientReview = function(id) {
+      const testimonials = getStoredTestimonials();
+      const item = testimonials.find(r => r.id === id);
+      if (!item) return;
+
+      openStorageModal('testimonials');
+
+      document.getElementById('edit-review-id').value = item.id;
+      document.getElementById('review-name').value = item.name || '';
+      document.getElementById('review-company').value = item.company || '';
+      document.getElementById('review-stars').value = item.rating || 5;
+      document.getElementById('review-color').value = item.color || 'yellow';
+      document.getElementById('review-quote').value = item.quote || '';
+
+      document.getElementById('form-review-heading').textContent = `✏️ Edit Review from "${item.name}"`;
+      document.getElementById('save-review-btn').innerHTML = `<span>💾 Update Review</span>`;
+      document.getElementById('reset-review-form-btn').classList.remove('hidden');
+
+      document.getElementById('client-review-form').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.deleteClientReview = function(id) {
+      const testimonials = getStoredTestimonials();
+      const item = testimonials.find(r => r.id === id);
+      if (!item) return;
+      if (confirm(`Are you sure you want to delete review from "${item.name}"?`)) {
+        const updated = testimonials.filter(r => r.id !== id);
+        saveStoredTestimonials(updated);
+        showToast(`Deleted review from ${item.name}`);
+      }
+    };
+
+    function resetReviewForm() {
+      document.getElementById('edit-review-id').value = '';
+      document.getElementById('client-review-form').reset();
+      document.getElementById('form-review-heading').textContent = '➕ Add New Client Review';
+      document.getElementById('save-review-btn').innerHTML = `<span>💾 Save Client Review</span>`;
+      document.getElementById('reset-review-form-btn').classList.add('hidden');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+
+    /**
+     * ==============================================================
+     * INITIALIZATION ON DOM CONTENT LOADED
+     * ==============================================================
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      initScrollProgress();
+      initStickyNav();
+      initMobileMenu();
+      initRotatingHeadline();
+      initSpotsCounter();
+      initSpecialOfferClaim();
+      initStatsCounter();
+      initAccordion();
+      initContactForm();
+      initServiceQuoteFillers();
+      initBackToTop();
+      
+      // Initialize dynamic storage showcase & manager
+      renderProjectsGrid('all');
+      renderTestimonialsGrid();
+      initShowcaseStorageManager();
+    });
+
+
+    /**
+     * 1. SCROLL PROGRESS INDICATOR
+     */
+    function initScrollProgress() {
+      const bar = document.getElementById('scroll-progress');
+      if (!bar) return;
+
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        bar.style.width = `${progress}%`;
+      }, { passive: true });
+    }
+
+
+    /**
+     * 2. STICKY NAV SHADOW ON SCROLL
+     */
+    function initStickyNav() {
+      const navbar = document.getElementById('navbar');
+      if (!navbar) return;
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      }, { passive: true });
+    }
+
+
+    /**
+     * 3. MOBILE MENU TOGGLE
+     */
+    function initMobileMenu() {
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      if (!btn || !menu) return;
+
+      btn.addEventListener('click', () => {
+        const isOpen = !menu.classList.contains('hidden');
+        if (isOpen) {
+          menu.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          menu.classList.remove('hidden');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      // Close mobile menu on clicking any link
+      menu.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          menu.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
+
+    /**
+     * 4. ROTATING TEXT EFFECT IN HERO
+     */
+    function initRotatingHeadline() {
+      const target = document.getElementById('rotating-text');
+      if (!target) return;
+
+      const roles = [
+        "Frontend & UI Design",
+        "Full-Stack Web Apps",
+        "Fast E-Commerce Stores",
+        "Node & PHP APIs",
+        "Conversion Problem Solver"
+      ];
+      let index = 0;
+
+      setInterval(() => {
+        target.style.opacity = '0';
+        target.style.transform = 'translateY(4px)';
+        target.style.transition = 'all 0.25s ease';
+
+        setTimeout(() => {
+          index = (index + 1) % roles.length;
+          target.textContent = roles[index];
+          target.style.opacity = '1';
+          target.style.transform = 'translateY(0)';
+        }, 250);
+      }, 3000);
+    }
+
+
+    /**
+     * 5. SPOTS LEFT CONTROLLER & PROGRESS BAR
+     */
+    function initSpotsCounter() {
+      const spotsDisplay = document.getElementById('spots-display');
+      const spotsClaimed = document.getElementById('spots-claimed-text');
+      const progressBar = document.getElementById('spots-progress-bar');
+      if (!spotsDisplay || !progressBar) return;
+
+      const clampedSpots = Math.max(0, Math.min(5, SPOTS_LEFT));
+      const claimed = 5 - clampedSpots;
+      const percent = (claimed / 5) * 100;
+
+      spotsDisplay.textContent = clampedSpots > 0 
+        ? `🔥 ${clampedSpots} spots available` 
+        : `🔒 All 5 launch spots claimed`;
+      
+      if (spotsClaimed) {
+        spotsClaimed.textContent = `${claimed} claimed / 5 total`;
+      }
+
+      progressBar.style.width = `${Math.max(10, percent)}%`;
+    }
+
+
+    /**
+     * 6. SPECIAL OFFER CLAIM BUTTON
+     */
+    function initSpecialOfferClaim() {
+      const btn = document.getElementById('claim-discount-btn');
+      const messageField = document.getElementById('form-message');
+      const contactSection = document.getElementById('contact');
+
+      if (!btn || !messageField) return;
+
+      btn.addEventListener('click', () => {
+        messageField.value = "I'd like to claim the 10% first-5-clients discount.";
+        contactSection.scrollIntoView({ behavior: 'smooth' });
+        
+        // Highlight message textarea
+        setTimeout(() => {
+          messageField.focus();
+          messageField.classList.add('ring-4', 'ring-orange-300');
+          setTimeout(() => {
+            messageField.classList.remove('ring-4', 'ring-orange-300');
+          }, 2000);
+        }, 600);
+      });
+    }
+
+
+    /**
+     * 7. ACCORDION FAQ
+     */
+    function initAccordion() {
+      const items = document.querySelectorAll('.faq-item');
+      items.forEach(item => {
+        const questionBtn = item.querySelector('.faq-question');
+        if (!questionBtn) return;
+
+        questionBtn.addEventListener('click', () => {
+          const isOpen = item.classList.contains('open');
+
+          // Close all others for neatness
+          items.forEach(other => {
+            if (other !== item) {
+              other.classList.remove('open');
+              const btn = other.querySelector('.faq-question');
+              if (btn) btn.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          // Toggle current
+          if (isOpen) {
+            item.classList.remove('open');
+            questionBtn.setAttribute('aria-expanded', 'false');
+          } else {
+            item.classList.add('open');
+            questionBtn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+    }
+
+
+    /**
+     * 8. STATS COUNTER WITH INTERSECTION OBSERVER
+     */
+    function initStatsCounter() {
+      const counters = document.querySelectorAll('.stat-counter');
+      if (!counters.length) return;
+
+      let started = false;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !started) {
+            started = true;
+            counters.forEach(counter => {
+              const target = parseInt(counter.getAttribute('data-target'), 10) || 0;
+              let current = 0;
+              const step = Math.max(1, Math.ceil(target / 40));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                  counter.textContent = `${target}+`;
+                  clearInterval(timer);
+                } else {
+                  counter.textContent = `${current}+`;
+                }
+              }, 30);
+            });
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.3 });
+
+      counters.forEach(counter => observer.observe(counter));
+    }
+
+
+    /**
+     * 9. PRE-FILL CONTACT FORM FROM SERVICES
+     */
+    function initServiceQuoteFillers() {
+      document.querySelectorAll('.service-quote-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const serviceName = btn.getAttribute('data-service');
+          const typeSelect = document.getElementById('form-project-type');
+          const msgField = document.getElementById('form-message');
+          if (typeSelect && serviceName) {
+            typeSelect.value = serviceName;
+          }
+          if (msgField && !msgField.value) {
+            msgField.value = `Hi Femi, I would like to get a quote and timeline for a ${serviceName}.`;
+          }
+        });
+      });
+    }
+
+
+    /**
+     * 10. CONTACT FORM VALIDATION & WHATSAPP GENERATION (0911 574 2760)
+     */
+    function initContactForm() {
+      const form = document.getElementById('contact-form');
+      if (!form) return;
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const nameInput = document.getElementById('form-name');
+        const emailInput = document.getElementById('form-email');
+        const phoneInput = document.getElementById('form-phone');
+        const projectTypeSelect = document.getElementById('form-project-type');
+        const budgetSelect = document.getElementById('form-budget');
+        const messageInput = document.getElementById('form-message');
+
+        const errName = document.getElementById('error-name');
+        const errEmail = document.getElementById('error-email');
+        const errMessage = document.getElementById('error-message');
+
+        // Reset errors
+        [errName, errEmail, errMessage].forEach(el => el && el.classList.add('hidden'));
+
+        let isValid = true;
+
+        if (!nameInput.value.trim()) {
+          errName && errName.classList.remove('hidden');
+          nameInput.focus();
+          isValid = false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailInput.value.trim() || !emailRegex.test(emailInput.value.trim())) {
+          if (isValid) emailInput.focus();
+          errEmail && errEmail.classList.remove('hidden');
+          isValid = false;
+        }
+
+        if (!messageInput.value.trim()) {
+          if (isValid) messageInput.focus();
+          errMessage && errMessage.classList.remove('hidden');
+          isValid = false;
+        }
+
+        if (!isValid) return;
+
+        // Build WhatsApp Message Payload directed to 09115742760
+        const textPayload = 
+`Hello Oluwafemi! 🚀
+I'm reaching out through your portfolio website.
+
+*Name:* ${nameInput.value.trim()}
+*Email:* ${emailInput.value.trim()}
+*Phone:* ${phoneInput.value.trim() || 'Not provided'}
+*Project Type:* ${projectTypeSelect.value}
+*Scope / Budget:* ${budgetSelect.value}
+
+*Project Details / Message:*
+${messageInput.value.trim()}`;
+
+        const encodedMsg = encodeURIComponent(textPayload);
+        const whatsappUrl = `https://wa.me/2349115742760?text=${encodedMsg}`;
+
+        // Open WhatsApp in new tab
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      });
+    }
+
+
+    /**
+     * 11. BACK TO TOP BUTTON
+     */
+    function initBackToTop() {
+      const btn = document.getElementById('back-to-top-btn');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  </script>
+</body>
+</html>
