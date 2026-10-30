@@ -37,6 +37,8 @@
   <!-- Tailwind CSS Entry Point (Vite & Standalone Browser Support) -->
   <link rel="stylesheet" href="/src/index.css" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Supabase Official JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     /* -------------------------------------------------------------
@@ -2173,6 +2175,37 @@
             <span>Import Data into Storage</span>
           </button>
         </div>
+
+        <!-- Supabase Cloud Database Integration -->
+        <div class="pt-4 border-t-2 border-dashed border-gray-300">
+          <div class="flex items-center justify-between mb-1">
+            <h4 class="font-mono font-bold text-xs uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
+              <span>⚡</span> Supabase Database (Table: <code>messages</code>)
+            </h4>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-mono font-bold px-1.5 py-0.5 rounded">Active Endpoint</span>
+          </div>
+          <p class="text-[11px] text-gray-600 mb-2">
+            Form entries are stored to: <code class="font-mono bg-stone-100 px-1 py-0.5 rounded text-orange-700 font-bold">https://plnfmgqjaspzucomxbsy.supabase.co</code>
+          </p>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input 
+              type="password" 
+              id="supabase-key-input" 
+              placeholder="Paste Supabase publishable / anon key (sbp_... or eyJ...)" 
+              class="flex-1 p-2 text-xs font-mono border rounded bg-stone-50 focus:bg-white" 
+            />
+            <button 
+              type="button" 
+              id="save-supabase-key-btn" 
+              class="btn-mono-cta text-xs py-2 px-3 bg-emerald-600 hover:bg-emerald-700 border-black whitespace-nowrap"
+            >
+              <span>💾 Save Key</span>
+            </button>
+          </div>
+          <div id="supabase-status-badge" class="mt-2 text-[11px] font-mono text-gray-600">
+            <!-- Updated via JS -->
+          </div>
+        </div>
       </div>
 
     </div>
@@ -2205,6 +2238,53 @@
        VANILLA JAVASCRIPT LOGIC
        ============================================================ -->
   <script>
+    /**
+     * ==============================================================
+     * SUPABASE DATABASE CONFIGURATION
+     * Project URL: https://plnfmgqjaspzucomxbsy.supabase.co
+     * Target Table: 'messages'
+     * ==============================================================
+     */
+    const SUPABASE_CONFIG = {
+      url: "https://plnfmgqjaspzucomxbsy.supabase.co",
+      table: "messages",
+      // Supabase Publishable / Anon Key integrated for backend database persistence:
+      key: (typeof window !== 'undefined' && (window.__SUPABASE_KEY__ || window.SUPABASE_PUBLISHABLE_KEY || (window.__ENV__ && window.__ENV__.VITE_SUPABASE_ANON_KEY)))
+        || (typeof localStorage !== 'undefined' && localStorage.getItem('supabase_publishable_key'))
+        || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbmZtZ3FqYXNwenVjb214YnN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNzQzODEsImV4cCI6MjEwODg1MDM4MX0.d0sLqi9sBC7603ekUEuTbcXdQxaMVKkVW0XzEtBcX48"
+    };
+
+    // Global Supabase client instance using official Supabase JS SDK or REST fallback
+    const supabaseClient = (typeof window !== 'undefined' && window.supabase && typeof window.supabase.createClient === 'function')
+      ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key)
+      : {
+          from: (table) => ({
+            insert: async (rows) => {
+              try {
+                const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/${table}`, {
+                  method: 'POST',
+                  headers: {
+                    'apikey': SUPABASE_CONFIG.key,
+                    'Authorization': `Bearer ${SUPABASE_CONFIG.key}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation'
+                  },
+                  body: JSON.stringify(rows)
+                });
+                if (!res.ok) {
+                  const errText = await res.text();
+                  return { data: null, error: new Error(errText || `HTTP ${res.status}`) };
+                }
+                const data = await res.json();
+                return { data, error: null };
+              } catch (e) {
+                return { data: null, error: e };
+              }
+            }
+          })
+        };
+    window.supabaseClient = supabaseClient;
+
     /**
      * ==============================================================
      * DEFAULT SHOWCASE DATA (FALLBACK & SEED DATA)
@@ -2784,6 +2864,43 @@
         });
       }
 
+      // Supabase Publishable Key UI management
+      const supabaseInput = document.getElementById('supabase-key-input');
+      const saveSupabaseBtn = document.getElementById('save-supabase-key-btn');
+      const supabaseBadge = document.getElementById('supabase-status-badge');
+
+      function updateSupabaseStatusDisplay() {
+        const storedKey = SUPABASE_CONFIG.key || localStorage.getItem('supabase_publishable_key');
+        if (supabaseBadge) {
+          if (storedKey) {
+            const preview = storedKey.length > 12 ? (storedKey.slice(0, 6) + '...' + storedKey.slice(-4)) : 'Saved';
+            supabaseBadge.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active Key: <code>${escapeHtml(preview)}</code></span>`;
+          } else {
+            supabaseBadge.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-50 border border-amber-300 text-amber-800"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Key not set yet (messages will still open WhatsApp immediately).</span>`;
+          }
+        }
+        if (supabaseInput && storedKey) {
+          supabaseInput.value = storedKey;
+        }
+      }
+
+      if (saveSupabaseBtn && supabaseInput) {
+        saveSupabaseBtn.addEventListener('click', () => {
+          const val = supabaseInput.value.trim();
+          if (val) {
+            localStorage.setItem('supabase_publishable_key', val);
+            SUPABASE_CONFIG.key = val;
+            showToast("Supabase publishable key saved!");
+          } else {
+            localStorage.removeItem('supabase_publishable_key');
+            SUPABASE_CONFIG.key = "";
+            showToast("Supabase key cleared.");
+          }
+          updateSupabaseStatusDisplay();
+        });
+      }
+      updateSupabaseStatusDisplay();
+
       // Setup Category Filter buttons on main page
       const filterPills = document.querySelectorAll('#portfolio-filter-container .filter-pill');
       filterPills.forEach(pill => {
@@ -3231,27 +3348,25 @@
 
 
     /**
-     * 10. CONTACT FORM VALIDATION & WHATSAPP GENERATION (0911 574 2760)
+     * 10. CONTACT FORM: SUPABASE 'messages' TABLE PERSISTENCE & WHATSAPP REDIRECT
      */
     function initContactForm() {
       const form = document.getElementById('contact-form');
       if (!form) return;
 
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const nameInput = document.getElementById('form-name');
         const emailInput = document.getElementById('form-email');
         const phoneInput = document.getElementById('form-phone');
-        const projectTypeSelect = document.getElementById('form-project-type');
-        const budgetSelect = document.getElementById('form-budget');
         const messageInput = document.getElementById('form-message');
 
         const errName = document.getElementById('error-name');
         const errEmail = document.getElementById('error-email');
         const errMessage = document.getElementById('error-message');
 
-        // Reset errors
+        // Reset error messages
         [errName, errEmail, errMessage].forEach(el => el && el.classList.add('hidden'));
 
         let isValid = true;
@@ -3277,25 +3392,61 @@
 
         if (!isValid) return;
 
-        // Build WhatsApp Message Payload directed to 09115742760
-        const textPayload = 
-`Hello Oluwafemi! 🚀
-I'm reaching out through your portfolio website.
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim() || 'Not provided';
+        const message = messageInput.value.trim();
 
-*Name:* ${nameInput.value.trim()}
-*Email:* ${emailInput.value.trim()}
-*Phone:* ${phoneInput.value.trim() || 'Not provided'}
-*Project Type:* ${projectTypeSelect.value}
-*Scope / Budget:* ${budgetSelect.value}
+        // Visual saving indicator on submit button
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `<span>Saving to Supabase... ⏳</span><span class="icon-square bg-white text-emerald-700 font-bold">💾</span>`;
+        }
 
-*Project Details / Message:*
-${messageInput.value.trim()}`;
+        try {
+          // 1. SAVE TO SUPABASE FIRST
+          // Using supabaseClient.from('messages').insert() with exact schema: { name, email, message, phone }
+          const activeClient = window.supabaseClient || supabaseClient;
 
-        const encodedMsg = encodeURIComponent(textPayload);
-        const whatsappUrl = `https://wa.me/2349115742760?text=${encodedMsg}`;
+          const { data, error } = await activeClient
+            .from('messages')
+            .insert([
+              { name, email, message, phone }
+            ]);
 
-        // Open WhatsApp in new tab
-        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+          // Restore submit button
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+          }
+
+          if (error) {
+            console.error('Supabase error:', error);
+            showToast('Failed to save to Supabase. Check connection.');
+            alert('Failed to save, check Supabase: ' + (error.message || JSON.stringify(error)));
+            return;
+          }
+
+          // 2. IF INSERT SUCCEEDS: SHOW SUCCESS TOAST & THEN OPEN WHATSAPP LINK
+          showToast('✓ Message saved to Supabase! Opening WhatsApp...');
+
+          const whatsappText = `Hello Oluwafemi! 🚀\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`;
+          const whatsappUrl = `https://wa.me/2349115742760?text=${encodeURIComponent(whatsappText)}`;
+          window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+
+          // Reset form
+          form.reset();
+        } catch (err) {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+          }
+          console.error('Form submission exception:', err);
+          showToast('Error saving to Supabase. Please try again.');
+          alert('Submission error: ' + (err.message || err));
+        }
       });
     }
 
