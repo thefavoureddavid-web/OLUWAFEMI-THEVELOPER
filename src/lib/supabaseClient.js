@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
   'https://plnfmggjaszucmxbosy.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsZm1mZ2dqYXN6dWNteGJvc3kiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc2MTYwNzI1MCwiZXhwIjoyMDcxODMwNTAwfQ.1H7oF0M8b8d0qXvYJbW2N4IsW1cN5ImE6FnGb2I4ClYpXQiOJE3O7fNyQ'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbmZtZ3FqYXNwenVjb214YnN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNzQzODEsImV4cCI6MjEwODg1MDM4MX0.d0sLqi9sBC7603ekUEuTbcXdQxaMVKkVW0XzEtBcX48'
 )
 
 export default function ContactForm() {
