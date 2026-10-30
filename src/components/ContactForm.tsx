@@ -1,96 +1,47 @@
-import React, { useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { useState } from 'react'
+import { supabase } from '../lib/supabaseClient'
 
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-}
+export default function ContactForm() {
+  const [form, setForm] = useState({ name: '', email: '', message: '', phone: '' })
+  const [status, setStatus] = useState('')
 
-export const ContactForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    phone: '',
-    message: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setStatus('Sending...')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const { name, email, phone, message } = formData;
+    // THIS WILL SHOW THE REAL ERROR
+    const { data, error } = await supabase
+      .from('messages')
+      .insert([{ 
+        name: form.name, 
+        email: form.email, 
+        message: form.message, 
+        phone: form.phone,
+        project_type: 'general',
+        budget_range: 'any'
+      }])
+      .select()
 
-    if (!name || !email || !message) {
-      alert('Please fill out all required fields.');
-      return;
+    if (error) {
+      alert('REAL ERROR: ' + error.message + '\n\nDetails: ' + JSON.stringify(error))
+      setStatus('Failed: ' + error.message)
+      console.log('SUPABASE ERROR:', error)
+      return
     }
 
-    setLoading(true);
-    try {
-      // 1. SAVE TO SUPABASE FIRST - This must be before WhatsApp
-      const { error } = await supabase
-        .from('messages')
-        .insert([{ name, email, message, phone }]);
-
-      if (error) {
-        console.error('Supabase error:', error);
-        alert('Supabase error: ' + error.message);
-        setLoading(false);
-        return;
-      }
-
-      setToastMsg('Saved! Opening WhatsApp...');
-
-      // 2. THEN OPEN WHATSAPP AFTER Supabase succeeds
-      const waText = encodeURIComponent(
-        `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`
-      );
-      window.open(`https://wa.me/2349115742760?text=${waText}`, '_blank');
-
-      // Clear form
-      setFormData({ name: '', email: '', phone: '', message: '' });
-      
-      setTimeout(() => setToastMsg(null), 3000);
-    } catch (err: any) {
-      alert('Failed: ' + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    alert('SUCCESS! Saved: ' + JSON.stringify(data))
+    setStatus('Sent successfully!')
+    setForm({ name: '', email: '', message: '', phone: '' })
+  }
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Keep all your JSX inputs for name, email, phone, message here - same as before */}
-      <div>
-        <label className="block text-xs font-mono font-bold mb-1">Phone</label>
-        <input
-          value={formData.phone}
-          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          className="w-full px-3 py-2 border rounded"
-        />
-      </div>
-      <div>
-        <label className="block text-xs font-mono font-bold mb-1">Message</label>
-        <textarea
-          rows={4}
-          value={formData.message}
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          required
-          className="w-full px-3 py-2 border rounded"
-        />
-      </div>
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full py-3 bg-emerald-600 text-white font-mono font-bold rounded hover:bg-emerald-700"
-      >
-        {loading ? 'Saving to Supabase...' : 'Submit & Open WhatsApp'}
-      </button>
-      {toastMsg && <p className="mt-2 text-sm text-green-600">{toastMsg}</p>}
+      <input placeholder="Name" value={form.name} onChange={e=>setForm({...form, name:e.target.value})} required />
+      <input placeholder="Email" type="email" value={form.email} onChange={e=>setForm({...form, email:e.target.value})} required />
+      <input placeholder="Phone" value={form.phone} onChange={e=>setForm({...form, phone:e.target.value})} />
+      <textarea placeholder="Message" value={form.message} onChange={e=>setForm({...form, message:e.target.value})} required />
+      <button type="submit">{status || 'Send Message'}</button>
+      <p>{status}</p>
     </form>
-  );
-};
-
-export default ContactForm;
+  )
+}
