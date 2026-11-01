@@ -29,8 +29,7 @@ function AdminPage() {
 }
 
 export default function App() {
-  const isAdmin = window.location.href.includes('admin')
-  if (isAdmin) return <AdminPage />
+    const isAdmin = window.location.href.toLowerCase().includes('admin')
   return (
     <div className="min-h-screen bg-stone-100 p-6 flex items-center justify-center">
       <div className="w-full max-w-lg bg-white p-6 rounded-xl border-2 border-black shadow-[4px_4px_0px_#000]">
