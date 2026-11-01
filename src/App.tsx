@@ -29,7 +29,7 @@ function AdminPage() {
 }
 
 export default function App() {
-  const isAdmin = window.location.pathname === '/admin'
+  const isAdmin = window.location.href.includes('admin')
   if (isAdmin) return <AdminPage />
   return (
     <div className="min-h-screen bg-stone-100 p-6 flex items-center justify-center">
