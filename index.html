@@ -1998,51 +1998,253 @@
 
 
   <!-- ============================================================
-       ADMIN PASSWORD GATE MODAL (Step 3)
+       HARDENED SUPABASE AUTH MODAL (Step 1, 2, 3, 4, 5)
        ============================================================ -->
-  <div id="admin-password-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="pwd-modal-title">
-    <div class="modal-content-box bg-white w-full max-w-sm rounded-2xl border-3 border-black shadow-[8px_8px_0px_#000] p-6 relative">
+  <div id="admin-auth-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+    <div class="modal-content-box bg-white w-full max-w-md rounded-2xl border-3 border-black shadow-[8px_8px_0px_#000] p-6 sm:p-7 relative">
       <!-- Washi tape at modal top -->
-      <div class="washi-tape" style="top: -12px; left: 50%; width: 80px; background-color: rgba(251, 146, 60, 0.9);"></div>
+      <div class="washi-tape" style="top: -12px; left: 50%; width: 85px; background-color: rgba(251, 146, 60, 0.9);"></div>
       
       <!-- Close button -->
-      <button type="button" id="close-password-modal-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-red-50 hover:text-red-600 border border-black flex items-center justify-center font-mono font-bold text-sm transition-colors" aria-label="Close password modal">
+      <button type="button" id="close-auth-modal-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-red-50 hover:text-red-600 border border-black flex items-center justify-center font-mono font-bold text-sm transition-colors" aria-label="Close authentication modal">
         ✕
       </button>
 
-      <div class="text-center pt-2 mb-5">
-        <div class="w-12 h-12 rounded-full bg-orange-100 border-2 border-orange-500 mx-auto flex items-center justify-center text-2xl mb-2">
-          🔒
+      <!-- VIEW 1: SIGN IN (Default) -->
+      <div id="auth-view-login">
+        <div class="text-center pt-1 mb-4">
+          <div class="w-12 h-12 rounded-full bg-orange-100 border-2 border-orange-500 mx-auto flex items-center justify-center text-2xl mb-2">
+            🔐
+          </div>
+          <h3 id="auth-modal-title" class="text-xl font-bold font-mono text-gray-900">
+            Admin Authentication
+          </h3>
+          <p class="text-xs text-gray-600 mt-1">
+            Protected workspace for <strong>Oluwafemi David</strong>. Re-authentication required on every entry.
+          </p>
         </div>
-        <h3 id="pwd-modal-title" class="text-xl font-bold font-mono text-gray-900">
-          Admin Access
-        </h3>
-        <p class="text-xs text-gray-600 mt-1">
-          Enter the administrator password to unlock the Showcase & Reviews Hub.
-        </p>
-      </div>
 
-      <form id="admin-password-form" class="space-y-4">
-        <div>
-          <label for="admin-password-input" class="block text-xs font-mono font-bold text-gray-700 mb-1">Password</label>
-          <input 
-            type="password" 
-            id="admin-password-input" 
-            required 
-            placeholder="Enter password..." 
-            autocomplete="current-password"
-            class="w-full px-3 py-2 rounded-lg border-2 border-black font-mono text-sm bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500" 
-          />
-          <div id="password-error-msg" class="text-xs font-mono text-red-600 font-bold mt-1.5 hidden flex items-center gap-1">
-            <span>⚠️</span> <span>Incorrect password. Please try again.</span>
+        <!-- Lockout banner (Brute-Force Protection) -->
+        <div id="lockout-banner" class="hidden mb-3 p-3 bg-red-100 border-2 border-red-500 rounded-lg text-red-900 text-xs font-mono">
+          <div class="flex items-center gap-1.5 font-bold mb-1">
+            <span>⛔</span> <span>Account Access Locked</span>
+          </div>
+          <div id="lockout-countdown" class="text-[11px] leading-tight">
+            Too many failed attempts. Try again in 15:00.
           </div>
         </div>
 
-        <button type="submit" class="btn-mono-cta w-full justify-center text-center font-mono text-xs py-2.5 bg-orange-600 hover:bg-orange-700 border-black shadow-[3px_3px_0px_#000]">
-          <span>Unlock Admin Hub</span>
-          <span>🔓</span>
-        </button>
-      </form>
+        <!-- Caps-Lock Warning -->
+        <div id="caps-lock-warning" class="hidden mb-2 p-2 bg-amber-50 border border-amber-400 rounded text-amber-800 text-[11px] font-mono flex items-center gap-1">
+          <span>⚠️</span> <span>Caps Lock is ON. Passwords are case-sensitive.</span>
+        </div>
+
+        <!-- Generic Auth Error Message -->
+        <div id="auth-error-msg" class="hidden mb-3 p-2.5 bg-red-50 border border-red-300 rounded text-red-700 text-xs font-mono flex items-center gap-1.5">
+          <span>⚠️</span> <span id="auth-error-text">Incorrect email or password.</span>
+        </div>
+
+        <form id="admin-login-form" class="space-y-3">
+          <div>
+            <label for="admin-email-input" class="block text-xs font-mono font-bold text-gray-700 mb-1">Admin Email</label>
+            <input 
+              type="email" 
+              id="admin-email-input" 
+              required 
+              value="davidbryght@gmail.com"
+              autocomplete="username"
+              class="w-full px-3 py-2 rounded-lg border-2 border-black font-mono text-xs bg-stone-100 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500" 
+            />
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="admin-password-input" class="block text-xs font-mono font-bold text-gray-700">Password</label>
+              <button type="button" id="toggle-login-password-btn" class="text-[11px] font-mono text-orange-600 hover:text-orange-700 underline">
+                Show
+              </button>
+            </div>
+            <div class="relative">
+              <input 
+                type="password" 
+                id="admin-password-input" 
+                required 
+                placeholder="Enter Supabase password..." 
+                autocomplete="current-password"
+                class="w-full px-3 py-2 rounded-lg border-2 border-black font-mono text-sm bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10" 
+              />
+            </div>
+          </div>
+
+          <!-- Turnstile / CAPTCHA hook container (Optional) -->
+          <div id="turnstile-container" class="my-2 min-h-[4px]"></div>
+
+          <button 
+            type="submit" 
+            id="login-submit-btn" 
+            class="btn-mono-cta w-full justify-center text-center font-mono text-xs py-2.5 bg-orange-600 hover:bg-orange-700 border-black shadow-[3px_3px_0px_#000] mt-2"
+          >
+            <span id="login-btn-spinner" class="hidden inline-block animate-spin mr-1">⏳</span>
+            <span id="login-btn-text">Sign in to Admin Space</span>
+            <span>🔓</span>
+          </button>
+        </form>
+
+        <div class="mt-4 pt-3 border-t border-gray-200 text-center">
+          <button type="button" id="forgot-password-trigger" class="text-xs font-mono text-gray-500 hover:text-orange-600 underline">
+            Forgot password? (Email Reset)
+          </button>
+        </div>
+      </div>
+
+      <!-- VIEW 2: TWO-FACTOR TOTP CHALLENGE (MFA Step 3) -->
+      <div id="auth-view-mfa" class="hidden">
+        <div class="text-center pt-1 mb-4">
+          <div class="w-12 h-12 rounded-full bg-blue-100 border-2 border-blue-500 mx-auto flex items-center justify-center text-2xl mb-2">
+            🛡️
+          </div>
+          <h3 class="text-xl font-bold font-mono text-gray-900">
+            Two-Factor Challenge
+          </h3>
+          <p class="text-xs text-gray-600 mt-1">
+            Open Google Authenticator or Authy and enter your 6-digit TOTP code.
+          </p>
+        </div>
+
+        <div id="mfa-challenge-error" class="hidden mb-3 p-2 bg-red-50 border border-red-300 rounded text-red-700 text-xs font-mono text-center">
+          Invalid code. Please check your authenticator clock.
+        </div>
+
+        <form id="admin-mfa-challenge-form" class="space-y-4">
+          <div>
+            <label class="block text-xs font-mono font-bold text-gray-700 mb-1 text-center">6-Digit Authenticator Code</label>
+            <input 
+              type="text" 
+              id="mfa-code-input" 
+              required 
+              maxlength="6" 
+              pattern="[0-9]{6}" 
+              inputmode="numeric" 
+              placeholder="000000" 
+              autocomplete="one-time-code"
+              class="w-full text-center tracking-[0.4em] font-mono text-xl py-2.5 rounded-lg border-2 border-black bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" 
+            />
+          </div>
+
+          <button type="submit" id="mfa-verify-btn" class="btn-mono-cta w-full justify-center text-center font-mono text-xs py-2.5 bg-blue-600 hover:bg-blue-700 border-black shadow-[3px_3px_0px_#000]">
+            <span>Verify & Enter Dashboard</span>
+            <span>✓</span>
+          </button>
+
+          <button type="button" id="cancel-mfa-btn" class="w-full text-center text-xs font-mono text-gray-500 hover:text-black py-1">
+            Cancel & Sign Out
+          </button>
+        </form>
+      </div>
+
+      <!-- VIEW 3: FORGOT PASSWORD REQUEST (Step 4A) -->
+      <div id="auth-view-forgot" class="hidden">
+        <div class="text-center pt-1 mb-4">
+          <div class="w-12 h-12 rounded-full bg-purple-100 border-2 border-purple-500 mx-auto flex items-center justify-center text-2xl mb-2">
+            📧
+          </div>
+          <h3 class="text-xl font-bold font-mono text-gray-900">
+            Password Recovery
+          </h3>
+          <p class="text-xs text-gray-600 mt-1">
+            A secure recovery link will be sent strictly to your administrator address:
+            <br/><strong class="text-purple-700 font-mono">davidbryght@gmail.com</strong>
+          </p>
+        </div>
+
+        <div id="forgot-feedback-box" class="hidden mb-3 p-3 bg-emerald-50 border border-emerald-400 rounded text-emerald-800 text-xs font-mono">
+          ✓ If this account exists, a reset link has been sent to your email. Check your inbox and spam folder.
+        </div>
+
+        <form id="admin-forgot-form" class="space-y-4">
+          <button type="submit" id="send-reset-btn" class="btn-mono-cta w-full justify-center text-center font-mono text-xs py-2.5 bg-purple-600 hover:bg-purple-700 border-black shadow-[3px_3px_0px_#000]">
+            <span>Dispatch Recovery Link to David</span>
+            <span>✉️</span>
+          </button>
+
+          <button type="button" id="back-to-login-btn" class="w-full text-center text-xs font-mono text-gray-500 hover:text-black py-1">
+            ← Back to Login
+          </button>
+        </form>
+      </div>
+
+      <!-- VIEW 4: SET NEW PASSWORD VIA EMAIL LINK (Step 4A & Step 5) -->
+      <div id="auth-view-reset" class="hidden">
+        <div class="text-center pt-1 mb-3">
+          <div class="w-12 h-12 rounded-full bg-emerald-100 border-2 border-emerald-500 mx-auto flex items-center justify-center text-2xl mb-2">
+            🔑
+          </div>
+          <h3 class="text-xl font-bold font-mono text-gray-900">
+            Set New Password
+          </h3>
+          <p class="text-xs text-gray-600 mt-1">
+            Confirmed email recovery session. Enter your new password below.
+          </p>
+        </div>
+
+        <form id="admin-reset-form" class="space-y-3">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="new-password-input" class="block text-xs font-mono font-bold text-gray-700">New Password</label>
+              <button type="button" id="gen-reset-pwd-btn" class="text-[11px] font-mono text-emerald-700 hover:underline">
+                🎲 Generate Strong
+              </button>
+            </div>
+            <input 
+              type="password" 
+              id="new-password-input" 
+              required 
+              placeholder="At least 12 characters..."
+              autocomplete="new-password"
+              class="w-full px-3 py-2 rounded-lg border-2 border-black font-mono text-xs bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+            />
+          </div>
+
+          <!-- Password Strength Meter -->
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-mono text-gray-600 mb-1">
+              <span>Password Strength:</span>
+              <span id="strength-label" class="font-bold text-red-600">Too Weak</span>
+            </div>
+            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden border border-gray-300">
+              <div id="strength-bar" class="h-full bg-red-500 w-1/12 transition-all duration-300"></div>
+            </div>
+          </div>
+
+          <!-- Live Rule Checklist -->
+          <div class="p-2.5 bg-stone-50 border border-gray-300 rounded text-[11px] font-mono space-y-1 text-gray-700">
+            <div id="rule-len" class="flex items-center gap-1.5 text-gray-400"><span>○</span> 12+ Characters</div>
+            <div id="rule-upper" class="flex items-center gap-1.5 text-gray-400"><span>○</span> Uppercase letter (A-Z)</div>
+            <div id="rule-lower" class="flex items-center gap-1.5 text-gray-400"><span>○</span> Lowercase letter (a-z)</div>
+            <div id="rule-num" class="flex items-center gap-1.5 text-gray-400"><span>○</span> Number (0-9)</div>
+            <div id="rule-sym" class="flex items-center gap-1.5 text-gray-400"><span>○</span> Symbol (!@#$%...)</div>
+            <div id="rule-name" class="flex items-center gap-1.5 text-gray-400"><span>○</span> No name/email ('femi', 'david')</div>
+            <div id="rule-hibp" class="flex items-center gap-1.5 text-gray-400"><span>○</span> Not in Have I Been Pwned breaches</div>
+          </div>
+
+          <div>
+            <label for="confirm-password-input" class="block text-xs font-mono font-bold text-gray-700 mb-1">Confirm New Password</label>
+            <input 
+              type="password" 
+              id="confirm-password-input" 
+              required 
+              placeholder="Re-enter password..."
+              autocomplete="new-password"
+              class="w-full px-3 py-2 rounded-lg border-2 border-black font-mono text-xs bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500" 
+            />
+          </div>
+
+          <button type="submit" id="submit-new-password-btn" class="btn-mono-cta w-full justify-center text-center font-mono text-xs py-2.5 bg-emerald-600 hover:bg-emerald-700 border-black shadow-[3px_3px_0px_#000]">
+            <span>Save New Password & Sign In</span>
+            <span>💾</span>
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -2051,39 +2253,47 @@
        SHOWCASE STORAGE SPACE & CONTENT MANAGER MODAL
        ============================================================ -->
   <div id="showcase-manager-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal-content-box bg-stone-50 w-full max-w-2xl rounded-2xl border-3 border-black shadow-[8px_8px_0px_#000] p-6 sm:p-8 relative">
+    <div class="modal-content-box bg-stone-50 w-full max-w-3xl rounded-2xl border-3 border-black shadow-[8px_8px_0px_#000] p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto">
       
       <!-- Washi tape at modal top -->
       <div class="washi-tape" style="top: -12px; left: 40%; width: 90px; background-color: rgba(251, 146, 60, 0.9);"></div>
 
       <!-- Close button -->
-      <button id="close-modal-btn" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white border-2 border-black flex items-center justify-center font-mono font-bold text-lg hover:bg-red-50 hover:text-red-600 transition-colors">
+      <button id="close-modal-btn" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white border-2 border-black flex items-center justify-center font-mono font-bold text-lg hover:bg-red-50 hover:text-red-600 transition-colors" title="Close Dashboard">
         ✕
       </button>
 
       <!-- Modal Header -->
-      <div class="mb-6">
-        <div class="flex items-center gap-2 text-xs font-mono font-bold text-orange-600 uppercase tracking-wider">
-          <span>⚡</span> Portfolio Storage Space
+      <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-mono font-bold text-orange-600 uppercase tracking-wider">
+            <span>⚡</span> Authenticated Storage Hub · <strong>davidbryght@gmail.com</strong>
+          </div>
+          <h3 id="modal-title" class="text-2xl sm:text-3xl font-extrabold text-gray-900 font-mono tracking-tight mt-0.5">
+            Showcase & Admin Workspace
+          </h3>
         </div>
-        <h3 id="modal-title" class="text-2xl sm:text-3xl font-extrabold text-gray-900 font-mono tracking-tight mt-1">
-          Showcase & Reviews Hub
-        </h3>
-        <p class="text-xs sm:text-sm text-gray-600 mt-1">
-          Upload, update, and manage your website samples and client testimonials. Stored directly in your browser with instant live updates!
-        </p>
+        <button id="header-signout-btn" class="px-3 py-1.5 rounded-lg border-2 border-black bg-red-100 hover:bg-red-200 text-red-800 font-mono text-xs font-bold flex items-center gap-1 transition-all">
+          <span>🚪 Sign out</span>
+        </button>
       </div>
 
-      <!-- Tabs Navigation -->
-      <div class="flex border-b-2 border-black gap-2 mb-6 font-mono text-xs sm:text-sm font-bold">
-        <button id="tab-btn-websites" class="px-4 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-500 text-white flex items-center gap-1.5">
-          <span>🌐</span> Website Samples (<span id="modal-website-count">4</span>)
+      <!-- Tabs Navigation (Step 1, 2, 3) -->
+      <div class="flex flex-wrap border-b-2 border-black gap-1 mb-5 font-mono text-xs font-bold">
+        <button id="tab-btn-websites" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-500 text-white flex items-center gap-1">
+          <span>🌐</span> Samples (<span id="modal-website-count">4</span>)
         </button>
-        <button id="tab-btn-testimonials" class="px-4 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1.5">
-          <span>💬</span> Client Reviews (<span id="modal-review-count">3</span>)
+        <button id="tab-btn-testimonials" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
+          <span>💬</span> Reviews (<span id="modal-review-count">3</span>)
         </button>
-        <button id="tab-btn-backup" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1.5 ml-auto">
-          <span>💾</span> Backup & Export
+        <button id="tab-btn-backup" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
+          <span>💾</span> Backup
+        </button>
+        <button id="tab-btn-security" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
+          <span>🛡️</span> Security & MFA
+        </button>
+        <button id="tab-btn-logs" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
+          <span>📜</span> Security Logs
         </button>
       </div>
 
@@ -2268,6 +2478,215 @@
         </div>
       </div>
 
+      <!-- Tab 4: Security & MFA Settings (Step 3 & Step 4B) -->
+      <div id="tab-content-security" class="space-y-6 hidden bg-white p-5 rounded-xl border-2 border-black">
+        <div>
+          <h4 class="font-mono font-bold text-sm text-gray-900 mb-1">🛡️ Admin Security & Authentication</h4>
+          <p class="text-xs text-gray-600">
+            Enterprise-grade controls for your administrator account (<strong>davidbryght@gmail.com</strong>).
+          </p>
+        </div>
+
+        <!-- Section A: Change Password with Email Confirmation (Step 4B) -->
+        <div class="p-4 bg-stone-50 rounded-xl border border-gray-300 space-y-3">
+          <div class="flex items-center justify-between">
+            <h5 class="font-mono font-bold text-xs uppercase tracking-wider text-gray-800 flex items-center gap-1.5">
+              <span>🔑</span> Change Password (Requires Email Confirmation)
+            </h5>
+            <span class="text-[10px] bg-blue-100 text-blue-800 font-mono font-bold px-2 py-0.5 rounded border border-blue-300">
+              Reauth Nonce Enforced
+            </span>
+          </div>
+          <p class="text-[11px] text-gray-600">
+            For security, changing your password requires your current password plus a 6-digit one-time code emailed directly to <strong>davidbryght@gmail.com</strong>.
+          </p>
+
+          <!-- Step 1: Current Password Verification -->
+          <div id="reauth-step-1" class="space-y-2">
+            <label class="block text-xs font-mono font-bold text-gray-700">Enter Current Password:</label>
+            <div class="flex gap-2">
+              <input 
+                type="password" 
+                id="current-password-input" 
+                placeholder="Current administrator password..." 
+                class="flex-1 px-3 py-2 text-xs font-mono border-2 border-black rounded-lg bg-white" 
+              />
+              <button type="button" id="verify-current-pwd-btn" class="btn-mono-cta text-xs py-2 px-3 bg-stone-900 border-black flex-shrink-0">
+                <span>Verify & Request Email Code</span>
+                <span>✉️</span>
+              </button>
+            </div>
+            <div id="current-pwd-error" class="hidden text-xs text-red-600 font-mono">Incorrect current password.</div>
+          </div>
+
+          <!-- Step 2: Enter Emailed Code + New Password (Hidden initially) -->
+          <div id="reauth-step-2" class="hidden space-y-3 pt-3 border-t border-gray-200">
+            <div class="p-2.5 bg-blue-50 border border-blue-300 rounded text-[11px] font-mono text-blue-900">
+              ✓ Confirmation code sent to <strong>davidbryght@gmail.com</strong>! Check your inbox.
+            </div>
+
+            <div>
+              <label class="block text-xs font-mono font-bold text-gray-700 mb-1">Emailed Confirmation Code (OTP):</label>
+              <input 
+                type="text" 
+                id="reauth-code-input" 
+                placeholder="Enter 6-digit code from email..." 
+                class="w-full px-3 py-2 text-xs font-mono border-2 border-black rounded-lg bg-white" 
+              />
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-mono font-bold text-gray-700">New Strong Password:</label>
+                <button type="button" id="gen-change-pwd-btn" class="text-[11px] font-mono text-emerald-700 hover:underline">
+                  🎲 Generate Strong
+                </button>
+              </div>
+              <input 
+                type="password" 
+                id="change-new-password-input" 
+                placeholder="At least 12 characters..." 
+                class="w-full px-3 py-2 text-xs font-mono border-2 border-black rounded-lg bg-white" 
+              />
+            </div>
+
+            <!-- Password Strength in Settings -->
+            <div>
+              <div class="flex items-center justify-between text-[11px] font-mono text-gray-600 mb-1">
+                <span>Password Strength:</span>
+                <span id="change-strength-label" class="font-bold text-red-600">Too Weak</span>
+              </div>
+              <div class="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden border">
+                <div id="change-strength-bar" class="h-full bg-red-500 w-1/12 transition-all duration-300"></div>
+              </div>
+            </div>
+
+            <div class="p-2 bg-white border rounded text-[10px] font-mono space-y-0.5 text-gray-600">
+              <div id="cp-rule-len" class="text-gray-400">○ 12+ Characters</div>
+              <div id="cp-rule-upper" class="text-gray-400">○ Uppercase & Lowercase</div>
+              <div id="cp-rule-num" class="text-gray-400">○ Number (0-9) & Symbol (!@#$)</div>
+              <div id="cp-rule-name" class="text-gray-400">○ No personal keywords ('femi', 'david')</div>
+              <div id="cp-rule-hibp" class="text-gray-400">○ Not in known data breaches (HIBP)</div>
+            </div>
+
+            <button type="button" id="commit-password-change-btn" class="btn-mono-cta text-xs py-2 px-4 bg-emerald-600 hover:bg-emerald-700 border-black w-full justify-center">
+              <span>Confirm Password Update & Sign Out Globally</span>
+              <span>🔒</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section B: Two-Factor Authentication (TOTP Step 3) -->
+        <div class="p-4 bg-stone-50 rounded-xl border border-gray-300 space-y-3">
+          <div class="flex items-center justify-between">
+            <h5 class="font-mono font-bold text-xs uppercase tracking-wider text-gray-800 flex items-center gap-1.5">
+              <span>📱</span> Two-Factor Authentication (TOTP / Authenticator)
+            </h5>
+            <span id="mfa-status-badge" class="text-[10px] bg-stone-200 text-stone-700 font-mono font-bold px-2 py-0.5 rounded border border-stone-300">
+              Checking status...
+            </span>
+          </div>
+          <p class="text-[11px] text-gray-600">
+            Use Google Authenticator, Authy, or 1Password. When enabled, your dashboard requires the 6-digit TOTP code on every login (Supabase AAL2).
+          </p>
+
+          <div id="mfa-enroll-cta" class="pt-2">
+            <button type="button" id="start-mfa-enroll-btn" class="btn-mono-cta text-xs py-2 px-3 bg-blue-600 hover:bg-blue-700 border-black">
+              <span>➕ Set Up Google Authenticator / Authy</span>
+            </button>
+          </div>
+
+          <!-- MFA Setup Container (Hidden until user clicks enroll) -->
+          <div id="mfa-setup-box" class="hidden p-4 bg-white border-2 border-black rounded-lg space-y-3">
+            <div class="font-mono font-bold text-xs text-gray-800">1. Scan QR Code in your Authenticator app:</div>
+            <div class="flex flex-col sm:flex-row items-center gap-4 bg-stone-50 p-3 rounded-lg border border-gray-300">
+              <img id="mfa-qr-image" src="" alt="MFA QR Code" class="w-36 h-36 bg-white border border-gray-300 rounded p-1" />
+              <div class="text-[11px] font-mono text-gray-700 space-y-1">
+                <div>Manual entry key (if camera unavailable):</div>
+                <div id="mfa-secret-code" class="font-bold text-xs text-black bg-stone-200 p-1.5 rounded select-all break-all">------</div>
+                <div class="text-[10px] text-gray-500">Issuer: <strong>Oluwafemi Adekanola Portfolio</strong></div>
+              </div>
+            </div>
+
+            <div class="space-y-1 pt-1">
+              <label class="block text-xs font-mono font-bold text-gray-800">2. Enter 6-digit code to activate:</label>
+              <div class="flex gap-2">
+                <input 
+                  type="text" 
+                  id="mfa-setup-verify-input" 
+                  maxlength="6" 
+                  placeholder="123456" 
+                  class="w-36 text-center font-mono text-sm py-1.5 px-3 border-2 border-black rounded-lg bg-stone-50" 
+                />
+                <button type="button" id="confirm-mfa-enroll-btn" class="btn-mono-cta text-xs py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 border-black">
+                  <span>Verify & Enable 2FA</span>
+                </button>
+                <button type="button" id="cancel-mfa-setup-btn" class="btn-outline text-xs py-1.5 px-2 border-gray-400">
+                  Cancel
+                </button>
+              </div>
+              <div id="mfa-setup-error" class="hidden text-xs text-red-600 font-mono">Invalid code. Check clock synchronization.</div>
+            </div>
+          </div>
+
+          <!-- Unenroll Option -->
+          <div id="mfa-active-box" class="hidden flex items-center justify-between p-3 bg-emerald-50 border border-emerald-300 rounded-lg">
+            <div class="text-xs font-mono text-emerald-900">
+              ✓ TOTP 2FA is active and enforced on all logins.
+            </div>
+            <button type="button" id="unenroll-mfa-btn" class="text-xs font-mono text-red-700 underline font-bold hover:text-red-900">
+              Disable 2FA
+            </button>
+          </div>
+        </div>
+
+        <!-- Section C: Session Security (Step 1) -->
+        <div class="p-4 bg-stone-50 rounded-xl border border-gray-300 space-y-3">
+          <h5 class="font-mono font-bold text-xs uppercase tracking-wider text-gray-800 flex items-center gap-1.5">
+            <span>🌐</span> Active Sessions & Global Revocation
+          </h5>
+          <p class="text-[11px] text-gray-600">
+            Sessions are kept exclusively in memory (zero disk persistence). If you suspect unauthorized access, terminate all active browser sessions immediately.
+          </p>
+          <button type="button" id="signout-all-devices-btn" class="btn-outline text-xs py-2 px-3 text-red-700 border-red-500 hover:bg-red-50 font-mono">
+            <span>🚨 Sign Out on All Devices (Global Invalidation)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 5: Security Activity Logs (Step 2) -->
+      <div id="tab-content-logs" class="space-y-4 hidden bg-white p-5 rounded-xl border-2 border-black">
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 class="font-mono font-bold text-sm text-gray-900 mb-0.5">📜 Security & Authentication Audit Logs</h4>
+            <p class="text-xs text-gray-600">
+              Every login attempt, lockout, password reset, and session event recorded from Supabase <code>activity_logs</code>.
+            </p>
+          </div>
+          <button type="button" id="refresh-logs-btn" class="btn-outline text-xs py-1.5 px-2.5 font-mono border-black">
+            <span>🔄 Refresh</span>
+          </button>
+        </div>
+
+        <div class="border border-gray-300 rounded-lg overflow-x-auto max-h-72 overflow-y-auto">
+          <table class="w-full text-left font-mono text-xs">
+            <thead class="bg-stone-100 border-b border-gray-300 text-gray-700 text-[11px]">
+              <tr>
+                <th class="p-2.5">Timestamp</th>
+                <th class="p-2.5">Event</th>
+                <th class="p-2.5">Target</th>
+                <th class="p-2.5">Device / User Agent</th>
+              </tr>
+            </thead>
+            <tbody id="security-logs-tbody" class="divide-y divide-gray-200">
+              <tr>
+                <td colspan="4" class="p-4 text-center text-gray-500 italic">Loading security events...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -2275,6 +2694,22 @@
   <div id="toast-notice" class="bg-black text-white font-mono text-xs px-4 py-2.5 rounded-full border-2 border-orange-500 shadow-xl flex items-center gap-2">
     <span class="text-emerald-400 font-bold">✓</span>
     <span id="toast-msg">Showcase updated successfully!</span>
+  </div>
+
+  <!-- Inactivity Warning Toast (Step 1 - 60s Warning) -->
+  <div id="inactivity-warning-toast" class="hidden fixed top-6 right-6 z-[100002] bg-stone-900 border-2 border-orange-500 text-white p-4 rounded-xl shadow-2xl font-mono text-xs max-w-sm">
+    <div class="flex items-start gap-3">
+      <span class="text-xl">⏳</span>
+      <div class="space-y-1">
+        <div class="font-bold text-orange-400">Inactivity Warning</div>
+        <div class="text-[11px] text-gray-300">
+          Your session will automatically lock in <span id="inactivity-countdown" class="font-bold text-white">60</span> seconds due to inactivity.
+        </div>
+        <button type="button" id="stay-signed-in-btn" class="mt-2 px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded border border-black text-[11px]">
+          Stay Signed In
+        </button>
+      </div>
+    </div>
   </div>
 
 
@@ -2300,18 +2735,26 @@
   <script>
     /**
      * ==============================================================
-     * // EDIT: 1. ADMIN SECURITY CONFIGURATION (Step 3)
+     * // EDIT: 1. HARDENED ADMIN & BACKEND CONFIGURATION (Step 1, 2, 5, 6)
+     * Passwords are NEVER hard-coded, compared, or stored on client-side.
      * ==============================================================
      */
-    // EDIT: Change your administrator password here
-    const ADMIN_PASSWORD = "CHANGE_ME";
+    const ADMIN_CONFIG = {
+      email: "davidbryght@gmail.com",
+      maxFailedAttempts: 5,
+      initialLockoutSeconds: 900, // 15 minutes
+      inactivityTimeoutMs: 15 * 60 * 1000, // 15 minutes
+      inactivityWarningMs: 14 * 60 * 1000, // Warning at 14 minutes (60s countdown)
+      maxBackgroundHiddenMs: 10 * 60 * 1000 // Sign out if tab hidden > 10 minutes
+    };
+
+    // EDIT: Cloudflare Turnstile / hCaptcha site key (Optional Step 2, left empty by default)
+    const CLOUDFLARE_TURNSTILE_SITE_KEY = ""; 
 
     /**
-     * ==============================================================
      * // EDIT: 2. SUPABASE BACKEND DATABASE CONFIGURATION
      * Project URL: https://plnfmgqjaspzucomxbsy.supabase.co
      * Target Table: 'messages'
-     * ==============================================================
      */
     const SUPABASE_CONFIG = {
       url: "https://plnfmgqjaspzucomxbsy.supabase.co",
@@ -2320,9 +2763,19 @@
       key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbmZtZ3FqYXNwenVjb214YnN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNzQzODEsImV4cCI6MjEwODg1MDM4MX0.d0sLqi9sBC7603ekUEuTbcXdQxaMVKkVW0XzEtBcX48"
     };
 
-    // Safe Supabase client initialization (works with official SDK or REST API fallback)
+    /**
+     * // EDIT: 3. INITIALIZE SUPABASE CLIENT (IN-MEMORY AUTH ONLY - Step 1)
+     * persistSession: false ensures sessions live ONLY in RAM.
+     * Refreshing page, closing tab, or closing admin completely clears token.
+     */
     const supabaseClient = (typeof window !== 'undefined' && window.supabase && typeof window.supabase.createClient === 'function')
-      ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key)
+      ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key, {
+          auth: {
+            persistSession: false,     // ZERO disk or cookie persistence
+            autoRefreshToken: true,   // In-memory token renewal
+            detectSessionInUrl: true  // Allows email password reset (#admin-reset)
+          }
+        })
       : {
           from: (table) => ({
             insert: async (rows) => {
@@ -2347,34 +2800,310 @@
                 return { data: null, error: e };
               }
             }
-          })
+          }),
+          auth: {
+            signInWithPassword: async () => ({ data: null, error: new Error("Supabase SDK not loaded") }),
+            signOut: async () => ({ error: null }),
+            onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
+          }
         };
     window.supabaseClient = supabaseClient;
 
     /**
      * ==============================================================
-     * 3. ADMIN SESSION AUTHENTICATION (Step 3)
-     * Remembers unlock only for current browser session via sessionStorage
+     * // EDIT: 4. BRUTE-FORCE LOCKOUT & DELAY TRACKER (Step 2)
      * ==============================================================
      */
-    function isAdminSessionUnlocked() {
+    let memoryFailedAttempts = 0;
+    let memoryLockoutUntil = 0;
+    let memoryLockoutMultiplier = 1;
+    let lockoutIntervalId = null;
+
+    function getLockoutState() {
       try {
-        return sessionStorage.getItem('femi_admin_unlocked') === 'true';
-      } catch (e) {
+        const raw = sessionStorage.getItem('femi_admin_lockout_state');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed.lockoutUntil && parsed.lockoutUntil > Date.now()) {
+            return parsed;
+          }
+        }
+      } catch (e) {}
+      return {
+        failedAttempts: memoryFailedAttempts,
+        lockoutUntil: memoryLockoutUntil,
+        multiplier: memoryLockoutMultiplier
+      };
+    }
+
+    function saveLockoutState(state) {
+      memoryFailedAttempts = state.failedAttempts || 0;
+      memoryLockoutUntil = state.lockoutUntil || 0;
+      memoryLockoutMultiplier = state.multiplier || 1;
+      try {
+        sessionStorage.setItem('femi_admin_lockout_state', JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function clearLockoutState() {
+      memoryFailedAttempts = 0;
+      memoryLockoutUntil = 0;
+      memoryLockoutMultiplier = 1;
+      try {
+        sessionStorage.removeItem('femi_admin_lockout_state');
+      } catch (e) {}
+      if (lockoutIntervalId) {
+        clearInterval(lockoutIntervalId);
+        lockoutIntervalId = null;
+      }
+      const banner = document.getElementById('lockout-banner');
+      if (banner) banner.classList.add('hidden');
+      const submitBtn = document.getElementById('login-submit-btn');
+      if (submitBtn) submitBtn.disabled = false;
+    }
+
+    function updateLockoutUI() {
+      const state = getLockoutState();
+      const banner = document.getElementById('lockout-banner');
+      const countdownEl = document.getElementById('lockout-countdown');
+      const submitBtn = document.getElementById('login-submit-btn');
+
+      if (state.lockoutUntil && state.lockoutUntil > Date.now()) {
+        const remainingMs = state.lockoutUntil - Date.now();
+        const mins = Math.floor(remainingMs / 60000);
+        const secs = Math.floor((remainingMs % 60000) / 1000);
+        if (banner) banner.classList.remove('hidden');
+        if (countdownEl) countdownEl.textContent = `Too many failed attempts. Form locked for ${mins}m ${secs < 10 ? '0' : ''}${secs}s.`;
+        if (submitBtn) submitBtn.disabled = true;
+
+        if (!lockoutIntervalId) {
+          lockoutIntervalId = setInterval(() => {
+            const current = getLockoutState();
+            if (current.lockoutUntil <= Date.now()) {
+              clearLockoutState();
+            } else {
+              updateLockoutUI();
+            }
+          }, 1000);
+        }
+        return true;
+      } else {
+        if (banner) banner.classList.add('hidden');
+        if (submitBtn) submitBtn.disabled = false;
         return false;
       }
     }
 
-    function setAdminSessionUnlocked(status) {
+    /**
+     * ==============================================================
+     * // EDIT: 5. AUDIT & ACTIVITY LOGGER (Step 2)
+     * Safe client-side logger using Supabase RPC for unauthenticated events
+     * ==============================================================
+     */
+    async function logSecurityActivity(eventType, metadata = {}) {
+      const userAgent = navigator.userAgent || 'Unknown';
       try {
-        if (status) {
-          sessionStorage.setItem('femi_admin_unlocked', 'true');
-        } else {
-          sessionStorage.removeItem('femi_admin_unlocked');
+        if (supabaseClient && typeof supabaseClient.rpc === 'function') {
+          // Safe RPC function available to anon & authenticated
+          await supabaseClient.rpc('log_security_event', {
+            p_event_type: eventType,
+            p_user_agent: userAgent,
+            p_metadata: metadata
+          });
+        } else if (supabaseClient && typeof supabaseClient.from === 'function') {
+          await supabaseClient.from('activity_logs').insert([{
+            event_type: eventType,
+            admin_email: ADMIN_CONFIG.email,
+            user_agent: userAgent,
+            metadata
+          }]);
         }
-      } catch (e) {
-        console.warn('sessionStorage unavailable', e);
+      } catch (err) {
+        console.warn('Audit log write skipped:', err);
       }
+    }
+
+    /**
+     * ==============================================================
+     * // EDIT: 6. HAVE I BEEN PWNED RANGE API (k-Anonymity SHA-1 - Step 5)
+     * Sends ONLY first 5 characters of SHA-1 hash to api.pwnedpasswords.com
+     * ==============================================================
+     */
+    async function checkHaveIBeenPwned(password) {
+      if (!password || password.length < 8) return { breached: false, count: 0 };
+      try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password);
+        const hashBuf = await crypto.subtle.digest('SHA-1', data);
+        const hashArr = Array.from(new Uint8Array(hashBuf));
+        const hashHex = hashArr.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+        const prefix = hashHex.substring(0, 5);
+        const suffix = hashHex.substring(5);
+
+        const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`, {
+          method: 'GET',
+          cache: 'no-store'
+        });
+        if (!res.ok) return { breached: false, count: 0 };
+        const text = await res.text();
+        const lines = text.split('\n');
+        for (const line of lines) {
+          const [hSuffix, count] = line.trim().split(':');
+          if (hSuffix === suffix) {
+            return { breached: true, count: parseInt(count, 10) || 1 };
+          }
+        }
+        return { breached: false, count: 0 };
+      } catch (err) {
+        // Fail open if offline or network error
+        return { breached: false, count: 0 };
+      }
+    }
+
+    /**
+     * ==============================================================
+     * // EDIT: 7. PASSWORD POLICY & STRENGTH METER ENGINE (Step 5)
+     * ==============================================================
+     */
+    function evaluatePasswordPolicy(pwd) {
+      const result = {
+        hasLen: pwd.length >= 12,
+        hasUpper: /[A-Z]/.test(pwd),
+        hasLower: /[a-z]/.test(pwd),
+        hasNum: /[0-9]/.test(pwd),
+        hasSym: /[^A-Za-z0-9]/.test(pwd),
+        noPersonal: true,
+        score: 0
+      };
+
+      const lower = pwd.toLowerCase();
+      const forbidden = ['femi', 'david', 'adekanola', 'bryght', 'davidbryght'];
+      for (const term of forbidden) {
+        if (lower.includes(term)) {
+          result.noPersonal = false;
+          break;
+        }
+      }
+
+      let points = 0;
+      if (result.hasLen) points += 25;
+      if (pwd.length >= 16) points += 15;
+      if (result.hasUpper) points += 15;
+      if (result.hasLower) points += 15;
+      if (result.hasNum) points += 15;
+      if (result.hasSym) points += 15;
+      if (!result.noPersonal) points = Math.min(points, 20);
+
+      result.score = Math.min(points, 100);
+      result.isValid = result.hasLen && result.hasUpper && result.hasLower && result.hasNum && result.hasSym && result.noPersonal;
+      return result;
+    }
+
+    function generateCryptographicPassword(length = 20) {
+      const charset = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%^&*()_+-=[]{}|";
+      const randomValues = new Uint32Array(length);
+      crypto.getRandomValues(randomValues);
+      let pwd = "";
+      for (let i = 0; i < length; i++) {
+        pwd += charset[randomValues[i] % charset.length];
+      }
+      return pwd;
+    }
+
+    /**
+     * ==============================================================
+     * // EDIT: 8. INACTIVITY & BACKGROUND VISIBILITY LOCKOUT (Step 1)
+     * Logs out after 15m idle; 60s warning toast; 10m tab hidden
+     * ==============================================================
+     */
+    let lastActivityTime = Date.now();
+    let hiddenSinceTime = 0;
+    let inactivityTimerId = null;
+    let warningTimerId = null;
+    let warningCountdownInterval = null;
+
+    function resetInactivityWatchers() {
+      lastActivityTime = Date.now();
+      const toast = document.getElementById('inactivity-warning-toast');
+      if (toast) toast.classList.add('hidden');
+      if (warningCountdownInterval) {
+        clearInterval(warningCountdownInterval);
+        warningCountdownInterval = null;
+      }
+    }
+
+    function startInactivityEngine() {
+      stopInactivityEngine();
+      resetInactivityWatchers();
+
+      // Activity event listeners
+      const events = ['mousemove', 'keydown', 'touchstart', 'scroll'];
+      events.forEach(evt => window.addEventListener(evt, resetInactivityWatchers, { passive: true }));
+
+      // Warning timer check
+      inactivityTimerId = setInterval(async () => {
+        const idleMs = Date.now() - lastActivityTime;
+
+        // Show warning at 14 minutes (60 seconds remaining)
+        if (idleMs >= ADMIN_CONFIG.inactivityWarningMs && idleMs < ADMIN_CONFIG.inactivityTimeoutMs) {
+          const toast = document.getElementById('inactivity-warning-toast');
+          const countdownEl = document.getElementById('inactivity-countdown');
+          if (toast && toast.classList.contains('hidden')) {
+            toast.classList.remove('hidden');
+            let remainingSecs = Math.max(1, Math.round((ADMIN_CONFIG.inactivityTimeoutMs - idleMs) / 1000));
+            if (countdownEl) countdownEl.textContent = remainingSecs;
+
+            if (!warningCountdownInterval) {
+              warningCountdownInterval = setInterval(() => {
+                const currentIdle = Date.now() - lastActivityTime;
+                remainingSecs = Math.max(0, Math.round((ADMIN_CONFIG.inactivityTimeoutMs - currentIdle) / 1000));
+                if (countdownEl) countdownEl.textContent = remainingSecs;
+                if (remainingSecs <= 0) {
+                  clearInterval(warningCountdownInterval);
+                  warningCountdownInterval = null;
+                }
+              }, 1000);
+            }
+          }
+        }
+
+        // Full timeout at 15 minutes
+        if (idleMs >= ADMIN_CONFIG.inactivityTimeoutMs) {
+          stopInactivityEngine();
+          await performAdminLogout("Session expired due to 15 minutes of inactivity.");
+        }
+      }, 5000);
+
+      // Visibility change tracker (Sign out if tab hidden > 10 minutes)
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+
+    async function handleVisibilityChange() {
+      if (document.visibilityState === 'hidden') {
+        hiddenSinceTime = Date.now();
+      } else if (document.visibilityState === 'visible' && hiddenSinceTime > 0) {
+        const hiddenDuration = Date.now() - hiddenSinceTime;
+        hiddenSinceTime = 0;
+        if (hiddenDuration >= ADMIN_CONFIG.maxBackgroundHiddenMs) {
+          await performAdminLogout("Session terminated: Browser tab was in background for over 10 minutes.");
+        }
+      }
+    }
+
+    function stopInactivityEngine() {
+      if (inactivityTimerId) {
+        clearInterval(inactivityTimerId);
+        inactivityTimerId = null;
+      }
+      if (warningCountdownInterval) {
+        clearInterval(warningCountdownInterval);
+        warningCountdownInterval = null;
+      }
+      const toast = document.getElementById('inactivity-warning-toast');
+      if (toast) toast.classList.add('hidden');
+      const events = ['mousemove', 'keydown', 'touchstart', 'scroll'];
+      events.forEach(evt => window.removeEventListener(evt, resetInactivityWatchers));
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     }
 
     /**
@@ -2604,38 +3333,66 @@
      * 7. PASSWORD GATE & ADMIN OPEN/CLOSE HANDLERS
      * ==============================================================
      */
-    window.triggerAdminAccess = function(tab = 'websites') {
+    window.triggerAdminAccess = async function(tab = 'websites') {
       pendingAdminTab = tab;
       captureStateBeforeModal();
 
-      if (isAdminSessionUnlocked()) {
-        openStorageModal(pendingAdminTab);
-      } else {
-        openPasswordModal();
-      }
+      // Step 1: Every time admin opens, signOut first to ensure fresh password prompt
+      try {
+        if (supabaseClient && supabaseClient.auth) {
+          await supabaseClient.auth.signOut();
+        }
+      } catch (e) {}
+
+      stopInactivityEngine();
+      openAuthModal('login');
     };
 
-    function openPasswordModal() {
-      const pwdModal = document.getElementById('admin-password-modal');
-      const pwdInput = document.getElementById('admin-password-input');
-      const errMsg = document.getElementById('password-error-msg');
-      if (!pwdModal) return;
+    function openAuthModal(view = 'login') {
+      const modal = document.getElementById('admin-auth-modal');
+      if (!modal) return;
 
-      if (errMsg) errMsg.classList.add('hidden');
-      if (pwdInput) pwdInput.value = '';
-
-      pwdModal.classList.add('active');
+      switchAuthView(view);
+      modal.classList.add('active');
       document.body.style.overflow = 'hidden';
 
+      // Check lockout state
+      updateLockoutUI();
+
       setTimeout(() => {
-        if (pwdInput) pwdInput.focus();
+        if (view === 'login') {
+          const pwd = document.getElementById('admin-password-input');
+          if (pwd) pwd.focus();
+        } else if (view === 'mfa') {
+          const mfaInput = document.getElementById('mfa-code-input');
+          if (mfaInput) mfaInput.focus();
+        } else if (view === 'reset') {
+          const npInput = document.getElementById('new-password-input');
+          if (npInput) npInput.focus();
+        }
       }, 100);
     }
 
-    function closePasswordModal(restore = true) {
-      const pwdModal = document.getElementById('admin-password-modal');
-      if (!pwdModal) return;
-      pwdModal.classList.remove('active');
+    function switchAuthView(view) {
+      const views = {
+        login: document.getElementById('auth-view-login'),
+        mfa: document.getElementById('auth-view-mfa'),
+        forgot: document.getElementById('auth-view-forgot'),
+        reset: document.getElementById('auth-view-reset')
+      };
+      Object.keys(views).forEach(k => {
+        if (views[k]) views[k].classList.add('hidden');
+      });
+      if (views[view]) views[view].classList.remove('hidden');
+
+      const err = document.getElementById('auth-error-msg');
+      if (err) err.classList.add('hidden');
+    }
+
+    function closeAuthModal(restore = true) {
+      const modal = document.getElementById('admin-auth-modal');
+      if (!modal) return;
+      modal.classList.remove('active');
       document.body.style.overflow = '';
       if (restore) {
         restoreStateAfterModal();
@@ -2646,7 +3403,7 @@
       const modal = document.getElementById('showcase-manager-modal');
       if (!modal) return;
 
-      closePasswordModal(false);
+      closeAuthModal(false);
 
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -2658,6 +3415,12 @@
       } else if (tab === 'backup') {
         const btn = document.getElementById('tab-btn-backup');
         if (btn) btn.click();
+      } else if (tab === 'security') {
+        const btn = document.getElementById('tab-btn-security');
+        if (btn) btn.click();
+      } else if (tab === 'logs') {
+        const btn = document.getElementById('tab-btn-logs');
+        if (btn) btn.click();
       } else {
         const btn = document.getElementById('tab-btn-websites');
         if (btn) btn.click();
@@ -2665,8 +3428,8 @@
 
       renderModalLists();
       updateSupabaseStatusDisplay();
+      startInactivityEngine();
 
-      // Focus close button or first input for accessibility
       setTimeout(() => {
         const firstFocus = modal.querySelector('button, input, select');
         if (firstFocus) firstFocus.focus();
@@ -2679,6 +3442,19 @@
       modal.classList.remove('active');
       document.body.style.overflow = '';
       restoreStateAfterModal();
+    }
+
+    async function performAdminLogout(reason = "Signed out.") {
+      stopInactivityEngine();
+      try {
+        if (supabaseClient && supabaseClient.auth) {
+          await supabaseClient.auth.signOut();
+        }
+      } catch (e) {}
+
+      closeStorageModal();
+      showToast(reason);
+      logSecurityActivity('logout', { reason });
     }
 
     /**
@@ -2833,46 +3609,678 @@
      * 10. SHOWCASE STORAGE MANAGER (MODAL & FORMS)
      * ==============================================================
      */
+    /**
+     * ==============================================================
+     * // EDIT: 10. AUTHENTICATED STORAGE & SECURITY MANAGER (Step 1-5)
+     * ==============================================================
+     */
+    let currentMfaFactorId = null;
+    let currentMfaChallengeId = null;
+
     function initShowcaseStorageManager() {
       const modal = document.getElementById('showcase-manager-modal');
       const closeBtn = document.getElementById('close-modal-btn');
-      const pwdModal = document.getElementById('admin-password-modal');
-      const closePwdBtn = document.getElementById('close-password-modal-btn');
-      const pwdForm = document.getElementById('admin-password-form');
-      const pwdInput = document.getElementById('admin-password-input');
-      const pwdError = document.getElementById('password-error-msg');
+      const authModal = document.getElementById('admin-auth-modal');
+      const closeAuthBtn = document.getElementById('close-auth-modal-btn');
       const footerAdminLink = document.getElementById('footer-admin-link');
+      const headerSignoutBtn = document.getElementById('header-signout-btn');
+      const staySignedInBtn = document.getElementById('stay-signed-in-btn');
 
-      // Password Form Submit handler
-      if (pwdForm) {
-        pwdForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const entered = (pwdInput.value || '').trim();
-          if (entered === ADMIN_PASSWORD) {
-            setAdminSessionUnlocked(true);
-            if (pwdError) pwdError.classList.add('hidden');
-            openStorageModal(pendingAdminTab);
+      // 1. Password Visibility Toggle
+      const togglePwdBtn = document.getElementById('toggle-login-password-btn');
+      const loginPwdInput = document.getElementById('admin-password-input');
+      if (togglePwdBtn && loginPwdInput) {
+        togglePwdBtn.addEventListener('click', () => {
+          if (loginPwdInput.type === 'password') {
+            loginPwdInput.type = 'text';
+            togglePwdBtn.textContent = 'Hide';
           } else {
-            if (pwdError) pwdError.classList.remove('hidden');
-            pwdInput.classList.add('ring-2', 'ring-red-500');
-            setTimeout(() => {
-              pwdInput.classList.remove('ring-2', 'ring-red-500');
-            }, 1000);
+            loginPwdInput.type = 'password';
+            togglePwdBtn.textContent = 'Show';
           }
         });
       }
 
-      // Password Modal Close triggers
-      if (closePwdBtn) {
-        closePwdBtn.addEventListener('click', () => closePasswordModal(true));
-      }
-      if (pwdModal) {
-        pwdModal.addEventListener('click', (e) => {
-          if (e.target === pwdModal) closePasswordModal(true);
+      // 2. Caps-Lock Warning Detector
+      if (loginPwdInput) {
+        loginPwdInput.addEventListener('keyup', (e) => {
+          const warn = document.getElementById('caps-lock-warning');
+          if (warn) {
+            if (e.getModifierState && e.getModifierState('CapsLock')) {
+              warn.classList.remove('hidden');
+            } else {
+              warn.classList.add('hidden');
+            }
+          }
         });
       }
 
-      // Admin Modal Close triggers
+      // 3. Login Form Submit (Step 1 & 2)
+      const loginForm = document.getElementById('admin-login-form');
+      if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (updateLockoutUI()) return;
+
+          const emailInput = document.getElementById('admin-email-input');
+          const pwdInput = document.getElementById('admin-password-input');
+          const submitBtn = document.getElementById('login-submit-btn');
+          const spinner = document.getElementById('login-btn-spinner');
+          const btnText = document.getElementById('login-btn-text');
+          const authError = document.getElementById('auth-error-msg');
+          const authErrorText = document.getElementById('auth-error-text');
+
+          const email = (emailInput?.value || ADMIN_CONFIG.email).trim().toLowerCase();
+          const password = pwdInput?.value || '';
+
+          if (authError) authError.classList.add('hidden');
+          if (submitBtn) submitBtn.disabled = true;
+          if (spinner) spinner.classList.remove('hidden');
+          if (btnText) btnText.textContent = 'Authenticating with Supabase...';
+
+          // Progressive anti-brute-force delay based on previous failures
+          const delayMs = Math.min(500 + (memoryFailedAttempts * 600), 4000);
+          await new Promise(r => setTimeout(r, delayMs));
+
+          try {
+            // Strictly enforce authentication for davidbryght@gmail.com
+            if (email !== ADMIN_CONFIG.email.toLowerCase()) {
+              throw new Error("Invalid credentials");
+            }
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+              email: ADMIN_CONFIG.email,
+              password
+            });
+
+            if (error) throw error;
+
+            // Successful authentication
+            clearLockoutState();
+            await logSecurityActivity('login_success', { user_id: data.user?.id });
+
+            if (pwdInput) pwdInput.value = '';
+
+            // Check if MFA (TOTP) is required (AAL2 Step 3)
+            let isMfaRequired = false;
+            try {
+              if (supabaseClient.auth.mfa) {
+                const { data: aalData } = await supabaseClient.auth.mfa.getAuthenticatorAssuranceLevel();
+                if (aalData && aalData.nextLevel === 'aal2' && aalData.currentLevel === 'aal1') {
+                  const { data: factors } = await supabaseClient.auth.mfa.listFactors();
+                  const totpFactor = factors?.totp?.find(f => f.status === 'verified');
+                  if (totpFactor) {
+                    currentMfaFactorId = totpFactor.id;
+                    const { data: challenge, error: chErr } = await supabaseClient.auth.mfa.challenge({ factorId: totpFactor.id });
+                    if (!chErr && challenge) {
+                      currentMfaChallengeId = challenge.id;
+                      isMfaRequired = true;
+                      switchAuthView('mfa');
+                    }
+                  }
+                }
+              }
+            } catch (mfaCheckErr) {
+              console.warn('MFA check error:', mfaCheckErr);
+            }
+
+            if (!isMfaRequired) {
+              closeAuthModal(false);
+              openStorageModal(pendingAdminTab);
+              showToast("Authenticated as Oluwafemi David!");
+            }
+          } catch (err) {
+            // Generic error message that NEVER leaks whether email or password was incorrect
+            memoryFailedAttempts += 1;
+            await logSecurityActivity('login_failure', { reason: 'bad_credentials' });
+
+            if (memoryFailedAttempts >= ADMIN_CONFIG.maxFailedAttempts) {
+              const lockoutSeconds = ADMIN_CONFIG.initialLockoutSeconds * memoryLockoutMultiplier;
+              const lockoutUntil = Date.now() + (lockoutSeconds * 1000);
+              saveLockoutState({
+                failedAttempts: memoryFailedAttempts,
+                lockoutUntil,
+                multiplier: memoryLockoutMultiplier * 2
+              });
+              await logSecurityActivity('client_lockout', { lockoutSeconds });
+              updateLockoutUI();
+            } else {
+              saveLockoutState({
+                failedAttempts: memoryFailedAttempts,
+                lockoutUntil: 0,
+                multiplier: memoryLockoutMultiplier
+              });
+              if (authError && authErrorText) {
+                authErrorText.textContent = `Incorrect email or password. (${ADMIN_CONFIG.maxFailedAttempts - memoryFailedAttempts} attempts left before 15m lockout)`;
+                authError.classList.remove('hidden');
+              }
+            }
+
+            if (pwdInput) {
+              pwdInput.focus();
+              pwdInput.select();
+            }
+          } finally {
+            if (submitBtn) submitBtn.disabled = false;
+            if (spinner) spinner.classList.add('hidden');
+            if (btnText) btnText.textContent = 'Sign in to Admin Space';
+            updateLockoutUI();
+          }
+        });
+      }
+
+      // 4. MFA 2FA Challenge Submit (Step 3)
+      const mfaForm = document.getElementById('admin-mfa-challenge-form');
+      if (mfaForm) {
+        mfaForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const codeInput = document.getElementById('mfa-code-input');
+          const mfaErr = document.getElementById('mfa-challenge-error');
+          const code = (codeInput?.value || '').trim();
+
+          if (mfaErr) mfaErr.classList.add('hidden');
+          try {
+            const { data, error } = await supabaseClient.auth.mfa.verify({
+              factorId: currentMfaFactorId,
+              challengeId: currentMfaChallengeId,
+              code
+            });
+            if (error) throw error;
+
+            await logSecurityActivity('mfa_verified', { factorId: currentMfaFactorId });
+            closeAuthModal(false);
+            openStorageModal(pendingAdminTab);
+            showToast("Two-factor authentication verified!");
+          } catch (err) {
+            if (mfaErr) mfaErr.classList.remove('hidden');
+            await logSecurityActivity('mfa_challenge_failed', { reason: err.message });
+            if (codeInput) {
+              codeInput.focus();
+              codeInput.select();
+            }
+          }
+        });
+      }
+
+      const cancelMfaBtn = document.getElementById('cancel-mfa-btn');
+      if (cancelMfaBtn) {
+        cancelMfaBtn.addEventListener('click', async () => {
+          await performAdminLogout("MFA cancelled. Signed out.");
+          openAuthModal('login');
+        });
+      }
+
+      // 5. Forgot Password Triggers (Step 4A)
+      const forgotTrigger = document.getElementById('forgot-password-trigger');
+      if (forgotTrigger) {
+        forgotTrigger.addEventListener('click', () => {
+          switchAuthView('forgot');
+        });
+      }
+
+      const backToLoginBtn = document.getElementById('back-to-login-btn');
+      if (backToLoginBtn) {
+        backToLoginBtn.addEventListener('click', () => {
+          switchAuthView('login');
+        });
+      }
+
+      const forgotForm = document.getElementById('admin-forgot-form');
+      if (forgotForm) {
+        forgotForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const feedback = document.getElementById('forgot-feedback-box');
+          const sendBtn = document.getElementById('send-reset-btn');
+
+          if (sendBtn) sendBtn.disabled = true;
+          try {
+            // ALWAYS strictly reset for davidbryght@gmail.com
+            await supabaseClient.auth.resetPasswordForEmail(ADMIN_CONFIG.email, {
+              redirectTo: window.location.origin + window.location.pathname + '#admin-reset'
+            });
+            await logSecurityActivity('password_reset_request', { target: ADMIN_CONFIG.email });
+          } catch (err) {
+            console.warn('Password reset error:', err);
+          } finally {
+            // Generic message so existence of email is never leaked
+            if (feedback) feedback.classList.remove('hidden');
+            if (sendBtn) sendBtn.disabled = false;
+          }
+        });
+      }
+
+      // 6. Set New Password Form (Step 4A & Step 5)
+      const resetForm = document.getElementById('admin-reset-form');
+      const newPwdInput = document.getElementById('new-password-input');
+      const genResetPwdBtn = document.getElementById('gen-reset-pwd-btn');
+
+      function updateResetPwdStrength() {
+        if (!newPwdInput) return;
+        const pwd = newPwdInput.value || '';
+        const evalRes = evaluatePasswordPolicy(pwd);
+
+        const bar = document.getElementById('strength-bar');
+        const label = document.getElementById('strength-label');
+        if (bar && label) {
+          bar.style.width = `${evalRes.score}%`;
+          if (evalRes.score < 50) {
+            bar.className = 'h-full bg-red-500 transition-all duration-300';
+            label.className = 'font-bold text-red-600';
+            label.textContent = 'Too Weak';
+          } else if (evalRes.score < 80) {
+            bar.className = 'h-full bg-amber-500 transition-all duration-300';
+            label.className = 'font-bold text-amber-600';
+            label.textContent = 'Moderate';
+          } else {
+            bar.className = 'h-full bg-emerald-500 transition-all duration-300';
+            label.className = 'font-bold text-emerald-600';
+            label.textContent = 'Strong & Compliant';
+          }
+        }
+
+        const setRule = (id, valid) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.className = valid ? 'flex items-center gap-1.5 text-emerald-600 font-bold' : 'flex items-center gap-1.5 text-gray-400';
+            el.firstElementChild.textContent = valid ? '✓' : '○';
+          }
+        };
+
+        setRule('rule-len', evalRes.hasLen);
+        setRule('rule-upper', evalRes.hasUpper);
+        setRule('rule-lower', evalRes.hasLower);
+        setRule('rule-num', evalRes.hasNum);
+        setRule('rule-sym', evalRes.hasSym);
+        setRule('rule-name', evalRes.noPersonal);
+      }
+
+      if (newPwdInput) {
+        newPwdInput.addEventListener('input', updateResetPwdStrength);
+        newPwdInput.addEventListener('blur', async () => {
+          const pwned = await checkHaveIBeenPwned(newPwdInput.value);
+          const hibpEl = document.getElementById('rule-hibp');
+          if (hibpEl) {
+            if (pwned.breached) {
+              hibpEl.className = 'flex items-center gap-1.5 text-red-600 font-bold';
+              hibpEl.firstElementChild.textContent = '✗';
+              hibpEl.lastChild.textContent = ` Breached ${pwned.count.toLocaleString()} times in HIBP database!`;
+            } else if (newPwdInput.value.length >= 8) {
+              hibpEl.className = 'flex items-center gap-1.5 text-emerald-600 font-bold';
+              hibpEl.firstElementChild.textContent = '✓';
+              hibpEl.lastChild.textContent = ' Not in Have I Been Pwned breaches';
+            }
+          }
+        });
+      }
+
+      if (genResetPwdBtn && newPwdInput) {
+        genResetPwdBtn.addEventListener('click', () => {
+          const strong = generateCryptographicPassword(20);
+          newPwdInput.type = 'text';
+          newPwdInput.value = strong;
+          const confirmInput = document.getElementById('confirm-password-input');
+          if (confirmInput) {
+            confirmInput.type = 'text';
+            confirmInput.value = strong;
+          }
+          navigator.clipboard.writeText(strong).catch(() => {});
+          showToast("Generated strong password & copied to clipboard!");
+          updateResetPwdStrength();
+        });
+      }
+
+      if (resetForm) {
+        resetForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const pwd = newPwdInput?.value || '';
+          const confirm = document.getElementById('confirm-password-input')?.value || '';
+
+          if (pwd !== confirm) {
+            alert("Passwords do not match!");
+            return;
+          }
+
+          const policy = evaluatePasswordPolicy(pwd);
+          if (!policy.isValid) {
+            alert("Password does not meet required security criteria. Check the rule checklist.");
+            return;
+          }
+
+          const pwnCheck = await checkHaveIBeenPwned(pwd);
+          if (pwnCheck.breached) {
+            alert(`This password was found in known data breaches (${pwnCheck.count} times). Please choose a unique password.`);
+            return;
+          }
+
+          try {
+            const { error } = await supabaseClient.auth.updateUser({ password: pwd });
+            if (error) throw error;
+
+            await supabaseClient.auth.signOut();
+            await logSecurityActivity('password_reset_complete');
+            showToast("Password updated successfully! Please sign in with your new password.");
+            switchAuthView('login');
+          } catch (err) {
+            alert("Failed to update password: " + err.message);
+          }
+        });
+      }
+
+      // 7. Security Tab: Change Password While Logged In (Step 4B)
+      const verifyCurrentPwdBtn = document.getElementById('verify-current-pwd-btn');
+      const currentPwdInput = document.getElementById('current-password-input');
+      const currentPwdErr = document.getElementById('current-pwd-error');
+      const reauthStep1 = document.getElementById('reauth-step-1');
+      const reauthStep2 = document.getElementById('reauth-step-2');
+
+      if (verifyCurrentPwdBtn && currentPwdInput) {
+        verifyCurrentPwdBtn.addEventListener('click', async () => {
+          const curPwd = currentPwdInput.value || '';
+          if (!curPwd) return;
+
+          if (currentPwdErr) currentPwdErr.classList.add('hidden');
+          verifyCurrentPwdBtn.disabled = true;
+          verifyCurrentPwdBtn.innerHTML = `<span>Verifying...</span>`;
+
+          try {
+            // Re-verify current password first
+            const { error: signErr } = await supabaseClient.auth.signInWithPassword({
+              email: ADMIN_CONFIG.email,
+              password: curPwd
+            });
+            if (signErr) throw signErr;
+
+            // Trigger Supabase reauthentication to email code
+            if (supabaseClient.auth.reauthenticate) {
+              await supabaseClient.auth.reauthenticate();
+            }
+
+            if (reauthStep1) reauthStep1.classList.add('hidden');
+            if (reauthStep2) reauthStep2.classList.remove('hidden');
+            showToast("Confirmation code emailed to davidbryght@gmail.com!");
+          } catch (err) {
+            if (currentPwdErr) {
+              currentPwdErr.textContent = "Incorrect current password.";
+              currentPwdErr.classList.remove('hidden');
+            }
+          } finally {
+            verifyCurrentPwdBtn.disabled = false;
+            verifyCurrentPwdBtn.innerHTML = `<span>Verify & Request Email Code</span> <span>✉️</span>`;
+          }
+        });
+      }
+
+      const genChangePwdBtn = document.getElementById('gen-change-pwd-btn');
+      const changeNewPwdInput = document.getElementById('change-new-password-input');
+      if (genChangePwdBtn && changeNewPwdInput) {
+        genChangePwdBtn.addEventListener('click', () => {
+          const strong = generateCryptographicPassword(20);
+          changeNewPwdInput.type = 'text';
+          changeNewPwdInput.value = strong;
+          navigator.clipboard.writeText(strong).catch(() => {});
+          showToast("Generated strong password & copied to clipboard!");
+        });
+      }
+
+      const commitPwdChangeBtn = document.getElementById('commit-password-change-btn');
+      if (commitPwdChangeBtn) {
+        commitPwdChangeBtn.addEventListener('click', async () => {
+          const otpCode = document.getElementById('reauth-code-input')?.value?.trim();
+          const newPwd = changeNewPwdInput?.value || '';
+
+          if (!newPwd || newPwd.length < 12) {
+            alert("New password must be at least 12 characters.");
+            return;
+          }
+
+          const policy = evaluatePasswordPolicy(newPwd);
+          if (!policy.isValid) {
+            alert("New password fails security rules.");
+            return;
+          }
+
+          try {
+            commitPwdChangeBtn.disabled = true;
+            commitPwdChangeBtn.innerHTML = `<span>Updating Password...</span>`;
+
+            const updatePayload = { password: newPwd };
+            if (otpCode) updatePayload.nonce = otpCode;
+
+            const { error } = await supabaseClient.auth.updateUser(updatePayload);
+            if (error) throw error;
+
+            await logSecurityActivity('password_change_reauth');
+            await supabaseClient.auth.signOut({ scope: 'global' });
+            closeStorageModal();
+            showToast("Password updated! All sessions terminated. Please sign in again.");
+            openAuthModal('login');
+          } catch (err) {
+            alert("Failed to update password: " + err.message);
+          } finally {
+            commitPwdChangeBtn.disabled = false;
+            commitPwdChangeBtn.innerHTML = `<span>Confirm Password Update & Sign Out Globally</span> <span>🔒</span>`;
+          }
+        });
+      }
+
+      // 8. Security Tab: Two-Factor Authentication (TOTP Step 3)
+      async function refreshMfaStatus() {
+        const badge = document.getElementById('mfa-status-badge');
+        const enrollCta = document.getElementById('mfa-enroll-cta');
+        const setupBox = document.getElementById('mfa-setup-box');
+        const activeBox = document.getElementById('mfa-active-box');
+
+        try {
+          if (!supabaseClient.auth.mfa) {
+            if (badge) badge.textContent = "MFA Not Supported by Client";
+            return;
+          }
+          const { data: factors } = await supabaseClient.auth.mfa.listFactors();
+          const verifiedTotp = factors?.totp?.find(f => f.status === 'verified');
+
+          if (verifiedTotp) {
+            if (badge) {
+              badge.textContent = "● Enabled & Enforced (AAL2)";
+              badge.className = "text-[10px] bg-emerald-100 text-emerald-800 font-mono font-bold px-2 py-0.5 rounded border border-emerald-300";
+            }
+            if (enrollCta) enrollCta.classList.add('hidden');
+            if (setupBox) setupBox.classList.add('hidden');
+            if (activeBox) activeBox.classList.remove('hidden');
+          } else {
+            if (badge) {
+              badge.textContent = "Not Enrolled";
+              badge.className = "text-[10px] bg-stone-200 text-stone-700 font-mono font-bold px-2 py-0.5 rounded border border-stone-300";
+            }
+            if (enrollCta) enrollCta.classList.remove('hidden');
+            if (setupBox) setupBox.classList.add('hidden');
+            if (activeBox) activeBox.classList.add('hidden');
+          }
+        } catch (e) {
+          console.warn("Could not load MFA status", e);
+        }
+      }
+
+      let pendingEnrollFactorId = null;
+      const startMfaBtn = document.getElementById('start-mfa-enroll-btn');
+      if (startMfaBtn) {
+        startMfaBtn.addEventListener('click', async () => {
+          try {
+            startMfaBtn.disabled = true;
+            const { data, error } = await supabaseClient.auth.mfa.enroll({
+              factorType: 'totp',
+              issuer: 'Oluwafemi Adekanola Portfolio'
+            });
+            if (error) throw error;
+
+            pendingEnrollFactorId = data.id;
+            const qrImg = document.getElementById('mfa-qr-image');
+            const secretEl = document.getElementById('mfa-secret-code');
+            const setupBox = document.getElementById('mfa-setup-box');
+
+            if (qrImg && data.totp?.uri) {
+              qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(data.totp.uri)}`;
+            }
+            if (secretEl && data.totp?.secret) {
+              secretEl.textContent = data.totp.secret;
+            }
+            if (setupBox) setupBox.classList.remove('hidden');
+          } catch (err) {
+            alert("MFA enrollment initialization error: " + err.message);
+          } finally {
+            startMfaBtn.disabled = false;
+          }
+        });
+      }
+
+      const confirmMfaBtn = document.getElementById('confirm-mfa-enroll-btn');
+      if (confirmMfaBtn) {
+        confirmMfaBtn.addEventListener('click', async () => {
+          const verifyInput = document.getElementById('mfa-setup-verify-input');
+          const errEl = document.getElementById('mfa-setup-error');
+          const code = (verifyInput?.value || '').trim();
+
+          if (!code || !pendingEnrollFactorId) return;
+          if (errEl) errEl.classList.add('hidden');
+
+          try {
+            const { data: challenge, error: chErr } = await supabaseClient.auth.mfa.challenge({ factorId: pendingEnrollFactorId });
+            if (chErr) throw chErr;
+
+            const { data, error } = await supabaseClient.auth.mfa.verify({
+              factorId: pendingEnrollFactorId,
+              challengeId: challenge.id,
+              code
+            });
+            if (error) throw error;
+
+            await logSecurityActivity('mfa_enrolled', { factorId: pendingEnrollFactorId });
+            showToast("Two-factor authentication successfully enabled!");
+            await refreshMfaStatus();
+          } catch (err) {
+            if (errEl) {
+              errEl.textContent = "Verification failed: " + err.message;
+              errEl.classList.remove('hidden');
+            }
+          }
+        });
+      }
+
+      const cancelMfaSetupBtn = document.getElementById('cancel-mfa-setup-btn');
+      if (cancelMfaSetupBtn) {
+        cancelMfaSetupBtn.addEventListener('click', () => {
+          const setupBox = document.getElementById('mfa-setup-box');
+          if (setupBox) setupBox.classList.add('hidden');
+        });
+      }
+
+      const unenrollMfaBtn = document.getElementById('unenroll-mfa-btn');
+      if (unenrollMfaBtn) {
+        unenrollMfaBtn.addEventListener('click', async () => {
+          if (!confirm("Are you sure you want to disable Two-Factor Authentication?")) return;
+          try {
+            const { data: factors } = await supabaseClient.auth.mfa.listFactors();
+            const verified = factors?.totp?.find(f => f.status === 'verified');
+            if (verified) {
+              await supabaseClient.auth.mfa.unenroll({ factorId: verified.id });
+              await logSecurityActivity('mfa_unenrolled', { factorId: verified.id });
+              showToast("Two-factor authentication disabled.");
+              await refreshMfaStatus();
+            }
+          } catch (err) {
+            alert("Could not disable 2FA: " + err.message);
+          }
+        });
+      }
+
+      // 9. Signout on All Devices (Global Revocation Step 1)
+      const signoutAllBtn = document.getElementById('signout-all-devices-btn');
+      if (signoutAllBtn) {
+        signoutAllBtn.addEventListener('click', async () => {
+          if (confirm("Terminate all active administrator sessions across all devices and browsers?")) {
+            await performAdminLogout("Terminated all sessions across all devices.");
+            try {
+              await supabaseClient.auth.signOut({ scope: 'global' });
+            } catch (e) {}
+            openAuthModal('login');
+          }
+        });
+      }
+
+      // 10. Audit Logs Display (Step 2)
+      async function loadSecurityLogs() {
+        const tbody = document.getElementById('security-logs-tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">Querying activity_logs...</td></tr>`;
+
+        try {
+          const { data, error } = await supabaseClient
+            .from('activity_logs')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(30);
+
+          if (error) throw error;
+          if (!data || data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500 italic">No security events recorded yet.</td></tr>`;
+            return;
+          }
+
+          const badgeClasses = {
+            login_success: "bg-emerald-100 text-emerald-800 border-emerald-300",
+            login_failure: "bg-red-100 text-red-800 border-red-300",
+            client_lockout: "bg-rose-900 text-white border-black font-bold",
+            logout: "bg-stone-200 text-stone-800 border-stone-300",
+            password_reset_request: "bg-purple-100 text-purple-800 border-purple-300",
+            password_reset_complete: "bg-purple-200 text-purple-900 border-purple-400 font-bold",
+            password_change_reauth: "bg-blue-100 text-blue-800 border-blue-300 font-bold",
+            mfa_enrolled: "bg-cyan-100 text-cyan-800 border-cyan-300 font-bold",
+            mfa_verified: "bg-emerald-200 text-emerald-900 border-emerald-400 font-bold"
+          };
+
+          tbody.innerHTML = data.map(log => {
+            const timeStr = log.created_at ? new Date(log.created_at).toLocaleString() : 'Just now';
+            const badgeClass = badgeClasses[log.event_type] || "bg-gray-100 text-gray-800 border-gray-300";
+            return `
+              <tr class="hover:bg-stone-50 transition-colors">
+                <td class="p-2.5 whitespace-nowrap text-gray-500">${escapeHtml(timeStr)}</td>
+                <td class="p-2.5 whitespace-nowrap">
+                  <span class="inline-block px-2 py-0.5 text-[10px] font-bold rounded border ${badgeClass}">
+                    ${escapeHtml(log.event_type)}
+                  </span>
+                </td>
+                <td class="p-2.5 whitespace-nowrap font-bold text-gray-800">${escapeHtml(log.admin_email || 'davidbryght@gmail.com')}</td>
+                <td class="p-2.5 text-gray-600 truncate max-w-xs" title="${escapeHtml(log.user_agent || '')}">${escapeHtml(log.user_agent || 'Unknown')}</td>
+              </tr>
+            `;
+          }).join('');
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-red-500 italic">Could not read security logs (RLS protected): ${escapeHtml(err.message)}</td></tr>`;
+        }
+      }
+
+      const refreshLogsBtn = document.getElementById('refresh-logs-btn');
+      if (refreshLogsBtn) {
+        refreshLogsBtn.addEventListener('click', loadSecurityLogs);
+      }
+
+      // 11. Inactivity Warning Action
+      if (staySignedInBtn) {
+        staySignedInBtn.addEventListener('click', () => {
+          resetInactivityWatchers();
+          showToast("Session extended.");
+        });
+      }
+
+      // 12. Modal Close triggers
+      if (closeAuthBtn) {
+        closeAuthBtn.addEventListener('click', () => closeAuthModal(true));
+      }
+      if (authModal) {
+        authModal.addEventListener('click', (e) => {
+          if (e.target === authModal) closeAuthModal(true);
+        });
+      }
       if (closeBtn && modal) {
         closeBtn.addEventListener('click', () => closeStorageModal());
         modal.addEventListener('click', (e) => {
@@ -2880,7 +4288,13 @@
         });
       }
 
-      // Footer Admin link
+      // 13. Header & Footer triggers
+      if (headerSignoutBtn) {
+        headerSignoutBtn.addEventListener('click', () => {
+          performAdminLogout("Signed out of admin dashboard.");
+        });
+      }
+
       if (footerAdminLink) {
         footerAdminLink.addEventListener('click', (e) => {
           e.preventDefault();
@@ -2888,70 +4302,67 @@
         });
       }
 
-      // Attach to any remaining manage buttons
-      const legacyTriggers = [
-        document.getElementById('open-showcase-manager-btn'),
-        document.getElementById('mobile-open-manager-btn'),
-        document.getElementById('upload-sample-cta-btn'),
-        document.getElementById('add-review-cta-btn'),
-        document.getElementById('quick-manage-showcase-btn')
-      ];
-      legacyTriggers.forEach(btn => {
-        if (!btn) return;
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          const targetTab = (btn.id === 'add-review-cta-btn') ? 'testimonials' : 'websites';
-          window.triggerAdminAccess(targetTab);
-        });
-      });
-
       // Accessible Focus Trap & Escape key handler
       window.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-          if (pwdModal && pwdModal.classList.contains('active')) {
-            closePasswordModal(true);
+          if (authModal && authModal.classList.contains('active')) {
+            closeAuthModal(true);
           } else if (modal && modal.classList.contains('active')) {
             closeStorageModal();
           }
         }
-        if (pwdModal && pwdModal.classList.contains('active')) {
-          trapModalFocus(pwdModal, e);
+        if (authModal && authModal.classList.contains('active')) {
+          trapModalFocus(authModal, e);
         } else if (modal && modal.classList.contains('active')) {
           trapModalFocus(modal, e);
         }
       });
 
-      // Tab switcher in Modal
+      // 14. Tab switcher in Modal
       const tabWebsites = document.getElementById('tab-btn-websites');
       const tabReviews = document.getElementById('tab-btn-testimonials');
       const tabBackup = document.getElementById('tab-btn-backup');
+      const tabSecurity = document.getElementById('tab-btn-security');
+      const tabLogs = document.getElementById('tab-btn-logs');
 
       const contentWebsites = document.getElementById('tab-content-websites');
       const contentReviews = document.getElementById('tab-content-testimonials');
       const contentBackup = document.getElementById('tab-content-backup');
+      const contentSecurity = document.getElementById('tab-content-security');
+      const contentLogs = document.getElementById('tab-content-logs');
 
       function switchTab(name) {
-        [tabWebsites, tabReviews, tabBackup].forEach(t => {
+        [tabWebsites, tabReviews, tabBackup, tabSecurity, tabLogs].forEach(t => {
           if (!t) return;
-          t.className = "px-4 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1.5";
+          t.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1";
         });
-        [contentWebsites, contentReviews, contentBackup].forEach(c => c && c.classList.add('hidden'));
+        [contentWebsites, contentReviews, contentBackup, contentSecurity, contentLogs].forEach(c => c && c.classList.add('hidden'));
 
         if (name === 'websites') {
-          tabWebsites.className = "px-4 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-500 text-white flex items-center gap-1.5";
-          contentWebsites.classList.remove('hidden');
+          tabWebsites.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-500 text-white flex items-center gap-1";
+          contentWebsites?.classList.remove('hidden');
         } else if (name === 'testimonials') {
-          tabReviews.className = "px-4 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-emerald-600 text-white flex items-center gap-1.5";
-          contentReviews.classList.remove('hidden');
+          tabReviews.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-emerald-600 text-white flex items-center gap-1";
+          contentReviews?.classList.remove('hidden');
         } else if (name === 'backup') {
-          tabBackup.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-stone-900 text-white flex items-center gap-1.5 ml-auto";
-          contentBackup.classList.remove('hidden');
+          tabBackup.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-stone-900 text-white flex items-center gap-1";
+          contentBackup?.classList.remove('hidden');
+        } else if (name === 'security') {
+          tabSecurity.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-blue-600 text-white flex items-center gap-1";
+          contentSecurity?.classList.remove('hidden');
+          refreshMfaStatus();
+        } else if (name === 'logs') {
+          tabLogs.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-purple-600 text-white flex items-center gap-1";
+          contentLogs?.classList.remove('hidden');
+          loadSecurityLogs();
         }
       }
 
       if (tabWebsites) tabWebsites.addEventListener('click', () => switchTab('websites'));
       if (tabReviews) tabReviews.addEventListener('click', () => switchTab('testimonials'));
       if (tabBackup) tabBackup.addEventListener('click', () => switchTab('backup'));
+      if (tabSecurity) tabSecurity.addEventListener('click', () => switchTab('security'));
+      if (tabLogs) tabLogs.addEventListener('click', () => switchTab('logs'));
 
       // File upload reader for website sample images
       const fileInput = document.getElementById('sample-file-input');
@@ -3326,10 +4737,21 @@
       const hash = window.location.hash.toLowerCase();
       if (hash === '#admin') {
         window.triggerAdminAccess('websites');
+      } else if (hash.includes('admin-reset') || hash.includes('type=recovery')) {
+        openAuthModal('reset');
       }
     }
 
     window.addEventListener('hashchange', checkHashRoute);
+
+    // Listen for Supabase password recovery link redirection event
+    if (supabaseClient && supabaseClient.auth && typeof supabaseClient.auth.onAuthStateChange === 'function') {
+      supabaseClient.auth.onAuthStateChange((event) => {
+        if (event === 'PASSWORD_RECOVERY') {
+          openAuthModal('reset');
+        }
+      });
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       initScrollProgress();
