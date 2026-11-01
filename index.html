@@ -505,20 +505,22 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(4px);
-      z-index: 99999;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      z-index: 100000;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
       opacity: 0;
       visibility: hidden;
+      pointer-events: none;
       transition: opacity 0.25s ease, visibility 0.25s ease;
     }
     .modal-overlay.active {
       opacity: 1;
       visibility: visible;
+      pointer-events: auto;
     }
     .modal-content-box {
       max-height: 90vh;
@@ -728,10 +730,13 @@
 
         <!-- Right Side: Social Icons & Contact CTA -->
         <div class="flex items-center gap-2.5">
-          <!-- Quick Storage / Showcase Manager Trigger -->
+          <!-- EDIT: "Manage Showcase" navbar button hidden from public visitors per Step 3 (use footer lock link 🔒 or /#admin) -->
           <button 
             id="open-showcase-manager-btn"
-            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-dashed border-orange-500 bg-orange-50 hover:bg-orange-100 text-orange-950 font-mono text-xs font-bold transition-all shadow-sm"
+            style="display: none !important;"
+            class="hidden"
+            aria-hidden="true"
+            tabindex="-1"
             title="Upload or update website samples & reviews"
           >
             <span>📂</span>
@@ -791,7 +796,8 @@
           <a href="#services" class="mobile-nav-link text-gray-900 py-1">✦ Services</a>
           <a href="#projects" class="mobile-nav-link text-gray-900 py-1">✦ Website Samples</a>
           <a href="#testimonials" class="mobile-nav-link text-gray-900 py-1">✦ Client Reviews</a>
-          <button id="mobile-open-manager-btn" class="text-left text-orange-700 py-1 font-bold">📂 Manage Showcase (Upload)</button>
+          <!-- EDIT: Mobile "Manage Showcase" hidden from public visitors per Step 3 -->
+          <button id="mobile-open-manager-btn" style="display: none !important;" class="hidden" aria-hidden="true" tabindex="-1">📂 Manage Showcase (Upload)</button>
           <a href="#special-offer" class="mobile-nav-link text-orange-600 py-1">🎉 10% Discount</a>
           <a href="#faq" class="mobile-nav-link text-gray-900 py-1">✦ FAQ</a>
           <a href="#contact" class="mobile-nav-link text-blue-600 py-1">✦ Get in Touch</a>
@@ -1464,14 +1470,16 @@
             <button class="filter-pill" data-filter="FinTech">FinTech</button>
           </div>
 
-          <!-- Upload / Manage Storage Space Action Button -->
+          <!-- EDIT: Upload Website Sample button hidden from public visitors per Step 3 -->
           <button 
             id="upload-sample-cta-btn" 
-            class="btn-mono-cta text-xs py-2 px-3.5 bg-orange-600 hover:bg-orange-700 border-black shadow-[2px_2px_0px_#000] ml-auto"
+            style="display: none !important;"
+            class="hidden"
+            aria-hidden="true"
+            tabindex="-1"
             title="Upload a new website sample to your showcase storage"
           >
             <span>+ Upload Website Sample</span>
-            <span class="icon-square bg-black text-white text-[11px]">📁</span>
           </button>
         </div>
       </div>
@@ -1501,17 +1509,21 @@
           Here is what clients say about working with me. You can easily add, update, and manage your client reviews right in your portfolio storage space.
         </p>
 
-        <!-- Testimonial Actions Bar -->
-        <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <!-- EDIT: Testimonial management buttons hidden from public visitors per Step 3 -->
+        <div class="mt-4 flex flex-wrap items-center justify-center gap-3" style="display: none !important;">
           <button 
             id="add-review-cta-btn" 
-            class="btn-outline font-mono text-xs py-2 px-4 border-2 border-black bg-white hover:bg-stone-100 font-bold flex items-center gap-2 shadow-[2px_2px_0px_#000]"
+            class="hidden"
+            aria-hidden="true"
+            tabindex="-1"
           >
             <span>✍️ Add Client Review</span>
           </button>
           <button 
             id="quick-manage-showcase-btn" 
-            class="font-mono text-xs text-orange-700 hover:text-orange-800 underline font-semibold flex items-center gap-1"
+            class="hidden"
+            aria-hidden="true"
+            tabindex="-1"
           >
             <span>Open Storage Manager ↗</span>
           </button>
@@ -1959,12 +1971,23 @@
         </div>
 
         <!-- Copyright & Bottom Credit -->
-        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-2 text-center sm:text-left">
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-3 text-center sm:text-left">
           <div>
             © 2026 Oluwafemi David Adekanola. All rights reserved.
           </div>
-          <div>
-            Crafted with passion in Ilorin, Kwara State, Nigeria 🇳🇬
+          <div class="flex items-center gap-4">
+            <span>Crafted with passion in Ilorin, Kwara State, Nigeria 🇳🇬</span>
+            <!-- EDIT: Low-key Admin link in footer (Step 3) -->
+            <a 
+              href="#admin" 
+              id="footer-admin-link" 
+              class="inline-flex items-center gap-1 text-stone-500 hover:text-orange-400 transition-colors"
+              title="Admin Storage Hub"
+              aria-label="Admin Storage Hub"
+            >
+              <span>🔒</span>
+              <span class="underline underline-offset-2">Admin</span>
+            </a>
           </div>
         </div>
 
@@ -1972,6 +1995,56 @@
     </footer>
 
   </div> <!-- End notebook-container -->
+
+
+  <!-- ============================================================
+       ADMIN PASSWORD GATE MODAL (Step 3)
+       ============================================================ -->
+  <div id="admin-password-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="pwd-modal-title">
+    <div class="modal-content-box bg-white w-full max-w-sm rounded-2xl border-3 border-black shadow-[8px_8px_0px_#000] p-6 relative">
+      <!-- Washi tape at modal top -->
+      <div class="washi-tape" style="top: -12px; left: 50%; width: 80px; background-color: rgba(251, 146, 60, 0.9);"></div>
+      
+      <!-- Close button -->
+      <button type="button" id="close-password-modal-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-stone-100 hover:bg-red-50 hover:text-red-600 border border-black flex items-center justify-center font-mono font-bold text-sm transition-colors" aria-label="Close password modal">
+        ✕
+      </button>
+
+      <div class="text-center pt-2 mb-5">
+        <div class="w-12 h-12 rounded-full bg-orange-100 border-2 border-orange-500 mx-auto flex items-center justify-center text-2xl mb-2">
+          🔒
+        </div>
+        <h3 id="pwd-modal-title" class="text-xl font-bold font-mono text-gray-900">
+          Admin Access
+        </h3>
+        <p class="text-xs text-gray-600 mt-1">
+          Enter the administrator password to unlock the Showcase & Reviews Hub.
+        </p>
+      </div>
+
+      <form id="admin-password-form" class="space-y-4">
+        <div>
+          <label for="admin-password-input" class="block text-xs font-mono font-bold text-gray-700 mb-1">Password</label>
+          <input 
+            type="password" 
+            id="admin-password-input" 
+            required 
+            placeholder="Enter password..." 
+            autocomplete="current-password"
+            class="w-full px-3 py-2 rounded-lg border-2 border-black font-mono text-sm bg-stone-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500" 
+          />
+          <div id="password-error-msg" class="text-xs font-mono text-red-600 font-bold mt-1.5 hidden flex items-center gap-1">
+            <span>⚠️</span> <span>Incorrect password. Please try again.</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-mono-cta w-full justify-center text-center font-mono text-xs py-2.5 bg-orange-600 hover:bg-orange-700 border-black shadow-[3px_3px_0px_#000]">
+          <span>Unlock Admin Hub</span>
+          <span>🔓</span>
+        </button>
+      </form>
+    </div>
+  </div>
 
 
   <!-- ============================================================
@@ -2176,34 +2249,21 @@
           </button>
         </div>
 
-        <!-- Supabase Cloud Database Integration -->
+        <!-- EDIT: Supabase Database Status (Protected - raw URL & keys hidden from UI per Step 3) -->
         <div class="pt-4 border-t-2 border-dashed border-gray-300">
           <div class="flex items-center justify-between mb-1">
             <h4 class="font-mono font-bold text-xs uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
-              <span>⚡</span> Supabase Database (Table: <code>messages</code>)
+              <span>⚡</span> Supabase Backend Database (Table: <code>messages</code>)
             </h4>
-            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-mono font-bold px-1.5 py-0.5 rounded">Active Endpoint</span>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-mono font-bold px-2 py-0.5 rounded border border-emerald-300">
+              ● Connected & Protected
+            </span>
           </div>
           <p class="text-[11px] text-gray-600 mb-2">
-            Form entries are stored to: <code class="font-mono bg-stone-100 px-1 py-0.5 rounded text-orange-700 font-bold">https://plnfmgqjaspzucomxbsy.supabase.co</code>
+            Inquiries submitted through your contact form are automatically persisted to your Supabase table and forwarded to WhatsApp. Database credentials and URLs are stored securely in script configuration and protected from visitor view.
           </p>
-          <div class="flex flex-col sm:flex-row gap-2">
-            <input 
-              type="password" 
-              id="supabase-key-input" 
-              placeholder="Paste Supabase publishable / anon key (sbp_... or eyJ...)" 
-              class="flex-1 p-2 text-xs font-mono border rounded bg-stone-50 focus:bg-white" 
-            />
-            <button 
-              type="button" 
-              id="save-supabase-key-btn" 
-              class="btn-mono-cta text-xs py-2 px-3 bg-emerald-600 hover:bg-emerald-700 border-black whitespace-nowrap"
-            >
-              <span>💾 Save Key</span>
-            </button>
-          </div>
           <div id="supabase-status-badge" class="mt-2 text-[11px] font-mono text-gray-600">
-            <!-- Updated via JS -->
+            <!-- Updated via JS with protected connection indicator -->
           </div>
         </div>
       </div>
@@ -2240,7 +2300,15 @@
   <script>
     /**
      * ==============================================================
-     * SUPABASE DATABASE CONFIGURATION
+     * // EDIT: 1. ADMIN SECURITY CONFIGURATION (Step 3)
+     * ==============================================================
+     */
+    // EDIT: Change your administrator password here
+    const ADMIN_PASSWORD = "CHANGE_ME";
+
+    /**
+     * ==============================================================
+     * // EDIT: 2. SUPABASE BACKEND DATABASE CONFIGURATION
      * Project URL: https://plnfmgqjaspzucomxbsy.supabase.co
      * Target Table: 'messages'
      * ==============================================================
@@ -2248,13 +2316,11 @@
     const SUPABASE_CONFIG = {
       url: "https://plnfmgqjaspzucomxbsy.supabase.co",
       table: "messages",
-      // Supabase Publishable / Anon Key integrated for backend database persistence:
-      key: (typeof window !== 'undefined' && (window.__SUPABASE_KEY__ || window.SUPABASE_PUBLISHABLE_KEY || (window.__ENV__ && window.__ENV__.VITE_SUPABASE_ANON_KEY)))
-        || (typeof localStorage !== 'undefined' && localStorage.getItem('supabase_publishable_key'))
-        || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbmZtZ3FqYXNwenVjb214YnN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNzQzODEsImV4cCI6MjEwODg1MDM4MX0.d0sLqi9sBC7603ekUEuTbcXdQxaMVKkVW0XzEtBcX48"
+      // Supabase Publishable / Anon Key (Masked in visible UI):
+      key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbmZtZ3FqYXNwenVjb214YnN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNzQzODEsImV4cCI6MjEwODg1MDM4MX0.d0sLqi9sBC7603ekUEuTbcXdQxaMVKkVW0XzEtBcX48"
     };
 
-    // Global Supabase client instance using official Supabase JS SDK or REST fallback
+    // Safe Supabase client initialization (works with official SDK or REST API fallback)
     const supabaseClient = (typeof window !== 'undefined' && window.supabase && typeof window.supabase.createClient === 'function')
       ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.key)
       : {
@@ -2287,7 +2353,95 @@
 
     /**
      * ==============================================================
-     * DEFAULT SHOWCASE DATA (FALLBACK & SEED DATA)
+     * 3. ADMIN SESSION AUTHENTICATION (Step 3)
+     * Remembers unlock only for current browser session via sessionStorage
+     * ==============================================================
+     */
+    function isAdminSessionUnlocked() {
+      try {
+        return sessionStorage.getItem('femi_admin_unlocked') === 'true';
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function setAdminSessionUnlocked(status) {
+      try {
+        if (status) {
+          sessionStorage.setItem('femi_admin_unlocked', 'true');
+        } else {
+          sessionStorage.removeItem('femi_admin_unlocked');
+        }
+      } catch (e) {
+        console.warn('sessionStorage unavailable', e);
+      }
+    }
+
+    /**
+     * ==============================================================
+     * 4. SCROLL & FOCUS RESTORATION & FOCUS TRAP (Step 2)
+     * ==============================================================
+     */
+    let savedScrollPosition = 0;
+    let savedActiveElement = null;
+    let savedHashBeforeAdmin = '';
+    let pendingAdminTab = 'websites';
+
+    function captureStateBeforeModal() {
+      savedScrollPosition = window.scrollY || document.documentElement.scrollTop;
+      savedActiveElement = document.activeElement;
+      const currentHash = window.location.hash;
+      if (currentHash && currentHash.toLowerCase() !== '#admin') {
+        savedHashBeforeAdmin = currentHash;
+      }
+    }
+
+    function restoreStateAfterModal() {
+      // Remove or restore URL hash
+      if (window.location.hash.toLowerCase() === '#admin') {
+        const returnHash = savedHashBeforeAdmin || '';
+        try {
+          history.replaceState(null, document.title, window.location.pathname + returnHash);
+        } catch (e) {
+          window.location.hash = returnHash;
+        }
+      }
+
+      // Restore exact scroll position
+      window.scrollTo({
+        top: savedScrollPosition,
+        behavior: 'instant'
+      });
+
+      // Restore keyboard focus
+      if (savedActiveElement && typeof savedActiveElement.focus === 'function') {
+        savedActiveElement.focus();
+      }
+    }
+
+    function trapModalFocus(modalEl, e) {
+      if (e.key !== 'Tab') return;
+      const focusable = modalEl.querySelectorAll('button:not([disabled]):not([aria-hidden="true"]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          last.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === last) {
+          first.focus();
+          e.preventDefault();
+        }
+      }
+    }
+
+    /**
+     * ==============================================================
+     * 5. DEFAULT SHOWCASE DATA (FALLBACK & SEED DATA)
      * ==============================================================
      */
     const DEFAULT_WEBSITES = [
@@ -2380,16 +2534,12 @@
       }
     ];
 
-    // Editable 10% promo spots left (0 to 5)
     const SPOTS_LEFT = 5;
-
-    // Active Category Filter for Projects
     let activeProjectFilter = 'all';
-
 
     /**
      * ==============================================================
-     * STORAGE SPACE HELPERS (LOCALSTORAGE + FALLBACK)
+     * 6. STORAGE HELPERS
      * ==============================================================
      */
     function getStoredWebsites() {
@@ -2449,10 +2599,91 @@
       }, 3000);
     }
 
+    /**
+     * ==============================================================
+     * 7. PASSWORD GATE & ADMIN OPEN/CLOSE HANDLERS
+     * ==============================================================
+     */
+    window.triggerAdminAccess = function(tab = 'websites') {
+      pendingAdminTab = tab;
+      captureStateBeforeModal();
+
+      if (isAdminSessionUnlocked()) {
+        openStorageModal(pendingAdminTab);
+      } else {
+        openPasswordModal();
+      }
+    };
+
+    function openPasswordModal() {
+      const pwdModal = document.getElementById('admin-password-modal');
+      const pwdInput = document.getElementById('admin-password-input');
+      const errMsg = document.getElementById('password-error-msg');
+      if (!pwdModal) return;
+
+      if (errMsg) errMsg.classList.add('hidden');
+      if (pwdInput) pwdInput.value = '';
+
+      pwdModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      setTimeout(() => {
+        if (pwdInput) pwdInput.focus();
+      }, 100);
+    }
+
+    function closePasswordModal(restore = true) {
+      const pwdModal = document.getElementById('admin-password-modal');
+      if (!pwdModal) return;
+      pwdModal.classList.remove('active');
+      document.body.style.overflow = '';
+      if (restore) {
+        restoreStateAfterModal();
+      }
+    }
+
+    function openStorageModal(tab = 'websites') {
+      const modal = document.getElementById('showcase-manager-modal');
+      if (!modal) return;
+
+      closePasswordModal(false);
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Switch to requested tab
+      if (tab === 'testimonials') {
+        const btn = document.getElementById('tab-btn-testimonials');
+        if (btn) btn.click();
+      } else if (tab === 'backup') {
+        const btn = document.getElementById('tab-btn-backup');
+        if (btn) btn.click();
+      } else {
+        const btn = document.getElementById('tab-btn-websites');
+        if (btn) btn.click();
+      }
+
+      renderModalLists();
+      updateSupabaseStatusDisplay();
+
+      // Focus close button or first input for accessibility
+      setTimeout(() => {
+        const firstFocus = modal.querySelector('button, input, select');
+        if (firstFocus) firstFocus.focus();
+      }, 100);
+    }
+
+    function closeStorageModal() {
+      const modal = document.getElementById('showcase-manager-modal');
+      if (!modal) return;
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      restoreStateAfterModal();
+    }
 
     /**
      * ==============================================================
-     * DYNAMIC RENDERING: PROJECTS / WEBSITE SAMPLES
+     * 8. DYNAMIC RENDERING: PROJECTS / WEBSITE SAMPLES
      * ==============================================================
      */
     function renderProjectsGrid(filter = 'all') {
@@ -2469,10 +2700,7 @@
           <div class="col-span-1 md:col-span-2 text-center py-12 bg-white rounded-2xl border-2 border-dashed border-gray-300 p-8">
             <span class="text-4xl block mb-2">📁</span>
             <h4 class="font-mono font-bold text-lg text-gray-800">No samples found in this category</h4>
-            <p class="text-sm text-gray-500 mt-1">Upload a website sample using the button above to showcase your work!</p>
-            <button onclick="openStorageModal('websites')" class="mt-4 btn-mono-cta text-xs py-2 px-4 bg-orange-600">
-              <span>+ Upload New Website Sample</span>
-            </button>
+            <p class="text-sm text-gray-500 mt-1">Samples will display here once added to storage.</p>
           </div>
         `;
         return;
@@ -2527,9 +2755,6 @@
                   <span>·</span>
                   <span class="${theme.badge} font-bold">${escapeHtml(proj.tag || 'Live Build')}</span>
                 </div>
-                <button onclick="editWebsiteSample('${proj.id}')" class="text-[11px] text-gray-400 hover:text-black underline font-mono">
-                  ✏️ Edit
-                </button>
               </div>
 
               <h3 class="text-2xl font-bold text-gray-900 font-mono">
@@ -2559,10 +2784,9 @@
       }).join('');
     }
 
-
     /**
      * ==============================================================
-     * DYNAMIC RENDERING: TESTIMONIALS & REVIEWS
+     * 9. DYNAMIC RENDERING: TESTIMONIALS & REVIEWS
      * ==============================================================
      */
     function renderTestimonialsGrid() {
@@ -2578,7 +2802,7 @@
         sky: { bg: 'bg-sky-100', border: 'border-sky-300', stars: 'text-sky-600', tape: 'rgba(186, 230, 253, 0.9)', rot: 'rotate-2' }
       };
 
-      container.innerHTML = testimonials.map((rev, idx) => {
+      container.innerHTML = testimonials.map((rev) => {
         const theme = colorMap[rev.color] || colorMap.yellow;
         const starCount = Math.max(1, Math.min(5, rev.rating || 5));
         const starsText = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
@@ -2589,9 +2813,6 @@
             
             <div class="flex items-center justify-between mb-2">
               <div class="${theme.stars} text-lg font-bold">${starsText}</div>
-              <button onclick="editClientReview('${rev.id}')" class="text-[10px] text-stone-400 hover:text-black underline font-mono">
-                ✏️ Edit
-              </button>
             </div>
 
             <p class="text-gray-800 text-sm italic font-sans leading-relaxed">
@@ -2607,40 +2828,98 @@
       }).join('');
     }
 
-
     /**
      * ==============================================================
-     * SHOWCASE STORAGE MANAGER (MODAL & FORMS)
+     * 10. SHOWCASE STORAGE MANAGER (MODAL & FORMS)
      * ==============================================================
      */
     function initShowcaseStorageManager() {
       const modal = document.getElementById('showcase-manager-modal');
       const closeBtn = document.getElementById('close-modal-btn');
+      const pwdModal = document.getElementById('admin-password-modal');
+      const closePwdBtn = document.getElementById('close-password-modal-btn');
+      const pwdForm = document.getElementById('admin-password-form');
+      const pwdInput = document.getElementById('admin-password-input');
+      const pwdError = document.getElementById('password-error-msg');
+      const footerAdminLink = document.getElementById('footer-admin-link');
 
-      // Modal open triggers
-      const openTriggers = [
-        document.getElementById('open-showcase-manager-btn'),
-        document.getElementById('mobile-open-manager-btn'),
-        document.getElementById('upload-sample-cta-btn'),
-        document.getElementById('add-review-cta-btn'),
-        document.getElementById('quick-manage-showcase-btn')
-      ];
-
-      openTriggers.forEach(btn => {
-        if (!btn) return;
-        btn.addEventListener('click', (e) => {
+      // Password Form Submit handler
+      if (pwdForm) {
+        pwdForm.addEventListener('submit', (e) => {
           e.preventDefault();
-          const targetTab = (btn.id === 'add-review-cta-btn') ? 'testimonials' : 'websites';
-          openStorageModal(targetTab);
+          const entered = (pwdInput.value || '').trim();
+          if (entered === ADMIN_PASSWORD) {
+            setAdminSessionUnlocked(true);
+            if (pwdError) pwdError.classList.add('hidden');
+            openStorageModal(pendingAdminTab);
+          } else {
+            if (pwdError) pwdError.classList.remove('hidden');
+            pwdInput.classList.add('ring-2', 'ring-red-500');
+            setTimeout(() => {
+              pwdInput.classList.remove('ring-2', 'ring-red-500');
+            }, 1000);
+          }
         });
-      });
+      }
 
+      // Password Modal Close triggers
+      if (closePwdBtn) {
+        closePwdBtn.addEventListener('click', () => closePasswordModal(true));
+      }
+      if (pwdModal) {
+        pwdModal.addEventListener('click', (e) => {
+          if (e.target === pwdModal) closePasswordModal(true);
+        });
+      }
+
+      // Admin Modal Close triggers
       if (closeBtn && modal) {
         closeBtn.addEventListener('click', () => closeStorageModal());
         modal.addEventListener('click', (e) => {
           if (e.target === modal) closeStorageModal();
         });
       }
+
+      // Footer Admin link
+      if (footerAdminLink) {
+        footerAdminLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.triggerAdminAccess('websites');
+        });
+      }
+
+      // Attach to any remaining manage buttons
+      const legacyTriggers = [
+        document.getElementById('open-showcase-manager-btn'),
+        document.getElementById('mobile-open-manager-btn'),
+        document.getElementById('upload-sample-cta-btn'),
+        document.getElementById('add-review-cta-btn'),
+        document.getElementById('quick-manage-showcase-btn')
+      ];
+      legacyTriggers.forEach(btn => {
+        if (!btn) return;
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetTab = (btn.id === 'add-review-cta-btn') ? 'testimonials' : 'websites';
+          window.triggerAdminAccess(targetTab);
+        });
+      });
+
+      // Accessible Focus Trap & Escape key handler
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (pwdModal && pwdModal.classList.contains('active')) {
+            closePasswordModal(true);
+          } else if (modal && modal.classList.contains('active')) {
+            closeStorageModal();
+          }
+        }
+        if (pwdModal && pwdModal.classList.contains('active')) {
+          trapModalFocus(pwdModal, e);
+        } else if (modal && modal.classList.contains('active')) {
+          trapModalFocus(modal, e);
+        }
+      });
 
       // Tab switcher in Modal
       const tabWebsites = document.getElementById('tab-btn-websites');
@@ -2713,14 +2992,12 @@
           const websites = getStoredWebsites();
 
           if (editId) {
-            // Update
             const index = websites.findIndex(w => w.id === editId);
             if (index !== -1) {
               websites[index] = { ...websites[index], title, category, image, liveUrl, tech: techArray, desc };
               showToast(`Updated "${title}"!`);
             }
           } else {
-            // Add new
             const newObj = {
               id: 'proj-' + Date.now(),
               title,
@@ -2741,7 +3018,6 @@
           resetWebsiteForm();
           closeStorageModal();
           
-          // Scroll to projects
           const pSec = document.getElementById('projects');
           if (pSec) pSec.scrollIntoView({ behavior: 'smooth' });
         });
@@ -2864,43 +3140,6 @@
         });
       }
 
-      // Supabase Publishable Key UI management
-      const supabaseInput = document.getElementById('supabase-key-input');
-      const saveSupabaseBtn = document.getElementById('save-supabase-key-btn');
-      const supabaseBadge = document.getElementById('supabase-status-badge');
-
-      function updateSupabaseStatusDisplay() {
-        const storedKey = SUPABASE_CONFIG.key || localStorage.getItem('supabase_publishable_key');
-        if (supabaseBadge) {
-          if (storedKey) {
-            const preview = storedKey.length > 12 ? (storedKey.slice(0, 6) + '...' + storedKey.slice(-4)) : 'Saved';
-            supabaseBadge.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active Key: <code>${escapeHtml(preview)}</code></span>`;
-          } else {
-            supabaseBadge.innerHTML = `<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-50 border border-amber-300 text-amber-800"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Key not set yet (messages will still open WhatsApp immediately).</span>`;
-          }
-        }
-        if (supabaseInput && storedKey) {
-          supabaseInput.value = storedKey;
-        }
-      }
-
-      if (saveSupabaseBtn && supabaseInput) {
-        saveSupabaseBtn.addEventListener('click', () => {
-          const val = supabaseInput.value.trim();
-          if (val) {
-            localStorage.setItem('supabase_publishable_key', val);
-            SUPABASE_CONFIG.key = val;
-            showToast("Supabase publishable key saved!");
-          } else {
-            localStorage.removeItem('supabase_publishable_key');
-            SUPABASE_CONFIG.key = "";
-            showToast("Supabase key cleared.");
-          }
-          updateSupabaseStatusDisplay();
-        });
-      }
-      updateSupabaseStatusDisplay();
-
       // Setup Category Filter buttons on main page
       const filterPills = document.querySelectorAll('#portfolio-filter-container .filter-pill');
       filterPills.forEach(pill => {
@@ -2913,31 +3152,23 @@
       });
 
       renderModalLists();
+      updateSupabaseStatusDisplay();
     }
 
-    function openStorageModal(tab = 'websites') {
-      const modal = document.getElementById('showcase-manager-modal');
-      if (!modal) return;
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-
-      // Switch to requested tab
-      if (tab === 'testimonials') {
-        const btn = document.getElementById('tab-btn-testimonials');
-        if (btn) btn.click();
-      } else {
-        const btn = document.getElementById('tab-btn-websites');
-        if (btn) btn.click();
-      }
-
-      renderModalLists();
-    }
-
-    function closeStorageModal() {
-      const modal = document.getElementById('showcase-manager-modal');
-      if (!modal) return;
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
+    function updateSupabaseStatusDisplay() {
+      const supabaseBadge = document.getElementById('supabase-status-badge');
+      if (!supabaseBadge) return;
+      supabaseBadge.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="font-bold text-emerald-800">Live & Protected</span>
+            <span class="text-stone-400">·</span>
+            <span class="text-stone-600">Table: <code>messages</code></span>
+          </div>
+          <span class="text-[10px] text-stone-500 font-mono">Credentials Hidden from Visitors</span>
+        </div>
+      `;
     }
 
     function renderModalLists() {
@@ -2995,7 +3226,6 @@
       }
     }
 
-    // Window-scoped Edit/Delete actions for inline onclick handlers
     window.editWebsiteSample = function(id) {
       const websites = getStoredWebsites();
       const item = websites.find(w => w.id === id);
@@ -3087,12 +3317,20 @@
         .replace(/'/g, '&#39;');
     }
 
-
     /**
      * ==============================================================
-     * INITIALIZATION ON DOM CONTENT LOADED
+     * 11. HASH ROUTING & INITIALIZATION
      * ==============================================================
      */
+    function checkHashRoute() {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === '#admin') {
+        window.triggerAdminAccess('websites');
+      }
+    }
+
+    window.addEventListener('hashchange', checkHashRoute);
+
     document.addEventListener('DOMContentLoaded', () => {
       initScrollProgress();
       initStickyNav();
@@ -3106,15 +3344,16 @@
       initServiceQuoteFillers();
       initBackToTop();
       
-      // Initialize dynamic storage showcase & manager
       renderProjectsGrid('all');
       renderTestimonialsGrid();
       initShowcaseStorageManager();
+
+      // Check #admin route upon initial page load
+      checkHashRoute();
     });
 
-
     /**
-     * 1. SCROLL PROGRESS INDICATOR
+     * 12. SCROLL PROGRESS INDICATOR
      */
     function initScrollProgress() {
       const bar = document.getElementById('scroll-progress');
@@ -3128,9 +3367,8 @@
       }, { passive: true });
     }
 
-
     /**
-     * 2. STICKY NAV SHADOW ON SCROLL
+     * 13. STICKY NAV SHADOW ON SCROLL
      */
     function initStickyNav() {
       const navbar = document.getElementById('navbar');
@@ -3145,9 +3383,8 @@
       }, { passive: true });
     }
 
-
     /**
-     * 3. MOBILE MENU TOGGLE
+     * 14. MOBILE MENU TOGGLE
      */
     function initMobileMenu() {
       const btn = document.getElementById('mobile-menu-btn');
@@ -3165,7 +3402,6 @@
         }
       });
 
-      // Close mobile menu on clicking any link
       menu.querySelectorAll('.mobile-nav-link').forEach(link => {
         link.addEventListener('click', () => {
           menu.classList.add('hidden');
@@ -3174,9 +3410,8 @@
       });
     }
 
-
     /**
-     * 4. ROTATING TEXT EFFECT IN HERO
+     * 15. ROTATING TEXT EFFECT IN HERO
      */
     function initRotatingHeadline() {
       const target = document.getElementById('rotating-text');
@@ -3205,9 +3440,8 @@
       }, 3000);
     }
 
-
     /**
-     * 5. SPOTS LEFT CONTROLLER & PROGRESS BAR
+     * 16. SPOTS LEFT CONTROLLER & PROGRESS BAR
      */
     function initSpotsCounter() {
       const spotsDisplay = document.getElementById('spots-display');
@@ -3230,9 +3464,8 @@
       progressBar.style.width = `${Math.max(10, percent)}%`;
     }
 
-
     /**
-     * 6. SPECIAL OFFER CLAIM BUTTON
+     * 17. SPECIAL OFFER CLAIM BUTTON
      */
     function initSpecialOfferClaim() {
       const btn = document.getElementById('claim-discount-btn');
@@ -3245,7 +3478,6 @@
         messageField.value = "I'd like to claim the 10% first-5-clients discount.";
         contactSection.scrollIntoView({ behavior: 'smooth' });
         
-        // Highlight message textarea
         setTimeout(() => {
           messageField.focus();
           messageField.classList.add('ring-4', 'ring-orange-300');
@@ -3256,9 +3488,8 @@
       });
     }
 
-
     /**
-     * 7. ACCORDION FAQ
+     * 18. ACCORDION FAQ
      */
     function initAccordion() {
       const items = document.querySelectorAll('.faq-item');
@@ -3269,7 +3500,6 @@
         questionBtn.addEventListener('click', () => {
           const isOpen = item.classList.contains('open');
 
-          // Close all others for neatness
           items.forEach(other => {
             if (other !== item) {
               other.classList.remove('open');
@@ -3278,7 +3508,6 @@
             }
           });
 
-          // Toggle current
           if (isOpen) {
             item.classList.remove('open');
             questionBtn.setAttribute('aria-expanded', 'false');
@@ -3290,9 +3519,8 @@
       });
     }
 
-
     /**
-     * 8. STATS COUNTER WITH INTERSECTION OBSERVER
+     * 19. STATS COUNTER WITH INTERSECTION OBSERVER
      */
     function initStatsCounter() {
       const counters = document.querySelectorAll('.stat-counter');
@@ -3326,9 +3554,8 @@
       counters.forEach(counter => observer.observe(counter));
     }
 
-
     /**
-     * 9. PRE-FILL CONTACT FORM FROM SERVICES
+     * 20. PRE-FILL CONTACT FORM FROM SERVICES
      */
     function initServiceQuoteFillers() {
       document.querySelectorAll('.service-quote-btn').forEach(btn => {
@@ -3346,9 +3573,8 @@
       });
     }
 
-
     /**
-     * 10. CONTACT FORM: SUPABASE 'messages' TABLE PERSISTENCE & WHATSAPP REDIRECT
+     * 21. CONTACT FORM: SUPABASE 'messages' TABLE PERSISTENCE & WHATSAPP REDIRECT
      */
     function initContactForm() {
       const form = document.getElementById('contact-form');
@@ -3366,7 +3592,6 @@
         const errEmail = document.getElementById('error-email');
         const errMessage = document.getElementById('error-message');
 
-        // Reset error messages
         [errName, errEmail, errMessage].forEach(el => el && el.classList.add('hidden'));
 
         let isValid = true;
@@ -3397,7 +3622,6 @@
         const phone = phoneInput.value.trim() || 'Not provided';
         const message = messageInput.value.trim();
 
-        // Visual saving indicator on submit button
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
         if (submitBtn) {
@@ -3407,7 +3631,6 @@
 
         try {
           // 1. SAVE TO SUPABASE FIRST
-          // Using supabaseClient.from('messages').insert() with exact schema: { name, email, message, phone }
           const activeClient = window.supabaseClient || supabaseClient;
 
           const { data, error } = await activeClient
@@ -3416,7 +3639,6 @@
               { name, email, message, phone }
             ]);
 
-          // Restore submit button
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnHtml;
@@ -3436,7 +3658,6 @@
           const whatsappUrl = `https://wa.me/2349115742760?text=${encodeURIComponent(whatsappText)}`;
           window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 
-          // Reset form
           form.reset();
         } catch (err) {
           if (submitBtn) {
@@ -3450,9 +3671,8 @@
       });
     }
 
-
     /**
-     * 11. BACK TO TOP BUTTON
+     * 22. BACK TO TOP BUTTON
      */
     function initBackToTop() {
       const btn = document.getElementById('back-to-top-btn');

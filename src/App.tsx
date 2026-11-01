@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
-import ContactForm from '../components/ContactForm.tsx'
+import ContactForm from './components/ContactForm.tsx'
 
 const supabase = createClient(
   'https://plnfmggjaszucmxbosy.supabase.co',
