@@ -1,10 +1,6 @@
 import { useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  'https://plnfmggjaszucmxbosy.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsZm1mZ2dqYXN6dWNteGJvc3kiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc2MTYwNzI1MCwiZXhwIjoyMDcxODMwNTAwfQ.1H7oF0M8b8d0qXvYJbW2N4IsW1cN5ImE6FnGb2I4ClYpXQiOJE3O7fNyQ'
-)
+import { supabase } from './supabaseClient'
+// If this gives error, try: '../lib/supabaseClient' or './lib/supabaseClient'
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false)
@@ -17,8 +13,9 @@ export default function ContactForm() {
     setLoading(false)
     if (error) {
       alert('FAILED: ' + error.message)
+      console.log(error)
     } else {
-      alert('SUCCESS! Check Supabase Row 3')
+      alert('SUCCESS! Now check Supabase - Row 3 should appear')
       setForm({ name: '', email: '', phone: '', project_type: '', budget_range: '', message: '' })
     }
   }
