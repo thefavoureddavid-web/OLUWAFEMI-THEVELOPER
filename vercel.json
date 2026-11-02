@@ -1,6 +1,5 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
@@ -31,15 +30,6 @@
         {
           "key": "Permissions-Policy",
           "value": "camera=(), microphone=(), geolocation=(), payment=()"
-        }
-      ]
-    },
-    {
-      "source": "/admin(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow, noarchive"
         }
       ]
     }
