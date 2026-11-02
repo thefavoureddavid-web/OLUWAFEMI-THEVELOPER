@@ -532,20 +532,95 @@
       transform: scale(1) translateY(0);
     }
 
-    /* Floating Toast Notification */
-    #toast-notice {
+    /* Modern Stackable Sticker Toast System (Feature 3) */
+    #toast-container {
       position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      z-index: 999999;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
-      opacity: 0;
+      top: 5rem;
+      right: 1.25rem;
+      z-index: 100000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
       pointer-events: none;
+      max-width: 24rem;
+      width: calc(100% - 2.5rem);
     }
-    #toast-notice.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
+    @media (max-width: 640px) {
+      #toast-container {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        width: calc(100% - 2rem);
+      }
+    }
+    .toast-card {
+      pointer-events: auto;
+      background: #1c1917; /* stone-900 */
+      color: #ffffff;
+      border: 2px solid #ea580c; /* orange-600 */
+      border-radius: 0.75rem;
+      box-shadow: 4px 4px 0px #000000;
+      position: relative;
+      overflow: hidden;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .toast-card {
+        animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .toast-card.dismissing {
+        animation: toastSlideOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .toast-card {
+        animation: toastFadeIn 0.15s ease forwards;
+      }
+      .toast-card.dismissing {
+        animation: toastFadeOut 0.15s ease forwards;
+      }
+    }
+    @keyframes toastSlideIn {
+      from { opacity: 0; transform: translateY(-12px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes toastSlideOut {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to { opacity: 0; transform: translateY(-12px) scale(0.96); }
+    }
+    @keyframes toastFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes toastFadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    .toast-progress-bar-wrap {
+      width: 100%;
+      height: 3px;
+      background: #292524;
+      overflow: hidden;
+    }
+    .toast-progress-bar {
+      height: 100%;
+      background: #f97316;
+      width: 100%;
+      transform-origin: left;
+    }
+    .toast-card.toast-error {
+      border-color: #ef4444;
+    }
+    .toast-card.toast-error .toast-progress-bar {
+      background: #ef4444;
+    }
+    .toast-card.toast-success {
+      border-color: #10b981;
+    }
+    .toast-card.toast-success .toast-progress-bar {
+      background: #10b981;
     }
 
     /* Accordion FAQ */
@@ -638,6 +713,153 @@
     .floating-whatsapp:hover .whatsapp-tooltip {
       opacity: 1;
       transform: translateX(0);
+    }
+
+    /* Floating AI Chatbot Trigger Button */
+    .floating-chatbot-trigger {
+      position: fixed;
+      bottom: 92px;
+      right: 24px;
+      z-index: 990;
+      background: linear-gradient(135deg, #ea580c, #c2410c);
+      color: #ffffff;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 22px rgba(234, 88, 12, 0.45), 2px 3px 0px #000000;
+      border: 2px solid #000000;
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+    }
+    .floating-chatbot-trigger:hover {
+      transform: scale(1.1) rotate(-6deg);
+      box-shadow: 0 12px 28px rgba(234, 88, 12, 0.6), 3px 4px 0px #000000;
+    }
+    .floating-chatbot-trigger.active {
+      transform: scale(0.95);
+      background: #1c1917;
+    }
+
+    /* Teaser Bubble after 8 seconds */
+    .chatbot-teaser-bubble {
+      position: fixed;
+      bottom: 98px;
+      right: 90px;
+      z-index: 995;
+      background: #ffffff;
+      color: #1c1917;
+      border: 2px solid #000000;
+      border-radius: 14px;
+      padding: 10px 14px;
+      box-shadow: 4px 4px 0px #ea580c, 4px 4px 0px 1px #000000;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.35;
+      max-width: 260px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      cursor: pointer;
+      transform-origin: bottom right;
+      animation: teaserPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes teaserPop {
+      0% { opacity: 0; transform: scale(0.85) translateX(10px); }
+      100% { opacity: 1; transform: scale(1) translateX(0); }
+    }
+
+    /* Chatbot Window */
+    .chatbot-window {
+      position: fixed;
+      bottom: 92px;
+      right: 24px;
+      width: 380px;
+      max-width: calc(100vw - 32px);
+      height: 560px;
+      max-height: calc(100vh - 120px);
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 18px;
+      box-shadow: 6px 6px 0px #000000;
+      z-index: 99990;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px) scale(0.96);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    }
+    .chatbot-window.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+    @media (max-width: 640px) {
+      .chatbot-window {
+        bottom: 12px;
+        right: 12px;
+        left: 12px;
+        top: 12px;
+        width: auto;
+        height: auto;
+        max-width: none;
+        max-height: none;
+        border-radius: 16px;
+      }
+      .floating-chatbot-trigger {
+        bottom: 84px;
+        right: 20px;
+        width: 52px;
+        height: 52px;
+      }
+      .floating-whatsapp {
+        bottom: 20px;
+        right: 20px;
+        width: 52px;
+        height: 52px;
+      }
+      .chatbot-teaser-bubble {
+        bottom: 90px;
+        right: 80px;
+        max-width: 220px;
+      }
+    }
+
+    /* Chat Messages styling */
+    .chat-bubble-bot {
+      background: #fbfbfa;
+      color: #1c1917;
+      border: 1.5px solid #d6d3d1;
+      border-radius: 14px;
+      border-top-left-radius: 3px;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.06);
+    }
+    .chat-bubble-user {
+      background: #ea580c;
+      color: #ffffff;
+      border: 1.5px solid #9a3412;
+      border-radius: 14px;
+      border-top-right-radius: 3px;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+    }
+    .typing-dots span {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: #78716c;
+      border-radius: 50%;
+      margin: 0 1.5px;
+      animation: typingBounce 1.2s infinite ease-in-out;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40% { transform: translateY(-5px); opacity: 1; }
     }
 
     /* Scroll Reveal Helper */
@@ -1731,6 +1953,9 @@
 
             <form id="contact-form" class="space-y-4" novalidate>
               
+              <!-- Anti-Spam Honeypot field (hidden from real users) -->
+              <input type="text" name="_hp_security_check" id="form-honeypot" class="hidden" tabindex="-1" autocomplete="off" style="display:none !important;" />
+
               <!-- Name & Email Grid -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -1743,9 +1968,10 @@
                     name="name" 
                     required 
                     placeholder="e.g. Adeola Johnson"
-                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                    aria-describedby="error-name"
+                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50 transition-colors"
                   />
-                  <span class="text-red-500 text-xs font-mono hidden error-msg" id="error-name">Please enter your name.</span>
+                  <div class="text-red-500 text-xs font-mono hidden error-msg mt-1" id="error-name" role="alert">Please enter your name.</div>
                 </div>
 
                 <div>
@@ -1758,9 +1984,10 @@
                     name="email" 
                     required 
                     placeholder="e.g. adeola@example.com"
-                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                    aria-describedby="error-email"
+                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50 transition-colors"
                   />
-                  <span class="text-red-500 text-xs font-mono hidden error-msg" id="error-email">Please enter a valid email address.</span>
+                  <div class="text-red-500 text-xs font-mono hidden error-msg mt-1" id="error-email" role="alert">Please enter a valid email address, like name@example.com.</div>
                 </div>
               </div>
 
@@ -1775,8 +2002,10 @@
                     id="form-phone" 
                     name="phone" 
                     placeholder="e.g. 0805 123 4567"
-                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                    aria-describedby="error-phone"
+                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50 transition-colors"
                   />
+                  <div class="text-red-500 text-xs font-mono hidden error-msg mt-1" id="error-phone" role="alert">Please enter a valid phone number.</div>
                 </div>
 
                 <div>
@@ -1786,8 +2015,10 @@
                   <select 
                     id="form-project-type" 
                     name="project_type" 
-                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                    aria-describedby="error-project-type"
+                    class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50 transition-colors"
                   >
+                    <option value="" disabled selected>Select a project type...</option>
                     <option value="Business Website">Business Website</option>
                     <option value="E-Commerce Store">E-Commerce Store</option>
                     <option value="Web App or Dashboard">Web App or Dashboard</option>
@@ -1798,6 +2029,7 @@
                     <option value="Maintenance & Support">Maintenance & Support</option>
                     <option value="Custom Project">Other Custom Project</option>
                   </select>
+                  <div class="text-red-500 text-xs font-mono hidden error-msg mt-1" id="error-project-type" role="alert">Please choose a project type.</div>
                 </div>
               </div>
 
@@ -1809,7 +2041,7 @@
                 <select 
                   id="form-budget" 
                   name="budget" 
-                  class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                  class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50 transition-colors"
                 >
                   <option value="Starter Website / Portfolio">Starter Website / Portfolio</option>
                   <option value="Growing Business / E-Commerce Store" selected>Growing Business / E-Commerce Store</option>
@@ -1830,19 +2062,36 @@
                   rows="4" 
                   required 
                   placeholder="Tell me a bit about what you want to build, any reference sites you like, or questions..."
-                  class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50"
+                  aria-describedby="error-message message-char-counter"
+                  class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 font-sans text-sm focus:border-orange-500 focus:bg-white bg-stone-50 transition-colors"
                 ></textarea>
-                <span class="text-red-500 text-xs font-mono hidden error-msg" id="error-message">Please enter your project message.</span>
+                <div class="flex items-center justify-between mt-1 text-xs font-mono">
+                  <div class="text-red-500 hidden error-msg" id="error-message" role="alert">Your message is too short. Please write at least 10 characters.</div>
+                  <div id="message-char-counter" class="ml-auto text-gray-500 font-bold" aria-live="polite">0 / 10 minimum</div>
+                </div>
               </div>
 
               <!-- Submit Button -->
               <button 
                 type="submit" 
-                class="btn-mono-cta w-full justify-center text-center font-mono py-3 bg-emerald-600 hover:bg-emerald-700 border-black shadow-[4px_4px_0px_#000]"
+                id="contact-submit-btn"
+                class="btn-mono-cta w-full justify-center text-center font-mono py-3 bg-emerald-600 hover:bg-emerald-700 border-black shadow-[4px_4px_0px_#000] flex items-center gap-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <span>Submit & Open WhatsApp</span>
-                <span class="icon-square bg-white text-emerald-700 font-bold">💬</span>
+                <svg id="contact-btn-spinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+                <span id="contact-btn-text">Submit & Open WhatsApp</span>
+                <span id="contact-btn-icon" class="icon-square bg-white text-emerald-700 font-bold">💬</span>
               </button>
+
+              <!-- Fallback WhatsApp Link if Popup is Blocked -->
+              <div id="wa-fallback-container" class="hidden p-3 bg-emerald-50 border border-emerald-300 rounded-lg text-center font-mono text-xs">
+                <p class="text-emerald-900 font-bold mb-1.5">WhatsApp couldn't open automatically in a new tab:</p>
+                <a id="wa-fallback-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded shadow-sm">
+                  <span>Continue on WhatsApp</span> 💬
+                </a>
+              </div>
 
               <div class="text-center text-[11px] text-gray-500 font-mono">
                 🔒 Your contact info is strictly confidential and never shared with third parties.
@@ -2295,6 +2544,9 @@
         <button id="tab-btn-logs" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
           <span>📜</span> Security Logs
         </button>
+        <button id="tab-btn-chatbot" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
+          <span>🤖</span> Chatbot Leads (<span id="modal-chatbot-count">0</span>)
+        </button>
       </div>
 
       <!-- Tab 1: Websites Management Content -->
@@ -2687,14 +2939,100 @@
         </div>
       </div>
 
+      <!-- Tab 6: AI Chatbot Leads & Transcripts (Step 4) -->
+      <div id="tab-content-chatbot" class="space-y-5 hidden bg-white p-5 rounded-xl border-2 border-black">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-200 pb-3">
+          <div>
+            <h4 class="font-mono font-bold text-sm text-gray-900 flex items-center gap-1.5">
+              <span>🤖</span> AI Chatbot Leads & Transcripts
+            </h4>
+            <p class="text-xs text-gray-600">
+              Live visitor interactions, captured consultations, and discount claims from <code>chat_conversations</code>.
+            </p>
+          </div>
+          <button type="button" id="refresh-chats-btn" class="btn-outline text-xs py-1.5 px-2.5 font-mono border-black">
+            <span>🔄 Refresh</span>
+          </button>
+        </div>
+
+        <!-- Metric Counter Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs">
+          <div class="p-3 bg-stone-50 border border-gray-200 rounded-lg">
+            <div class="text-[10px] text-gray-500 uppercase">Today's Chats</div>
+            <div id="stat-chats-today" class="text-lg font-bold text-gray-900 mt-0.5">0</div>
+          </div>
+          <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+            <div class="text-[10px] text-emerald-700 uppercase">Leads Captured</div>
+            <div id="stat-leads-captured" class="text-lg font-bold text-emerald-800 mt-0.5">0</div>
+          </div>
+          <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div class="text-[10px] text-blue-700 uppercase">Consultations</div>
+            <div id="stat-consultations" class="text-lg font-bold text-blue-800 mt-0.5">0</div>
+          </div>
+          <div class="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+            <div class="text-[10px] text-orange-700 uppercase">Discount Claims</div>
+            <div id="stat-discounts" class="text-lg font-bold text-orange-800 mt-0.5">0</div>
+          </div>
+        </div>
+
+        <!-- Filters & Search -->
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap gap-1.5 font-mono text-xs" id="chat-filter-pills">
+            <button type="button" class="chat-tab-filter-btn px-2.5 py-1 rounded-md bg-stone-900 text-white font-bold" data-filter="all">All</button>
+            <button type="button" class="chat-tab-filter-btn px-2.5 py-1 rounded-md bg-stone-100 text-gray-700 hover:bg-stone-200 font-bold" data-filter="consultation">📞 Consultations</button>
+            <button type="button" class="chat-tab-filter-btn px-2.5 py-1 rounded-md bg-stone-100 text-gray-700 hover:bg-stone-200 font-bold" data-filter="discount">🎁 Discounts</button>
+            <button type="button" class="chat-tab-filter-btn px-2.5 py-1 rounded-md bg-stone-100 text-gray-700 hover:bg-stone-200 font-bold" data-filter="unread">🔴 Unread</button>
+          </div>
+          <input 
+            type="text" 
+            id="chat-search-input" 
+            placeholder="Search leads by name, phone, email..." 
+            class="px-2.5 py-1 border border-gray-300 rounded text-xs font-mono bg-stone-50 w-full sm:w-56"
+          />
+        </div>
+
+        <!-- Conversation List -->
+        <div id="admin-chat-conversations-list" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+          <div class="p-4 text-center text-xs text-gray-500 font-mono italic">Loading chatbot conversations...</div>
+        </div>
+
+        <!-- Transcript Modal / Expanded View -->
+        <div id="admin-transcript-panel" class="hidden p-4 bg-stone-50 rounded-xl border border-gray-300 font-mono text-xs space-y-3">
+          <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+            <div class="font-bold text-gray-900" id="transcript-visitor-title">Conversation Transcript</div>
+            <button type="button" id="close-transcript-btn" class="text-gray-500 hover:text-black font-bold">✕ Close</button>
+          </div>
+          <div id="transcript-messages-list" class="space-y-2 max-h-60 overflow-y-auto pr-1 p-2 bg-white rounded border border-gray-200">
+            <!-- Messages injected via JS -->
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <div class="flex items-center gap-2">
+              <label class="text-[11px] text-gray-600">Status:</label>
+              <select id="transcript-status-select" class="text-xs font-mono p-1 border rounded bg-white">
+                <option value="new">New</option>
+                <option value="contacted">Contacted</option>
+                <option value="booked">Booked</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-2">
+              <a id="transcript-whatsapp-btn" href="#" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold">
+                Reply on WhatsApp 💬
+              </a>
+              <button type="button" id="delete-conversation-btn" class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded font-bold border border-red-200">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Realtime Toast Notification -->
-  <div id="toast-notice" class="bg-black text-white font-mono text-xs px-4 py-2.5 rounded-full border-2 border-orange-500 shadow-xl flex items-center gap-2">
-    <span class="text-emerald-400 font-bold">✓</span>
-    <span id="toast-msg">Showcase updated successfully!</span>
-  </div>
+  <!-- Realtime Toast Notification Stack Container (Feature 3) -->
+  <div id="toast-container" class="fixed top-20 right-4 sm:right-6 left-4 sm:left-auto sm:w-96 z-[100000] flex flex-col gap-2.5 pointer-events-none" aria-live="polite" aria-atomic="false"></div>
+  <div id="toast-notice" class="hidden"><span id="toast-msg"></span></div>
 
   <!-- Inactivity Warning Toast (Step 1 - 60s Warning) -->
   <div id="inactivity-warning-toast" class="hidden fixed top-6 right-6 z-[100002] bg-stone-900 border-2 border-orange-500 text-white p-4 rounded-xl shadow-2xl font-mono text-xs max-w-sm">
@@ -2712,6 +3050,220 @@
     </div>
   </div>
 
+
+  <!-- ============================================================
+       AI CHATBOT WIDGET (TEASER, TRIGGER, WINDOW)
+       Positioned stacked above the Floating WhatsApp button
+       ============================================================ -->
+  <!-- 1. Teaser Proactive Bubble (appears after 8 seconds) -->
+  <div 
+    id="chatbot-teaser-bubble" 
+    class="hidden fixed bottom-[160px] right-6 z-[990] max-w-[280px] bg-white border-2 border-black rounded-2xl p-3 shadow-[4px_4px_0px_#000] text-xs font-mono transition-all duration-300"
+    role="dialog"
+    aria-label="Chatbot invitation"
+  >
+    <div class="flex items-start justify-between gap-2">
+      <div class="flex items-center gap-1.5 font-bold text-gray-900">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Femi's Assistant</span>
+      </div>
+      <button 
+        id="chatbot-teaser-close-btn" 
+        class="text-gray-400 hover:text-black p-0.5 leading-none text-sm font-bold"
+        aria-label="Dismiss message"
+      >&times;</button>
+    </div>
+    <p class="mt-1 text-gray-700 text-[11px] leading-relaxed">
+      Hi! Need a fast website, quote, or free 20-min consultation? Ask me anything 👋
+    </p>
+    <div class="mt-2 flex items-center justify-between">
+      <span class="text-[10px] text-orange-600 font-bold">10% discount active</span>
+      <button 
+        id="chatbot-teaser-open-btn" 
+        class="text-[11px] font-bold text-orange-600 hover:text-orange-700 underline"
+      >
+        Chat Now &rarr;
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. Chatbot Trigger Button (Stacked above WhatsApp at bottom: 92px) -->
+  <button
+    id="chatbot-trigger-btn"
+    class="fixed bottom-[92px] right-6 z-[990] w-14 h-14 rounded-full bg-stone-900 text-amber-400 border-2 border-black shadow-[4px_4px_0px_#000] hover:bg-black hover:scale-105 active:translate-x-0.5 active:translate-y-0.5 transition-all flex items-center justify-center group"
+    aria-label="Open AI Assistant Chat"
+    aria-expanded="false"
+  >
+    <!-- Tooltip -->
+    <div class="absolute right-full mr-3 px-3 py-1.5 bg-black text-white text-xs font-mono font-bold rounded-lg whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity border border-white/20 shadow-lg">
+      Chat with Femi's AI 🤖
+    </div>
+
+    <!-- Notification Ping Dot -->
+    <span id="chatbot-trigger-ping" class="absolute -top-1 -right-1 flex h-4 w-4">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-4 w-4 bg-orange-500 border border-black text-[9px] font-bold text-white items-center justify-center">1</span>
+    </span>
+
+    <!-- Chat Bubble Icon -->
+    <svg id="chatbot-icon-open" class="w-6 h-6 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+
+    <!-- Close Icon (shown when active) -->
+    <svg id="chatbot-icon-close" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+
+  <!-- 3. Chatbot Window (Modal/Flyout) -->
+  <div
+    id="chatbot-widget-window"
+    class="hidden fixed bottom-6 sm:bottom-6 right-3 sm:right-6 z-[99990] w-[calc(100vw-24px)] sm:w-[390px] h-[580px] max-h-[calc(100vh-32px)] bg-stone-950 text-white rounded-2xl border-2 border-black shadow-[8px_8px_0px_#000] flex flex-col overflow-hidden font-sans transition-all"
+    role="dialog"
+    aria-label="Oluwafemi David Adekanola AI Assistant"
+  >
+    <!-- Header -->
+    <div class="px-4 py-3 bg-stone-900 border-b-2 border-stone-800 flex items-center justify-between flex-shrink-0">
+      <div class="flex items-center gap-2.5">
+        <div class="relative">
+          <div class="w-9 h-9 rounded-full bg-orange-600 border border-amber-400/50 flex items-center justify-center font-bold text-sm text-white shadow-inner">
+            OD
+          </div>
+          <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-stone-900 animate-pulse"></span>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h3 class="font-bold text-sm text-white leading-tight">Oluwafemi Adekanola</h3>
+            <span class="px-1.5 py-0.5 bg-orange-500/20 text-orange-400 text-[10px] font-mono font-bold rounded border border-orange-500/30">AI</span>
+          </div>
+          <p class="text-[11px] text-gray-400 flex items-center gap-1">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>Online · 10% Discount Active</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1 text-gray-400">
+        <button 
+          id="chatbot-clear-history-btn" 
+          class="p-1.5 hover:text-white hover:bg-stone-800 rounded transition-colors" 
+          title="Reset conversation"
+          aria-label="Reset conversation"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+        </button>
+        <button 
+          id="chatbot-minimize-btn" 
+          class="p-1.5 hover:text-white hover:bg-stone-800 rounded transition-colors" 
+          title="Minimize chat"
+          aria-label="Minimize chat"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        </button>
+        <button 
+          id="chatbot-close-btn" 
+          class="p-1.5 hover:text-white hover:bg-stone-800 rounded transition-colors text-lg leading-none" 
+          title="Close chat"
+          aria-label="Close chat"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Banner (Discount & Consult) -->
+    <div class="bg-gradient-to-r from-orange-950 via-stone-900 to-amber-950 px-3 py-1.5 border-b border-orange-900/40 text-[11px] font-mono flex items-center justify-between text-orange-200">
+      <span class="flex items-center gap-1.5">
+        <span>🔥</span>
+        <span>10% Launch Offer: <strong id="chatbot-banner-spots">3</strong> spots left!</span>
+      </span>
+      <a href="#contact" id="chatbot-banner-claim-link" class="text-orange-400 hover:underline font-bold text-[10px]">Claim &rarr;</a>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="chatbot-messages-container" class="flex-1 p-3.5 overflow-y-auto space-y-3 font-sans text-xs scroll-smooth bg-stone-950">
+      <!-- Starter Welcome Bubble -->
+      <div class="flex gap-2.5 items-start">
+        <div class="w-7 h-7 rounded-full bg-orange-600 flex-shrink-0 flex items-center justify-center font-bold text-[11px] text-white">OD</div>
+        <div class="flex-1 space-y-2">
+          <div class="bg-stone-900 border border-stone-800 text-gray-200 p-3 rounded-2xl rounded-tl-sm leading-relaxed shadow-sm">
+            <p class="font-bold text-white mb-1">Hi there! I'm Oluwafemi's AI assistant. 👋</p>
+            <p class="text-gray-300">
+              I can answer your questions, quote your project, share our 10% launch discount, or schedule a free 20-minute consultation with Femi.
+            </p>
+            <div class="mt-2 pt-2 border-t border-stone-800/80 text-[11px] text-orange-300/90 font-mono">
+              💡 <em>"A website is more than looks — it needs strong security, lightning speed, and clean structure to convert customers."</em>
+            </div>
+          </div>
+
+          <!-- Quick Action Prompt Chips -->
+          <div class="flex flex-wrap gap-1.5 pt-1" id="chatbot-starter-chips">
+            <button type="button" class="chatbot-chip px-2.5 py-1 bg-stone-900 hover:bg-orange-600 hover:text-white text-orange-400 rounded-full border border-stone-700 text-[11px] font-mono transition-colors" data-prompt="What are your service prices and 10% discount?">
+              💰 Pricing &amp; Discount
+            </button>
+            <button type="button" class="chatbot-chip px-2.5 py-1 bg-stone-900 hover:bg-orange-600 hover:text-white text-orange-400 rounded-full border border-stone-700 text-[11px] font-mono transition-colors" data-prompt="I'd like to book a free 20-minute consultation call with Femi.">
+              📅 Free 20-Min Call
+            </button>
+            <button type="button" class="chatbot-chip px-2.5 py-1 bg-stone-900 hover:bg-orange-600 hover:text-white text-orange-400 rounded-full border border-stone-700 text-[11px] font-mono transition-colors" data-prompt="Why do you emphasize website security and loading speed?">
+              🛡️ Security &amp; Speed
+            </button>
+            <button type="button" class="chatbot-chip px-2.5 py-1 bg-stone-900 hover:bg-orange-600 hover:text-white text-orange-400 rounded-full border border-stone-700 text-[11px] font-mono transition-colors" data-prompt="How fast can you build and launch my website?">
+              ⚡ Launch Timeline
+            </button>
+            <button type="button" class="chatbot-chip px-2.5 py-1 bg-stone-900 hover:bg-orange-600 hover:text-white text-orange-400 rounded-full border border-stone-700 text-[11px] font-mono transition-colors" data-prompt="Can I chat with Oluwafemi directly on WhatsApp?">
+              💬 Direct WhatsApp
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typing indicator -->
+    <div id="chatbot-typing-indicator" class="hidden px-4 py-2 bg-stone-950 flex items-center gap-2 text-gray-400 text-xs font-mono">
+      <div class="w-6 h-6 rounded-full bg-orange-600 flex items-center justify-center font-bold text-[10px] text-white">OD</div>
+      <div class="flex items-center gap-1 bg-stone-900 px-3 py-1.5 rounded-full border border-stone-800">
+        <span class="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 0s;"></span>
+        <span class="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 0.15s;"></span>
+        <span class="w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce" style="animation-delay: 0.3s;"></span>
+      </div>
+      <span class="text-[10px] text-gray-500">Femi's assistant is thinking...</span>
+    </div>
+
+    <!-- Input Form & Footer -->
+    <div class="p-3 bg-stone-900 border-t border-stone-800 flex-shrink-0">
+      <!-- Offline Banner if connection lost -->
+      <div id="chatbot-offline-banner" class="hidden mb-2 px-2.5 py-1 bg-amber-950/80 border border-amber-600/50 rounded text-amber-300 text-[11px] font-mono flex items-center justify-between">
+        <span>⚠️ Offline mode active (local FAQ engine ready)</span>
+      </div>
+
+      <form id="chatbot-input-form" class="space-y-1.5">
+        <div class="relative flex items-end gap-1.5 bg-stone-950 border border-stone-700 rounded-xl p-1.5 focus-within:border-orange-500 transition-colors">
+          <textarea
+            id="chatbot-textarea"
+            rows="1"
+            maxlength="500"
+            placeholder="Ask about pricing, timeline, or consultation..."
+            class="flex-1 bg-transparent text-white text-xs resize-none px-2 py-1 focus:outline-none placeholder-gray-500 max-h-24 leading-relaxed"
+            aria-label="Message Oluwafemi's AI Assistant"
+          ></textarea>
+          <button
+            type="submit"
+            id="chatbot-send-btn"
+            disabled
+            class="p-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all flex-shrink-0 shadow-sm"
+            aria-label="Send message"
+          >
+            <svg class="w-4 h-4 transform rotate-90" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+          </button>
+        </div>
+        <div class="flex items-center justify-between text-[10px] text-gray-500 px-1 font-mono">
+          <span>Press Enter to send · Shift+Enter for newline</span>
+          <span id="chatbot-char-count">0/500</span>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- ============================================================
        FLOATING WHATSAPP BUTTON (BOTTOM-RIGHT CORNER)
@@ -3317,15 +3869,147 @@
       renderModalLists();
     }
 
-    function showToast(msg) {
-      const toast = document.getElementById('toast-notice');
-      const text = document.getElementById('toast-msg');
-      if (!toast || !text) return;
-      text.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
+    /**
+     * ==============================================================
+     * // EDIT: 6. REUSABLE STACKED TOAST & NOTIFICATION HELPER (Feature 3)
+     * Replaces alert(), confirm() and popup notices with accessible sticker toasts
+     * ==============================================================
+     */
+    function showCustomToast(message, type = 'success', options = {}) {
+      const container = document.getElementById('toast-container');
+      if (!container) return { dismiss: () => {} };
+
+      const duration = typeof options.duration === 'number' 
+        ? options.duration 
+        : (typeof CONTACT_CONFIG !== 'undefined' ? CONTACT_CONFIG.toastDurationMs : 5000);
+      
+      const toastId = 'toast-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6);
+      const card = document.createElement('div');
+      card.id = toastId;
+      card.className = `toast-card toast-${type} p-3.5 flex flex-col`;
+      card.setAttribute('role', type === 'error' ? 'alert' : 'status');
+      card.setAttribute('aria-live', 'polite');
+
+      const isSuccess = type === 'success';
+      const iconMarkup = isSuccess
+        ? `<span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500 flex items-center justify-center font-bold text-xs flex-shrink-0" aria-hidden="true">✓</span>`
+        : `<span class="w-6 h-6 rounded-full bg-red-500/20 text-red-400 border border-red-500 flex items-center justify-center font-bold text-xs flex-shrink-0" aria-hidden="true">⚠️</span>`;
+
+      let actionMarkup = '';
+      if (options.actionUrl && options.actionLabel) {
+        actionMarkup = `
+          <div class="mt-2.5 pt-2 border-t border-stone-800">
+            <a href="${escapeHtml(options.actionUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded text-xs transition-colors shadow-sm">
+              <span>${escapeHtml(options.actionLabel)}</span>
+            </a>
+          </div>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="flex items-start gap-2.5">
+          ${iconMarkup}
+          <div class="flex-1 pr-1 text-xs text-stone-100 font-mono leading-relaxed select-text">
+            ${escapeHtml(message)}
+          </div>
+          <button type="button" class="toast-close-btn text-stone-400 hover:text-white text-sm px-1 leading-none transition-colors" aria-label="Close notification">✕</button>
+        </div>
+        ${actionMarkup}
+        <div class="toast-progress-bar-wrap mt-2.5">
+          <div class="toast-progress-bar" style="width: 100%;"></div>
+        </div>
+      `;
+
+      container.appendChild(card);
+
+      const progressBar = card.querySelector('.toast-progress-bar');
+      let remainingTime = duration;
+      let startTime = Date.now();
+      let timerId = null;
+      let isPaused = false;
+
+      function dismiss() {
+        if (timerId) clearTimeout(timerId);
+        card.classList.add('dismissing');
+        card.addEventListener('animationend', () => {
+          if (card.parentNode) card.parentNode.removeChild(card);
+        }, { once: true });
+        setTimeout(() => {
+          if (card.parentNode) card.parentNode.removeChild(card);
+        }, 300);
+      }
+
+      function startTimer(ms) {
+        startTime = Date.now();
+        if (progressBar) {
+          progressBar.style.transition = `width ${ms}ms linear`;
+          // small tick to ensure browser renders transition
+          requestAnimationFrame(() => {
+            progressBar.style.width = '0%';
+          });
+        }
+        timerId = setTimeout(dismiss, ms);
+      }
+
+      const closeBtn = card.querySelector('.toast-close-btn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dismiss();
+        });
+      }
+
+      card.addEventListener('mouseenter', () => {
+        if (isPaused) return;
+        isPaused = true;
+        const elapsed = Date.now() - startTime;
+        remainingTime = Math.max(0, remainingTime - elapsed);
+        if (timerId) clearTimeout(timerId);
+        if (progressBar) {
+          const computedWidth = window.getComputedStyle(progressBar).width;
+          progressBar.style.transition = 'none';
+          progressBar.style.width = computedWidth;
+        }
+      });
+
+      card.addEventListener('mouseleave', () => {
+        if (!isPaused || remainingTime <= 0) return;
+        isPaused = false;
+        startTimer(remainingTime);
+      });
+
+      startTimer(duration);
+      return { dismiss };
+    }
+
+    function showToast(msg, type = 'success', options = {}) {
+      return showCustomToast(msg, type, options);
+    }
+
+    function showCustomConfirm(message, onConfirm) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const card = document.createElement('div');
+      card.className = 'toast-card toast-warning p-4 border-amber-500 bg-stone-900 text-white';
+      card.setAttribute('role', 'alertdialog');
+      card.setAttribute('aria-modal', 'true');
+      card.innerHTML = `
+        <div class="flex items-start gap-2.5 mb-3">
+          <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500 flex items-center justify-center font-bold text-xs flex-shrink-0">⚠️</span>
+          <div class="text-xs font-mono text-stone-200 leading-relaxed">${escapeHtml(message)}</div>
+        </div>
+        <div class="flex items-center justify-end gap-2 font-mono text-xs">
+          <button type="button" class="px-3 py-1 bg-stone-800 hover:bg-stone-700 text-stone-300 rounded border border-stone-600 font-bold cancel-btn">Cancel</button>
+          <button type="button" class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded border border-black font-bold confirm-btn">Yes, Proceed</button>
+        </div>
+      `;
+      card.querySelector('.cancel-btn').onclick = () => card.remove();
+      card.querySelector('.confirm-btn').onclick = () => {
+        card.remove();
+        onConfirm();
+      };
+      container.appendChild(card);
     }
 
     /**
@@ -3420,6 +4104,9 @@
         if (btn) btn.click();
       } else if (tab === 'logs') {
         const btn = document.getElementById('tab-btn-logs');
+        if (btn) btn.click();
+      } else if (tab === 'chatbot') {
+        const btn = document.getElementById('tab-btn-chatbot');
         if (btn) btn.click();
       } else {
         const btn = document.getElementById('tab-btn-websites');
@@ -4324,37 +5011,45 @@
       const tabBackup = document.getElementById('tab-btn-backup');
       const tabSecurity = document.getElementById('tab-btn-security');
       const tabLogs = document.getElementById('tab-btn-logs');
+      const tabChatbot = document.getElementById('tab-btn-chatbot');
 
       const contentWebsites = document.getElementById('tab-content-websites');
       const contentReviews = document.getElementById('tab-content-testimonials');
       const contentBackup = document.getElementById('tab-content-backup');
       const contentSecurity = document.getElementById('tab-content-security');
       const contentLogs = document.getElementById('tab-content-logs');
+      const contentChatbot = document.getElementById('tab-content-chatbot');
 
       function switchTab(name) {
-        [tabWebsites, tabReviews, tabBackup, tabSecurity, tabLogs].forEach(t => {
+        [tabWebsites, tabReviews, tabBackup, tabSecurity, tabLogs, tabChatbot].forEach(t => {
           if (!t) return;
           t.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1";
         });
-        [contentWebsites, contentReviews, contentBackup, contentSecurity, contentLogs].forEach(c => c && c.classList.add('hidden'));
+        [contentWebsites, contentReviews, contentBackup, contentSecurity, contentLogs, contentChatbot].forEach(c => c && c.classList.add('hidden'));
 
         if (name === 'websites') {
-          tabWebsites.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-500 text-white flex items-center gap-1";
+          tabWebsites.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-500 text-white flex items-center gap-1 font-bold";
           contentWebsites?.classList.remove('hidden');
         } else if (name === 'testimonials') {
-          tabReviews.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-emerald-600 text-white flex items-center gap-1";
+          tabReviews.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-emerald-600 text-white flex items-center gap-1 font-bold";
           contentReviews?.classList.remove('hidden');
         } else if (name === 'backup') {
-          tabBackup.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-stone-900 text-white flex items-center gap-1";
+          tabBackup.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-stone-900 text-white flex items-center gap-1 font-bold";
           contentBackup?.classList.remove('hidden');
         } else if (name === 'security') {
-          tabSecurity.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-blue-600 text-white flex items-center gap-1";
+          tabSecurity.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-blue-600 text-white flex items-center gap-1 font-bold";
           contentSecurity?.classList.remove('hidden');
           refreshMfaStatus();
         } else if (name === 'logs') {
-          tabLogs.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-purple-600 text-white flex items-center gap-1";
+          tabLogs.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-purple-600 text-white flex items-center gap-1 font-bold";
           contentLogs?.classList.remove('hidden');
           loadSecurityLogs();
+        } else if (name === 'chatbot') {
+          if (tabChatbot) tabChatbot.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-teal-600 text-white flex items-center gap-1 font-bold";
+          contentChatbot?.classList.remove('hidden');
+          if (typeof loadAdminChatbotConversations === 'function') {
+            loadAdminChatbotConversations();
+          }
         }
       }
 
@@ -4363,6 +5058,7 @@
       if (tabBackup) tabBackup.addEventListener('click', () => switchTab('backup'));
       if (tabSecurity) tabSecurity.addEventListener('click', () => switchTab('security'));
       if (tabLogs) tabLogs.addEventListener('click', () => switchTab('logs'));
+      if (tabChatbot) tabChatbot.addEventListener('click', () => switchTab('chatbot'));
 
       // File upload reader for website sample images
       const fileInput = document.getElementById('sample-file-input');
@@ -4532,10 +5228,10 @@
             if (data.testimonials && Array.isArray(data.testimonials)) {
               saveStoredTestimonials(data.testimonials);
             }
-            showToast("Imported data successfully!");
+            showCustomToast("Imported data successfully!");
             document.getElementById('import-json-text').value = '';
           } catch (err) {
-            alert("Invalid JSON format! Please check and try again.");
+            showCustomToast("Invalid JSON format! Please check and try again.", "error");
           }
         });
       }
@@ -4543,11 +5239,11 @@
       const resetDefaultsBtn = document.getElementById('reset-defaults-btn');
       if (resetDefaultsBtn) {
         resetDefaultsBtn.addEventListener('click', () => {
-          if (confirm("Reset showcase and reviews to default samples? Any custom items will be replaced.")) {
+          showCustomConfirm("Reset showcase and reviews to default samples? Any custom items will be replaced.", () => {
             saveStoredWebsites([...DEFAULT_WEBSITES]);
             saveStoredTestimonials([...DEFAULT_TESTIMONIALS]);
-            showToast("Reset to default showcase!");
-          }
+            showCustomToast("Reset to default showcase!");
+          });
         });
       }
 
@@ -4663,11 +5359,11 @@
       const websites = getStoredWebsites();
       const item = websites.find(w => w.id === id);
       if (!item) return;
-      if (confirm(`Are you sure you want to delete "${item.title}"?`)) {
+      showCustomConfirm(`Are you sure you want to delete "${item.title}"?`, () => {
         const updated = websites.filter(w => w.id !== id);
         saveStoredWebsites(updated);
-        showToast(`Deleted "${item.title}"`);
-      }
+        showCustomToast(`Deleted "${item.title}"`);
+      });
     };
 
     function resetWebsiteForm() {
@@ -4703,11 +5399,11 @@
       const testimonials = getStoredTestimonials();
       const item = testimonials.find(r => r.id === id);
       if (!item) return;
-      if (confirm(`Are you sure you want to delete review from "${item.name}"?`)) {
+      showCustomConfirm(`Are you sure you want to delete review from "${item.name}"?`, () => {
         const updated = testimonials.filter(r => r.id !== id);
         saveStoredTestimonials(updated);
-        showToast(`Deleted review from ${item.name}`);
-      }
+        showCustomToast(`Deleted review from ${item.name}`);
+      });
     };
 
     function resetReviewForm() {
@@ -4765,6 +5461,7 @@
       initContactForm();
       initServiceQuoteFillers();
       initBackToTop();
+      initChatbotWidget();
       
       renderProjectsGrid('all');
       renderTestimonialsGrid();
@@ -4898,6 +5595,7 @@
 
       btn.addEventListener('click', () => {
         messageField.value = "I'd like to claim the 10% first-5-clients discount.";
+        messageField.dispatchEvent(new Event('input', { bubbles: true }));
         contactSection.scrollIntoView({ behavior: 'smooth' });
         
         setTimeout(() => {
@@ -4987,108 +5685,401 @@
           const msgField = document.getElementById('form-message');
           if (typeSelect && serviceName) {
             typeSelect.value = serviceName;
+            typeSelect.dispatchEvent(new Event('change', { bubbles: true }));
           }
           if (msgField && !msgField.value) {
             msgField.value = `Hi Femi, I would like to get a quote and timeline for a ${serviceName}.`;
+            msgField.dispatchEvent(new Event('input', { bubbles: true }));
           }
         });
       });
     }
 
     /**
-     * 21. CONTACT FORM: SUPABASE 'messages' TABLE PERSISTENCE & WHATSAPP REDIRECT
+     * ==============================================================
+     * // EDIT: 21. CONTACT FORM & WHATSAPP CONFIGURATION (Features 1 - 4)
+     * ==============================================================
      */
+    /**
+     * ==============================================================
+     * // EDIT: 21. CONTACT FORM & WHATSAPP CONFIGURATION (Features 1 - 4)
+     * ==============================================================
+     */
+    const CONTACT_CONFIG = {
+      whatsappNumber: "2349115742760", // Femi's WhatsApp phone number without '+' (https://wa.me/2349115742760)
+      directCallNumber: "0805 476 3626", // Direct phone call number
+      minMessageLength: 10,            // Minimum character count for project message
+      minNameLength: 2,               // Minimum character count for name
+      toastDurationMs: 5000,          // Duration in ms before toast auto-dismisses (~5s)
+      safetyTimeoutMs: 15000,         // Max wait time for Supabase before fallback (15s)
+      successToastText: "Message sent! I'll reply in 24h", // Exact success toast text
+      errorToastText: "Something went wrong. Please try again or chat with me on WhatsApp 0911 574 2760." // Exact error toast text
+    };
+
+    // Helper: Offline Leads Queue persistence
+    function queueOfflineLead(lead) {
+      try {
+        const q = JSON.parse(localStorage.getItem('femi_offline_leads_queue') || '[]');
+        q.push({ ...lead, queued_at: new Date().toISOString() });
+        localStorage.setItem('femi_offline_leads_queue', JSON.stringify(q));
+      } catch (e) {
+        console.warn('Offline lead queue storage error', e);
+      }
+    }
+
+    // Auto-sync offline leads when browser regains internet connectivity
+    window.addEventListener('online', async () => {
+      try {
+        const raw = localStorage.getItem('femi_offline_leads_queue');
+        if (!raw) return;
+        const q = JSON.parse(raw);
+        if (Array.isArray(q) && q.length > 0) {
+          const client = window.supabaseClient || supabaseClient;
+          for (const item of q) {
+            const { queued_at, ...cleanLead } = item;
+            await client.from('messages').insert([cleanLead]);
+          }
+          localStorage.removeItem('femi_offline_leads_queue');
+          showCustomToast("Synced queued leads to database!", "success");
+        }
+      } catch (e) {
+        console.warn('Error syncing offline leads queue:', e);
+      }
+    });
+
     function initContactForm() {
       const form = document.getElementById('contact-form');
       if (!form) return;
 
+      const nameInput = document.getElementById('form-name');
+      const emailInput = document.getElementById('form-email');
+      const phoneInput = document.getElementById('form-phone');
+      const projectTypeSelect = document.getElementById('form-project-type');
+      const budgetSelect = document.getElementById('form-budget');
+      const messageInput = document.getElementById('form-message');
+      const charCounter = document.getElementById('message-char-counter');
+      const honeypot = document.getElementById('form-honeypot');
+
+      const submitBtn = document.getElementById('contact-submit-btn') || form.querySelector('button[type="submit"]');
+      const btnSpinner = document.getElementById('contact-btn-spinner');
+      const btnText = document.getElementById('contact-btn-text');
+      const btnIcon = document.getElementById('contact-btn-icon');
+      const fallbackContainer = document.getElementById('wa-fallback-container');
+      const fallbackLink = document.getElementById('wa-fallback-link');
+
+      const errName = document.getElementById('error-name');
+      const errEmail = document.getElementById('error-email');
+      const errPhone = document.getElementById('error-phone');
+      const errProjectType = document.getElementById('error-project-type');
+      const errMessage = document.getElementById('error-message');
+
+      // Track whether a field has been validated / touched
+      const touchedFields = new Set();
+
+      // Helper: set invalid state on a field
+      function setFieldInvalid(inputEl, errorEl, message) {
+        if (!inputEl) return;
+        inputEl.setAttribute('aria-invalid', 'true');
+        inputEl.classList.add('border-red-500', 'focus:border-red-500', 'ring-1', 'ring-red-500');
+        inputEl.classList.remove('border-gray-300', 'focus:border-orange-500');
+        if (errorEl) {
+          if (message) errorEl.textContent = message;
+          errorEl.classList.remove('hidden');
+        }
+      }
+
+      // Helper: set valid state on a field
+      function setFieldValid(inputEl, errorEl) {
+        if (!inputEl) return;
+        inputEl.setAttribute('aria-invalid', 'false');
+        inputEl.classList.remove('border-red-500', 'focus:border-red-500', 'ring-1', 'ring-red-500');
+        inputEl.classList.add('border-gray-300', 'focus:border-orange-500');
+        if (errorEl) {
+          errorEl.classList.add('hidden');
+        }
+      }
+
+      // Live character counter updater
+      function updateCharCounter() {
+        if (!messageInput || !charCounter) return;
+        const len = messageInput.value.length;
+        const min = CONTACT_CONFIG.minMessageLength;
+        if (len >= min) {
+          charCounter.textContent = `${len} / ${min} minimum ✓`;
+          charCounter.classList.remove('text-gray-500', 'text-amber-600');
+          charCounter.classList.add('text-emerald-600', 'font-bold');
+        } else {
+          charCounter.textContent = `${len} / ${min} minimum`;
+          charCounter.classList.remove('text-emerald-600');
+          charCounter.classList.add(len > 0 ? 'text-amber-600' : 'text-gray-500');
+        }
+      }
+
+      // Individual field validation rules (trim spaces first)
+      function validateName() {
+        const val = (nameInput?.value || '').trim();
+        if (val.length < CONTACT_CONFIG.minNameLength) {
+          setFieldInvalid(nameInput, errName, "Please enter your name.");
+          return false;
+        }
+        setFieldValid(nameInput, errName);
+        return true;
+      }
+
+      function validateEmail() {
+        const val = (emailInput?.value || '').trim();
+        // Valid email pattern (name@domain.com, no spaces)
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        if (!val || !emailRegex.test(val)) {
+          setFieldInvalid(emailInput, errEmail, "Please enter a valid email address, like name@example.com.");
+          return false;
+        }
+        setFieldValid(emailInput, errEmail);
+        return true;
+      }
+
+      function validatePhone() {
+        const raw = (phoneInput?.value || '').trim();
+        if (!raw) {
+          setFieldValid(phoneInput, errPhone);
+          return true; // Optional field
+        }
+        const digits = raw.replace(/\D/g, '');
+        const validPhoneChars = /^(\+?[0-9\s\-()]+)$/.test(raw);
+        if (!validPhoneChars || digits.length < 10 || digits.length > 15) {
+          setFieldInvalid(phoneInput, errPhone, "Please enter a valid phone number.");
+          return false;
+        }
+        setFieldValid(phoneInput, errPhone);
+        return true;
+      }
+
+      function validateProjectType() {
+        const val = projectTypeSelect?.value;
+        if (!val || val === '') {
+          setFieldInvalid(projectTypeSelect, errProjectType, "Please choose a project type.");
+          return false;
+        }
+        setFieldValid(projectTypeSelect, errProjectType);
+        return true;
+      }
+
+      function validateMessage() {
+        const val = (messageInput?.value || '').trim();
+        updateCharCounter();
+        if (val.length < CONTACT_CONFIG.minMessageLength) {
+          setFieldInvalid(messageInput, errMessage, "Your message is too short. Please write at least 10 characters.");
+          return false;
+        }
+        setFieldValid(messageInput, errMessage);
+        return true;
+      }
+
+      // Attach live validation on blur and input (once touched or after submit)
+      const fieldConfigs = [
+        { el: nameInput, validator: validateName },
+        { el: emailInput, validator: validateEmail },
+        { el: phoneInput, validator: validatePhone },
+        { el: projectTypeSelect, validator: validateProjectType },
+        { el: messageInput, validator: validateMessage }
+      ];
+
+      fieldConfigs.forEach(({ el, validator }) => {
+        if (!el) return;
+        el.addEventListener('blur', () => {
+          touchedFields.add(el);
+          validator();
+        });
+        el.addEventListener('input', () => {
+          if (el === messageInput) updateCharCounter();
+          if (touchedFields.has(el)) {
+            validator();
+          }
+        });
+        if (el.tagName === 'SELECT') {
+          el.addEventListener('change', () => {
+            touchedFields.add(el);
+            validator();
+          });
+        }
+      });
+
+      // Initialize counter on load
+      updateCharCounter();
+
+      // Listen for programmatic updates (e.g. Special Offer or Service Quote buttons)
+      form.addEventListener('input', updateCharCounter);
+
+      // FORM SUBMIT HANDLER
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const nameInput = document.getElementById('form-name');
-        const emailInput = document.getElementById('form-email');
-        const phoneInput = document.getElementById('form-phone');
-        const messageInput = document.getElementById('form-message');
-
-        const errName = document.getElementById('error-name');
-        const errEmail = document.getElementById('error-email');
-        const errMessage = document.getElementById('error-message');
-
-        [errName, errEmail, errMessage].forEach(el => el && el.classList.add('hidden'));
-
-        let isValid = true;
-
-        if (!nameInput.value.trim()) {
-          errName && errName.classList.remove('hidden');
-          nameInput.focus();
-          isValid = false;
+        // 0. Honeypot check for bots
+        if (honeypot && honeypot.value.trim() !== '') {
+          form.reset();
+          return;
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailInput.value.trim() || !emailRegex.test(emailInput.value.trim())) {
-          if (isValid) emailInput.focus();
-          errEmail && errEmail.classList.remove('hidden');
-          isValid = false;
+        // Mark all fields as touched for live re-validation
+        fieldConfigs.forEach(({ el }) => el && touchedFields.add(el));
+
+        // STEP 1: VALIDATE ALL FIELDS INLINE
+        const isNameValid = validateName();
+        const isEmailValid = validateEmail();
+        const isPhoneValid = validatePhone();
+        const isTypeValid = validateProjectType();
+        const isMessageValid = validateMessage();
+
+        const allValid = isNameValid && isEmailValid && isPhoneValid && isTypeValid && isMessageValid;
+
+        if (!allValid) {
+          // Find first invalid field, smoothly scroll to it and focus
+          const firstInvalid = [
+            !isNameValid && nameInput,
+            !isEmailValid && emailInput,
+            !isPhoneValid && phoneInput,
+            !isTypeValid && projectTypeSelect,
+            !isMessageValid && messageInput
+          ].find(Boolean);
+
+          if (firstInvalid) {
+            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+              firstInvalid.focus();
+            }, 300);
+          }
+          return; // STOP: do NOT proceed to sending state or Supabase
         }
 
-        if (!messageInput.value.trim()) {
-          if (isValid) messageInput.focus();
-          errMessage && errMessage.classList.remove('hidden');
-          isValid = false;
-        }
-
-        if (!isValid) return;
-
-        const name = nameInput.value.trim();
-        const email = emailInput.value.trim();
-        const phone = phoneInput.value.trim() || 'Not provided';
-        const message = messageInput.value.trim();
-
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+        // STEP 2: SET SENDING BUTTON STATE & DISABLE FIELDS
+        form.setAttribute('aria-busy', 'true');
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.innerHTML = `<span>Saving to Supabase... ⏳</span><span class="icon-square bg-white text-emerald-700 font-bold">💾</span>`;
+          submitBtn.setAttribute('aria-disabled', 'true');
+          submitBtn.classList.add('opacity-60', 'cursor-not-allowed', 'pointer-events-none');
+        }
+        if (btnSpinner) btnSpinner.classList.remove('hidden');
+        if (btnText) btnText.textContent = 'Sending...';
+        if (btnIcon) btnIcon.classList.add('hidden');
+
+        // Disable all form inputs during submission
+        const allFormControls = form.querySelectorAll('input, select, textarea');
+        allFormControls.forEach(ctrl => ctrl.disabled = true);
+
+        // Gather clean values
+        const name = (nameInput?.value || '').trim();
+        const email = (emailInput?.value || '').trim();
+        const phone = (phoneInput?.value || '').trim() || 'Not provided';
+        const projectType = (projectTypeSelect?.value || 'Custom Project');
+        const budget = (budgetSelect?.value || 'Flexible');
+        const message = (messageInput?.value || '').trim();
+
+        // Build WhatsApp text and URL
+        const whatsappText = `Hello Oluwafemi! 🚀\n*Project Inquiry from Portfolio*\n\n👤 *Name:* ${name}\n✉️ *Email:* ${email}\n📱 *Phone:* ${phone}\n💼 *Project Type:* ${projectType}\n💰 *Budget:* ${budget}\n\n📝 *Message:*\n${message}`;
+        const whatsappUrl = `https://wa.me/${CONTACT_CONFIG.whatsappNumber}?text=${encodeURIComponent(whatsappText)}`;
+
+        // Pre-open blank window synchronously on user click to prevent modern pop-up blockers
+        let waWindow = null;
+        try {
+          waWindow = window.open('about:blank', '_blank');
+        } catch (popupErr) {
+          console.warn('Sync window.open blocked:', popupErr);
         }
 
+        const leadData = { name, email, phone, message };
+
         try {
-          // 1. SAVE TO SUPABASE FIRST
+          // STEP 3: SAVE TO SUPABASE WITH 15-SECOND SAFETY TIMEOUT + OFFLINE QUEUE
           const activeClient = window.supabaseClient || supabaseClient;
 
-          const { data, error } = await activeClient
-            .from('messages')
-            .insert([
-              { name, email, message, phone }
-            ]);
+          if (!navigator.onLine) {
+            queueOfflineLead(leadData);
+          } else {
+            const supabaseSavePromise = (async () => {
+              return await activeClient
+                .from('messages')
+                .insert([leadData]);
+            })();
 
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnHtml;
+            const safetyTimeoutPromise = new Promise((_, reject) => {
+              setTimeout(() => {
+                reject(new Error("Supabase request timed out after 15 seconds"));
+              }, CONTACT_CONFIG.safetyTimeoutMs);
+            });
+
+            // Race Supabase insert against 15s timeout
+            try {
+              const result = await Promise.race([supabaseSavePromise, safetyTimeoutPromise]);
+              if (result && result.error) {
+                console.warn('Supabase returned error, queuing offline:', result.error);
+                queueOfflineLead(leadData);
+              }
+            } catch (dbErr) {
+              console.warn('Supabase insertion failed or timed out, queuing offline:', dbErr);
+              queueOfflineLead(leadData);
+            }
           }
 
-          if (error) {
-            console.error('Supabase error:', error);
-            showToast('Failed to save to Supabase. Check connection.');
-            alert('Failed to save, check Supabase: ' + (error.message || JSON.stringify(error)));
-            return;
-          }
+          // STEP 4: SHOW SUCCESS TOAST
+          showCustomToast(CONTACT_CONFIG.successToastText, 'success', {
+            duration: CONTACT_CONFIG.toastDurationMs,
+            actionUrl: whatsappUrl,
+            actionLabel: "Open WhatsApp 💬"
+          });
 
-          // 2. IF INSERT SUCCEEDS: SHOW SUCCESS TOAST & THEN OPEN WHATSAPP LINK
-          showToast('✓ Message saved to Supabase! Opening WhatsApp...');
-
-          const whatsappText = `Hello Oluwafemi! 🚀\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`;
-          const whatsappUrl = `https://wa.me/2349115742760?text=${encodeURIComponent(whatsappText)}`;
-          window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-
+          // STEP 5: CLEAR FORM & COUNTER ON SUCCESS
           form.reset();
+          touchedFields.clear();
+          fieldConfigs.forEach(({ el, validator }) => {
+            if (el) {
+              el.setAttribute('aria-invalid', 'false');
+              el.classList.remove('border-red-500', 'focus:border-red-500', 'ring-1', 'ring-red-500');
+              el.classList.add('border-gray-300', 'focus:border-orange-500');
+            }
+          });
+          [errName, errEmail, errPhone, errProjectType, errMessage].forEach(el => el && el.classList.add('hidden'));
+          updateCharCounter();
+
+          // STEP 6: OPEN WHATSAPP LINK (WITH POP-UP BLOCKER HANDLING)
+          let popupBlocked = false;
+          if (waWindow && !waWindow.closed && typeof waWindow.location !== 'undefined') {
+            try {
+              waWindow.location.href = whatsappUrl;
+            } catch (redirErr) {
+              popupBlocked = true;
+            }
+          } else {
+            popupBlocked = true;
+          }
+
+          if (popupBlocked) {
+            // Display prominent fallback button under the form and in toast
+            if (fallbackContainer && fallbackLink) {
+              fallbackLink.href = whatsappUrl;
+              fallbackContainer.classList.remove('hidden');
+            }
+          }
+
         } catch (err) {
+          console.error('Contact form submission error:', err);
+          showCustomToast(CONTACT_CONFIG.errorToastText, 'error');
+          if (waWindow && !waWindow.closed) {
+            try { waWindow.close(); } catch (e) {}
+          }
+          // On failure, keep everything the visitor typed
+        } finally {
+          // STEP 7: ALWAYS RESTORE BUTTON AND RE-ENABLE FIELDS
+          form.removeAttribute('aria-busy');
+          allFormControls.forEach(ctrl => ctrl.disabled = false);
+
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnHtml;
+            submitBtn.removeAttribute('aria-disabled');
+            submitBtn.classList.remove('opacity-60', 'cursor-not-allowed', 'pointer-events-none');
           }
-          console.error('Form submission exception:', err);
-          showToast('Error saving to Supabase. Please try again.');
-          alert('Submission error: ' + (err.message || err));
+          if (btnSpinner) btnSpinner.classList.add('hidden');
+          if (btnText) btnText.textContent = 'Submit & Open WhatsApp';
+          if (btnIcon) btnIcon.classList.remove('hidden');
         }
       });
     }
@@ -5103,6 +6094,985 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     }
+
+    /**
+     * ==============================================================
+     * // EDIT: 23. AI CHATBOT ENGINE & LEAD CAPTURE CONFIGURATION
+     * Represents: Oluwafemi David Adekanola (davidbryght@gmail.com)
+     * ==============================================================
+     */
+    const CHATBOT_CONFIG = {
+      apiEndpoint: "/api/chat",
+      ownerName: "Oluwafemi David Adekanola",
+      whatsappNumber: "2349115742760", // https://wa.me/2349115742760
+      phoneCall: "0805 476 3626",
+      email: "davidbryght@gmail.com",
+      facebook: "https://www.facebook.com/david.oluwafemi.724920",
+      location: "Ilorin, Kwara State, Nigeria (WAT / UTC+1)",
+      prices: {
+        frontend: { normal: 150000, discounted: 135000, label: "₦150,000 (₦135,000 with 10% discount)" },
+        fullstack: { normal: 400000, discounted: 360000, label: "₦400,000 (₦360,000 with 10% discount)" }
+      },
+      timelines: {
+        businessSites: "5 to 10 working days",
+        fullstackApps: "2 to 4 weeks"
+      },
+      pillars: [
+        "Strong Security: Data encryption, rate limiting, and protection against unauthorized access.",
+        "Fast Loading Speed: Sub-second page loads that retain visitors and score high on Google Core Web Vitals.",
+        "Solid Structure: Clean architecture, mobile-first responsiveness, and conversion-focused UX."
+      ],
+      teaserDelayMs: 8000 // Show teaser bubble after 8 seconds
+    };
+
+    // Chatbot Global State
+    let chatbotSessionId = null;
+    let chatbotMessages = [];
+    let chatbotLeadData = {
+      name: null,
+      email: null,
+      phone: null,
+      projectType: null,
+      budget: null,
+      summary: null,
+      consultationDate: null
+    };
+
+    /**
+     * Local Rule-Based Fallback FAQ Engine
+     * Invoked when offline, rate-limited, or if the serverless function is unreachable.
+     */
+    function getFallbackFaqAnswer(query) {
+      const q = (query || '').toLowerCase();
+      const spots = typeof SPOTS_LEFT !== 'undefined' ? SPOTS_LEFT : 3;
+
+      if (q.includes('price') || q.includes('cost') || q.includes('how much') || q.includes('rate') || q.includes('fee')) {
+        return {
+          text: `**Here are Oluwafemi's transparent rates:**\n\n- **Frontend Development:** ₦150,000 (With active 10% discount: **₦135,000**)\n- **Full-Stack Web App (Frontend + Backend):** ₦400,000 (With 10% discount: **₦360,000**)\n- **Custom Architectures / APIs:** Custom quote based on scope.\n\n*Payment terms:* 50% upfront deposit to commence, 50% on final client sign-off before deployment.\n\n🔥 **Notice:** Only **${spots} of 5 spots left** for the 10% launch discount!`,
+          actions: [
+            { label: "Claim 10% Discount", action: "fill_form_discount" },
+            { label: "Book Free 20-Min Call", action: "consultation" },
+            { label: "Chat on WhatsApp", action: "whatsapp" }
+          ]
+        };
+      }
+
+      if (q.includes('consult') || q.includes('call') || q.includes('20 min') || q.includes('meeting') || q.includes('book')) {
+        return {
+          text: `**Book a Free 20-Minute Consultation with Femi!** 📅\n\nNo obligation, 100% free strategic call to review your project, tech stack, and timeline.\n\nTo schedule, simply tell me:\n1. Your **Name**\n2. **Email or WhatsApp number**\n3. **Project idea / timeline**\n4. **Preferred day and time (WAT / West Africa Time)**\n\nOr click below to jump directly to the project form or chat on WhatsApp!`,
+          actions: [
+            { label: "Fill Form With My Details", action: "fill_form" },
+            { label: "Chat Direct on WhatsApp 💬", action: "whatsapp" }
+          ]
+        };
+      }
+
+      if (q.includes('security') || q.includes('speed') || q.includes('structure') || q.includes('why') || q.includes('pillars')) {
+        return {
+          text: `**Why Femi builds differently:**\n\n*"A website is much more than how it looks. A pretty site that loads in 8 seconds or gets hacked loses customers immediately."*\n\nEvery project Femi delivers is grounded in 3 core pillars:\n1. 🛡️ **Strong Security:** Built-in rate limiting, CSRF protection, secure SQL/Supabase RLS policies, and safe auth.\n2. ⚡ **Lightning Speed:** Clean code, zero bloat, optimized assets, and 95+ Google Lighthouse scores.\n3. 🧱 **Solid Structure:** Scalable database schemas, maintainable components, and seamless mobile responsiveness.`,
+          actions: [
+            { label: "Book Free 20-Min Call", action: "consultation" },
+            { label: "View Portfolio Projects", action: "portfolio" }
+          ]
+        };
+      }
+
+      if (q.includes('timeline') || q.includes('how long') || q.includes('days') || q.includes('weeks') || q.includes('fast')) {
+        return {
+          text: `**Estimated Turnaround Times:**\n\n- **Standard Business Websites:** 5 to 10 working days\n- **Full-Stack Web Applications & Portals:** 2 to 4 weeks\n- **Emergency bug fixes / maintenance:** 24 to 48 hours\n\nFemi gives clear milestone updates at each development stage.`,
+          actions: [
+            { label: "Get Project Started", action: "fill_form" },
+            { label: "Chat on WhatsApp", action: "whatsapp" }
+          ]
+        };
+      }
+
+      if (q.includes('contact') || q.includes('whatsapp') || q.includes('phone') || q.includes('call') || q.includes('reach') || q.includes('ilorin')) {
+        return {
+          text: `**You can reach Oluwafemi David directly through:**\n\n- 💬 **WhatsApp:** [0911 574 2760](https://wa.me/2349115742760)\n- 📞 **Direct Phone Call:** 0805 476 3626\n- ✉️ **Email:** davidbryght@gmail.com\n- 🌐 **Location:** Ilorin, Kwara State, Nigeria (Available worldwide)`,
+          actions: [
+            { label: "Open WhatsApp Chat 💬", action: "whatsapp" },
+            { label: "Send Message Via Form", action: "fill_form" }
+          ]
+        };
+      }
+
+      // Default fallback
+      return {
+        text: `Thanks for asking! As Oluwafemi's AI assistant, I can answer your questions on website pricing, timelines, technology stacks, or schedule a free 20-minute consultation.\n\nFemi provides custom Business Websites (from ₦135k with 10% discount) and Full-Stack Web Apps (from ₦360k).\n\nWhat kind of website or project are you looking to build?`,
+        actions: [
+          { label: "💰 View Pricing & 10% Discount", action: "pricing" },
+          { label: "📅 Book Free 20-Min Call", action: "consultation" },
+          { label: "💬 Chat Direct on WhatsApp", action: "whatsapp" }
+        ]
+      };
+    }
+
+    /**
+     * Extracts visitor lead information from chat text using regex
+     */
+    function extractLeadFromText(text) {
+      if (!text || typeof text !== 'string') return {};
+      const lead = {};
+
+      // 1. Email Regex
+      const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch) lead.email = emailMatch[0].trim();
+
+      // 2. Phone Regex (Nigerian and international formats)
+      const phoneMatch = text.match(/(?:(?:\+?234|0)[789][01]\d{8})|(?:\+?[1-9]\d{1,14})/);
+      if (phoneMatch) lead.phone = phoneMatch[0].replace(/\s+/g, '').trim();
+
+      // 3. Name extraction heuristic (e.g. "My name is John Doe", "I am Femi", "Name: Alex")
+      const nameMatch = text.match(/(?:my name is|i am|name[:\s]+)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/i);
+      if (nameMatch && nameMatch[1]) {
+        lead.name = nameMatch[1].trim();
+      }
+
+      // 4. Consultation intent
+      if (/consultation|20-min|free call|schedule|meeting/i.test(text)) {
+        lead.consultation = true;
+      }
+
+      // 5. Discount intent
+      if (/discount|10%|launch offer|spot/i.test(text)) {
+        lead.discount = true;
+      }
+
+      return lead;
+    }
+
+    /**
+     * Markdown text formatter for chat bubble display
+     */
+    function formatChatMarkdown(raw) {
+      if (!raw) return '';
+      let escaped = escapeHtml(raw);
+
+      // Bold **text**
+      escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      // Italic *text*
+      escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      // Bullet lists
+      escaped = escaped.replace(/(?:^|\n)-\s+(.*)/g, '<li class="ml-4 list-disc">$1</li>');
+      // Wrap consecutive <li> into <ul>
+      escaped = escaped.replace(/(<li.*<\/li>)/gs, '<ul class="my-1.5 space-y-0.5">$1</ul>');
+      // Newlines to <br>
+      escaped = escaped.replace(/\n/g, '<br>');
+
+      return escaped;
+    }
+
+    /**
+     * Persist lead to Supabase chat_conversations AND messages table
+     */
+    async function syncChatbotLeadToDatabase(leadData, fullTranscript = '') {
+      try {
+        const client = window.supabaseClient || supabaseClient;
+        if (!client || typeof client.from !== 'function') return;
+
+        const spotsLeft = typeof SPOTS_LEFT !== 'undefined' ? SPOTS_LEFT : 3;
+
+        // 1. Upsert into chat_conversations
+        if (chatbotSessionId) {
+          await client.from('chat_conversations').upsert([{
+            session_id: chatbotSessionId,
+            visitor_name: leadData.name || null,
+            visitor_email: leadData.email || null,
+            visitor_phone: leadData.phone || null,
+            project_type: leadData.projectType || null,
+            estimated_budget: leadData.budget || null,
+            summary: leadData.summary || 'Inquiry via AI Chatbot Widget',
+            has_lead: Boolean(leadData.email || leadData.phone),
+            is_consultation_booked: Boolean(leadData.consultation),
+            claimed_discount: Boolean(leadData.discount),
+            spots_left_at_time: spotsLeft,
+            status: 'needs_reply',
+            updated_at: new Date().toISOString()
+          }], { onConflict: 'session_id' });
+        }
+
+        // 2. Also insert into existing 'messages' table so it appears in standard Admin storage!
+        if (leadData.email || leadData.phone || leadData.name) {
+          const formattedMessage = `[AI Chatbot Lead]\nVisitor Name: ${leadData.name || 'Not provided'}\nEmail: ${leadData.email || 'Not provided'}\nPhone: ${leadData.phone || 'Not provided'}\nProject: ${leadData.projectType || 'General'}\nSummary: ${leadData.summary || 'Lead captured by chatbot'}\n\nTranscript Snippet:\n${fullTranscript.slice(-350)}`;
+          
+          await client.from('messages').insert([{
+            name: leadData.name || 'Chatbot Visitor',
+            email: leadData.email || 'visitor@chatbot.local',
+            phone: leadData.phone || 'N/A',
+            message: formattedMessage
+          }]);
+        }
+      } catch (err) {
+        console.warn('Chatbot lead database sync error (handled):', err);
+      }
+    }
+
+    /**
+     * Save single message to chat_messages table
+     */
+    async function logChatMessageToSupabase(sender, text) {
+      try {
+        const client = window.supabaseClient || supabaseClient;
+        if (!client || typeof client.from !== 'function' || !chatbotSessionId) return;
+
+        await client.from('chat_messages').insert([{
+          conversation_session_id: chatbotSessionId,
+          sender: sender,
+          message_text: text
+        }]);
+      } catch (e) {
+        // Silent fail
+      }
+    }
+
+    /**
+     * Initialize Chatbot Widget UI & Listeners
+     */
+    function initChatbotWidget() {
+      const triggerBtn = document.getElementById('chatbot-trigger-btn');
+      const teaserBubble = document.getElementById('chatbot-teaser-bubble');
+      const teaserCloseBtn = document.getElementById('chatbot-teaser-close-btn');
+      const teaserOpenBtn = document.getElementById('chatbot-teaser-open-btn');
+      const widgetWindow = document.getElementById('chatbot-widget-window');
+      const closeBtn = document.getElementById('chatbot-close-btn');
+      const minimizeBtn = document.getElementById('chatbot-minimize-btn');
+      const clearBtn = document.getElementById('chatbot-clear-history-btn');
+      const messagesContainer = document.getElementById('chatbot-messages-container');
+      const inputForm = document.getElementById('chatbot-input-form');
+      const textarea = document.getElementById('chatbot-textarea');
+      const sendBtn = document.getElementById('chatbot-send-btn');
+      const charCounter = document.getElementById('chatbot-char-count');
+      const typingIndicator = document.getElementById('chatbot-typing-indicator');
+      const iconOpen = document.getElementById('chatbot-icon-open');
+      const iconClose = document.getElementById('chatbot-icon-close');
+      const pingDot = document.getElementById('chatbot-trigger-ping');
+      const offlineBanner = document.getElementById('chatbot-offline-banner');
+      const spotsBanner = document.getElementById('chatbot-banner-spots');
+
+      if (!triggerBtn || !widgetWindow) return;
+
+      // Initialize session ID
+      try {
+        let storedSession = sessionStorage.getItem('femi_chatbot_session_id');
+        if (!storedSession) {
+          storedSession = 'chat_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+          sessionStorage.setItem('femi_chatbot_session_id', storedSession);
+        }
+        chatbotSessionId = storedSession;
+
+        // Restore messages
+        const storedMsgs = sessionStorage.getItem('femi_chatbot_messages');
+        if (storedMsgs) {
+          chatbotMessages = JSON.parse(storedMsgs);
+          renderStoredMessages();
+        }
+
+        // Restore lead data
+        const storedLead = sessionStorage.getItem('femi_chatbot_lead');
+        if (storedLead) {
+          chatbotLeadData = JSON.parse(storedLead);
+        }
+      } catch (e) {
+        chatbotSessionId = 'chat_' + Date.now();
+      }
+
+      // Live spots update
+      function updateBannerSpots() {
+        if (spotsBanner && typeof SPOTS_LEFT !== 'undefined') {
+          spotsBanner.textContent = SPOTS_LEFT;
+        }
+      }
+      updateBannerSpots();
+
+      // Online/Offline tracking
+      function updateOnlineState() {
+        if (!offlineBanner) return;
+        if (navigator.onLine) {
+          offlineBanner.classList.add('hidden');
+        } else {
+          offlineBanner.classList.remove('hidden');
+        }
+      }
+      window.addEventListener('online', updateOnlineState);
+      window.addEventListener('offline', updateOnlineState);
+      updateOnlineState();
+
+      // Show proactive teaser bubble after 8 seconds
+      setTimeout(() => {
+        const dismissed = sessionStorage.getItem('femi_chatbot_teaser_dismissed');
+        const isOpen = !widgetWindow.classList.contains('hidden');
+        if (!dismissed && !isOpen && teaserBubble) {
+          teaserBubble.classList.remove('hidden');
+        }
+      }, CHATBOT_CONFIG.teaserDelayMs);
+
+      // Teaser close & open handlers
+      if (teaserCloseBtn && teaserBubble) {
+        teaserCloseBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          teaserBubble.classList.add('hidden');
+          sessionStorage.setItem('femi_chatbot_teaser_dismissed', 'true');
+        });
+      }
+
+      if (teaserOpenBtn) {
+        teaserOpenBtn.addEventListener('click', () => {
+          if (teaserBubble) teaserBubble.classList.add('hidden');
+          sessionStorage.setItem('femi_chatbot_teaser_dismissed', 'true');
+          openChatbotWidget();
+        });
+      }
+
+      // Toggle Chatbot Window
+      function openChatbotWidget() {
+        widgetWindow.classList.remove('hidden');
+        triggerBtn.setAttribute('aria-expanded', 'true');
+        if (iconOpen) iconOpen.classList.add('hidden');
+        if (iconClose) iconClose.classList.remove('hidden');
+        if (pingDot) pingDot.classList.add('hidden');
+        if (teaserBubble) teaserBubble.classList.add('hidden');
+        sessionStorage.setItem('femi_chatbot_teaser_dismissed', 'true');
+        updateBannerSpots();
+        setTimeout(() => {
+          if (textarea) textarea.focus();
+          scrollChatToBottom();
+        }, 150);
+      }
+
+      function closeChatbotWidget() {
+        widgetWindow.classList.add('hidden');
+        triggerBtn.setAttribute('aria-expanded', 'false');
+        if (iconOpen) iconOpen.classList.remove('hidden');
+        if (iconClose) iconClose.classList.add('hidden');
+      }
+
+      window.openChatbotWidget = openChatbotWidget;
+      window.closeChatbotWidget = closeChatbotWidget;
+
+      triggerBtn.addEventListener('click', () => {
+        const isHidden = widgetWindow.classList.contains('hidden');
+        if (isHidden) {
+          openChatbotWidget();
+        } else {
+          closeChatbotWidget();
+        }
+      });
+
+      if (closeBtn) closeBtn.addEventListener('click', closeChatbotWidget);
+      if (minimizeBtn) minimizeBtn.addEventListener('click', closeChatbotWidget);
+
+      // Clear / Reset conversation
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          showCustomConfirm("Start a fresh conversation? Current chat history will be cleared.", () => {
+            chatbotMessages = [];
+            chatbotLeadData = {};
+            sessionStorage.removeItem('femi_chatbot_messages');
+            sessionStorage.removeItem('femi_chatbot_lead');
+            chatbotSessionId = 'chat_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+            sessionStorage.setItem('femi_chatbot_session_id', chatbotSessionId);
+
+            // Re-render starter welcome bubble
+            if (messagesContainer) {
+              messagesContainer.innerHTML = `
+                <div class="flex gap-2.5 items-start">
+                  <div class="w-7 h-7 rounded-full bg-orange-600 flex-shrink-0 flex items-center justify-center font-bold text-[11px] text-white">OD</div>
+                  <div class="flex-1 space-y-2">
+                    <div class="bg-stone-900 border border-stone-800 text-gray-200 p-3 rounded-2xl rounded-tl-sm leading-relaxed shadow-sm">
+                      <p class="font-bold text-white mb-1">Conversation reset! How can I help you today? 👋</p>
+                      <p class="text-gray-300">
+                        Ask about pricing, project timelines, our 10% discount, or schedule a free 20-minute consultation.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+            showCustomToast("Chat reset.", "success");
+          });
+        });
+      }
+
+      // Auto-resize textarea & character counter
+      if (textarea) {
+        textarea.addEventListener('input', () => {
+          textarea.style.height = 'auto';
+          textarea.style.height = Math.min(textarea.scrollHeight, 96) + 'px';
+          const len = textarea.value.length;
+          if (charCounter) charCounter.textContent = `${len}/500`;
+          if (sendBtn) {
+            sendBtn.disabled = len === 0 || len > 500;
+          }
+        });
+
+        textarea.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (!sendBtn.disabled) {
+              inputForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+          }
+        });
+      }
+
+      // Quick Chips handler (delegated)
+      document.addEventListener('click', (e) => {
+        const chip = e.target.closest('.chatbot-chip');
+        if (chip) {
+          const prompt = chip.getAttribute('data-prompt');
+          if (prompt) {
+            submitChatMessage(prompt);
+          }
+        }
+
+        // Action button inside chat bubbles
+        const actionBtn = e.target.closest('.chatbot-action-btn');
+        if (actionBtn) {
+          const action = actionBtn.getAttribute('data-action');
+          handleChatAction(action, actionBtn.getAttribute('data-meta'));
+        }
+      });
+
+      // Submit Form Handler
+      if (inputForm) {
+        inputForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const text = textarea ? textarea.value.trim() : '';
+          if (!text) return;
+          textarea.value = '';
+          textarea.style.height = 'auto';
+          if (charCounter) charCounter.textContent = '0/500';
+          if (sendBtn) sendBtn.disabled = true;
+          submitChatMessage(text);
+        });
+      }
+
+      function scrollChatToBottom() {
+        if (messagesContainer) {
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+      }
+
+      // Render stored messages from sessionStorage
+      function renderStoredMessages() {
+        if (!messagesContainer) return;
+        chatbotMessages.forEach(msg => {
+          appendMessageBubble(msg.role, msg.content, msg.actions || [], false);
+        });
+      }
+
+      // Append bubble to UI
+      function appendMessageBubble(role, content, actions = [], save = true) {
+        if (!messagesContainer) return;
+
+        const isUser = role === 'user';
+        const bubbleWrap = document.createElement('div');
+        bubbleWrap.className = isUser ? 'flex justify-end' : 'flex gap-2.5 items-start';
+
+        if (isUser) {
+          bubbleWrap.innerHTML = `
+            <div class="bg-orange-600 text-white p-3 rounded-2xl rounded-tr-sm max-w-[85%] leading-relaxed text-xs shadow-sm break-words">
+              ${escapeHtml(content).replace(/\n/g, '<br>')}
+            </div>
+          `;
+        } else {
+          let actionsMarkup = '';
+          if (Array.isArray(actions) && actions.length > 0) {
+            actionsMarkup = `
+              <div class="flex flex-wrap gap-1.5 pt-2 border-t border-stone-800/80 mt-2">
+                ${actions.map(a => `
+                  <button type="button" class="chatbot-action-btn px-2.5 py-1 bg-stone-800 hover:bg-orange-600 hover:text-white text-orange-400 rounded-lg border border-stone-700 text-[11px] font-mono transition-colors font-bold" data-action="${escapeHtml(a.action || '')}" data-meta="${escapeHtml(a.meta || '')}">
+                    ${escapeHtml(a.label || 'Action')}
+                  </button>
+                `).join('')}
+              </div>
+            `;
+          }
+
+          bubbleWrap.innerHTML = `
+            <div class="w-7 h-7 rounded-full bg-orange-600 flex-shrink-0 flex items-center justify-center font-bold text-[11px] text-white">OD</div>
+            <div class="flex-1 space-y-1.5 max-w-[88%]">
+              <div class="bg-stone-900 border border-stone-800 text-gray-200 p-3 rounded-2xl rounded-tl-sm leading-relaxed text-xs shadow-sm break-words">
+                ${formatChatMarkdown(content)}
+                ${actionsMarkup}
+              </div>
+            </div>
+          `;
+        }
+
+        messagesContainer.appendChild(bubbleWrap);
+        scrollChatToBottom();
+
+        if (save) {
+          chatbotMessages.push({ role, content, actions, timestamp: new Date().toISOString() });
+          try {
+            sessionStorage.setItem('femi_chatbot_messages', JSON.stringify(chatbotMessages));
+          } catch (e) {}
+        }
+      }
+
+      // Handle interactive action clicks
+      function handleChatAction(action, meta) {
+        if (action === 'fill_form' || action === 'fill_form_discount') {
+          closeChatbotWidget();
+          const form = document.getElementById('contact-form');
+          if (form) {
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Pre-fill extracted lead data
+            if (chatbotLeadData.name) {
+              const el = document.getElementById('form-name');
+              if (el) el.value = chatbotLeadData.name;
+            }
+            if (chatbotLeadData.email) {
+              const el = document.getElementById('form-email');
+              if (el) el.value = chatbotLeadData.email;
+            }
+            if (chatbotLeadData.phone) {
+              const el = document.getElementById('form-phone');
+              if (el) el.value = chatbotLeadData.phone;
+            }
+            if (action === 'fill_form_discount') {
+              const typeEl = document.getElementById('form-project-type');
+              const msgEl = document.getElementById('form-message');
+              if (typeEl) typeEl.value = 'Full-Stack Web App';
+              if (msgEl && !msgEl.value) {
+                msgEl.value = 'Hi Femi, I would like to claim the 10% launch discount for my website project.';
+                msgEl.dispatchEvent(new Event('input', { bubbles: true }));
+              }
+            }
+            showCustomToast("Contact form pre-filled with your details! Review and submit.", "success");
+          }
+        } else if (action === 'whatsapp') {
+          const text = `Hello Oluwafemi! 👋\nI was chatting with your AI Assistant on your website and would like to talk directly about my website project.`;
+          window.open(`https://wa.me/${CHATBOT_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+        } else if (action === 'consultation') {
+          appendMessageBubble('assistant', "To book your **Free 20-Minute Consultation**, please share your preferred day/time and email or WhatsApp number here in chat, or use our quick form!", [
+            { label: "Fill Form With My Details", action: "fill_form" },
+            { label: "WhatsApp Direct", action: "whatsapp" }
+          ]);
+        } else if (action === 'pricing') {
+          const faq = getFallbackFaqAnswer('pricing');
+          appendMessageBubble('assistant', faq.text, faq.actions);
+        } else if (action === 'portfolio') {
+          closeChatbotWidget();
+          const port = document.getElementById('portfolio');
+          if (port) port.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+
+      // Submit message to API or Local Fallback
+      async function submitChatMessage(userText) {
+        if (!userText) return;
+
+        // 1. Render User Message
+        appendMessageBubble('user', userText, [], true);
+        logChatMessageToSupabase('user', userText);
+
+        // 2. Extract Lead Info
+        const extracted = extractLeadFromText(userText);
+        let hasNewLeadInfo = false;
+        Object.keys(extracted).forEach(k => {
+          if (extracted[k] && !chatbotLeadData[k]) {
+            chatbotLeadData[k] = extracted[k];
+            hasNewLeadInfo = true;
+          }
+        });
+
+        if (hasNewLeadInfo) {
+          try {
+            sessionStorage.setItem('femi_chatbot_lead', JSON.stringify(chatbotLeadData));
+          } catch (e) {}
+        }
+
+        // 3. Show typing indicator
+        if (typingIndicator) typingIndicator.classList.remove('hidden');
+        scrollChatToBottom();
+
+        // 4. Send request to /api/chat with timeout
+        let assistantReply = null;
+        let assistantActions = [];
+
+        try {
+          if (!navigator.onLine) {
+            throw new Error("Offline");
+          }
+
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 18000); // 18s timeout
+
+          const payload = {
+            message: userText,
+            history: chatbotMessages.slice(-10).map(m => ({ role: m.role, content: m.content })),
+            spotsLeft: typeof SPOTS_LEFT !== 'undefined' ? SPOTS_LEFT : 3,
+            leadData: chatbotLeadData
+          };
+
+          const res = await fetch(CHATBOT_CONFIG.apiEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: controller.signal
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!res.ok) {
+            throw new Error(`Server returned HTTP ${res.status}`);
+          }
+
+          const data = await res.json();
+          if (data && data.reply) {
+            assistantReply = data.reply;
+            assistantActions = data.actions || [];
+            if (data.leadExtracted) {
+              chatbotLeadData = { ...chatbotLeadData, ...data.leadExtracted };
+              hasNewLeadInfo = true;
+            }
+          } else {
+            throw new Error("Invalid reply format");
+          }
+        } catch (fetchErr) {
+          console.warn('API chat route unavailable, using local rule-based engine:', fetchErr);
+          const fallback = getFallbackFaqAnswer(userText);
+          assistantReply = fallback.text;
+          assistantActions = fallback.actions;
+        } finally {
+          if (typingIndicator) typingIndicator.classList.add('hidden');
+        }
+
+        // 5. Append Assistant Message
+        if (assistantReply) {
+          appendMessageBubble('assistant', assistantReply, assistantActions, true);
+          logChatMessageToSupabase('assistant', assistantReply);
+        }
+
+        // 6. Sync Lead to Database if contact info is present
+        if (chatbotLeadData.email || chatbotLeadData.phone || chatbotLeadData.name) {
+          const transcript = chatbotMessages.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n');
+          syncChatbotLeadToDatabase(chatbotLeadData, transcript);
+        }
+      }
+    }
+
+    /**
+     * ==============================================================
+     * // EDIT: 24. ADMIN CHATBOT TAB CONTROLLER
+     * Query and manage captured conversations from chat_conversations
+     * ==============================================================
+     */
+    let adminChatFilter = 'all';
+    let adminChatSearchQuery = '';
+    let adminConversationsCache = [];
+    let activeTranscriptConvId = null;
+
+    async function loadAdminChatbotConversations() {
+      const container = document.getElementById('admin-chat-conversations-list');
+      const statChatsToday = document.getElementById('stat-chats-today');
+      const statLeads = document.getElementById('stat-leads-captured');
+      const statConsultations = document.getElementById('stat-consultations');
+      const statDiscounts = document.getElementById('stat-discounts');
+      const refreshBtn = document.getElementById('refresh-chats-btn');
+
+      if (!container) return;
+      container.innerHTML = `<div class="p-4 text-center text-xs text-gray-500 font-mono italic">Querying Supabase chat_conversations...</div>`;
+
+      try {
+        const client = window.supabaseClient || supabaseClient;
+        const { data, error } = await client
+          .from('chat_conversations')
+          .select('*')
+          .order('updated_at', { ascending: false })
+          .limit(50);
+
+        if (error) throw error;
+
+        adminConversationsCache = data || [];
+
+        // Compute metrics
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        
+        let todayCount = 0;
+        let leadsCount = 0;
+        let consultCount = 0;
+        let discountCount = 0;
+
+        adminConversationsCache.forEach(c => {
+          const created = new Date(c.created_at || c.updated_at).getTime();
+          if (created >= startOfDay) todayCount++;
+          if (c.has_lead) leadsCount++;
+          if (c.is_consultation_booked) consultCount++;
+          if (c.claimed_discount) discountCount++;
+        });
+
+        if (statChatsToday) statChatsToday.textContent = todayCount;
+        if (statLeads) statLeads.textContent = leadsCount;
+        if (statConsultations) statConsultations.textContent = consultCount;
+        if (statDiscounts) statDiscounts.textContent = discountCount;
+
+        renderAdminChatbotList();
+      } catch (err) {
+        container.innerHTML = `
+          <div class="p-4 text-center text-xs text-amber-700 bg-amber-50 rounded border border-amber-200 font-mono">
+            Could not load conversations: ${escapeHtml(err.message)}.<br>
+            <span class="text-[10px] text-gray-500">Ensure the <code>chat_conversations</code> SQL schema has been executed in Supabase.</span>
+          </div>
+        `;
+      }
+    }
+
+    function renderAdminChatbotList() {
+      const container = document.getElementById('admin-chat-conversations-list');
+      if (!container) return;
+
+      let filtered = [...adminConversationsCache];
+
+      // Apply filter pills
+      if (adminChatFilter === 'consultation') {
+        filtered = filtered.filter(c => c.is_consultation_booked);
+      } else if (adminChatFilter === 'discount') {
+        filtered = filtered.filter(c => c.claimed_discount);
+      } else if (adminChatFilter === 'unread') {
+        filtered = filtered.filter(c => c.status === 'needs_reply');
+      }
+
+      // Apply search query
+      if (adminChatSearchQuery) {
+        const q = adminChatSearchQuery.toLowerCase();
+        filtered = filtered.filter(c => 
+          (c.visitor_name && c.visitor_name.toLowerCase().includes(q)) ||
+          (c.visitor_email && c.visitor_email.toLowerCase().includes(q)) ||
+          (c.visitor_phone && c.visitor_phone.toLowerCase().includes(q)) ||
+          (c.summary && c.summary.toLowerCase().includes(q))
+        );
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-xs text-gray-400 font-mono italic">No chatbot conversations matching your criteria.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(conv => {
+        const timeStr = conv.updated_at ? new Date(conv.updated_at).toLocaleString() : 'Recent';
+        const hasContact = conv.visitor_email || conv.visitor_phone;
+        const nameDisplay = conv.visitor_name || (hasContact ? 'Prospect Visitor' : 'Anonymous Visitor');
+        
+        const badges = [];
+        if (conv.has_lead) badges.push(`<span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">Lead</span>`);
+        if (conv.is_consultation_booked) badges.push(`<span class="px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-bold text-[10px]">Consultation</span>`);
+        if (conv.claimed_discount) badges.push(`<span class="px-1.5 py-0.5 rounded bg-orange-100 text-orange-800 font-bold text-[10px]">10% Offer</span>`);
+
+        const statusColors = {
+          needs_reply: 'bg-rose-100 text-rose-800 border-rose-300',
+          contacted: 'bg-amber-100 text-amber-800 border-amber-300',
+          booked: 'bg-blue-100 text-blue-800 border-blue-300',
+          closed: 'bg-stone-100 text-stone-700 border-stone-300'
+        };
+
+        const currentStatusClass = statusColors[conv.status] || 'bg-gray-100 text-gray-800';
+
+        return `
+          <div class="p-3 bg-white rounded-lg border border-gray-200 hover:border-black font-mono text-xs transition-colors space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div class="space-y-0.5">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="font-bold text-gray-900 text-sm">${escapeHtml(nameDisplay)}</span>
+                  ${badges.join(' ')}
+                </div>
+                <div class="text-[11px] text-gray-500">
+                  ${conv.visitor_email ? `✉️ ${escapeHtml(conv.visitor_email)} ` : ''}
+                  ${conv.visitor_phone ? `📱 ${escapeHtml(conv.visitor_phone)} ` : ''}
+                  <span class="text-stone-400">·</span> ${escapeHtml(timeStr)}
+                </div>
+              </div>
+
+              <!-- Status Dropdown -->
+              <select 
+                class="text-[11px] font-mono px-2 py-0.5 rounded border ${currentStatusClass}"
+                onchange="updateAdminChatbotStatus('${escapeHtml(conv.session_id)}', this.value)"
+              >
+                <option value="needs_reply" ${conv.status === 'needs_reply' ? 'selected' : ''}>🔴 Needs Reply</option>
+                <option value="contacted" ${conv.status === 'contacted' ? 'selected' : ''}>🟡 Contacted</option>
+                <option value="booked" ${conv.status === 'booked' ? 'selected' : ''}>🔵 Booked Call</option>
+                <option value="closed" ${conv.status === 'closed' ? 'selected' : ''}>⚪ Closed</option>
+              </select>
+            </div>
+
+            ${conv.summary ? `<p class="text-[11px] text-gray-600 truncate bg-stone-50 p-1.5 rounded">${escapeHtml(conv.summary)}</p>` : ''}
+
+            <!-- Action buttons -->
+            <div class="flex items-center justify-between pt-1 border-t border-gray-100">
+              <span class="text-[10px] text-stone-400">Spots at chat: ${conv.spots_left_at_time || 3} left</span>
+              <div class="flex items-center gap-1.5">
+                <button 
+                  type="button" 
+                  onclick="openAdminChatbotTranscript('${escapeHtml(conv.session_id)}')"
+                  class="px-2 py-1 bg-stone-100 hover:bg-stone-200 rounded text-[11px] font-bold text-gray-800"
+                >
+                  📜 Transcript
+                </button>
+                ${conv.visitor_phone ? `
+                  <a 
+                    href="https://wa.me/${conv.visitor_phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello ${conv.visitor_name || ''}! This is Oluwafemi David following up on your website consultation inquiry.`)}" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-bold"
+                  >
+                    WhatsApp 💬
+                  </a>
+                ` : ''}
+                <button 
+                  type="button" 
+                  onclick="deleteAdminChatbotConversation('${escapeHtml(conv.session_id)}')"
+                  class="px-2 py-1 text-red-600 hover:bg-red-50 rounded text-[11px] font-bold"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.updateAdminChatbotStatus = async function(sessionId, newStatus) {
+      try {
+        const client = window.supabaseClient || supabaseClient;
+        await client
+          .from('chat_conversations')
+          .update({ status: newStatus, updated_at: new Date().toISOString() })
+          .eq('session_id', sessionId);
+        showCustomToast(`Status updated to ${newStatus}`);
+        loadAdminChatbotConversations();
+      } catch (err) {
+        showCustomToast("Failed to update status: " + err.message, "error");
+      }
+    };
+
+    window.openAdminChatbotTranscript = async function(sessionId) {
+      const panel = document.getElementById('admin-transcript-panel');
+      const list = document.getElementById('transcript-messages-list');
+      const title = document.getElementById('transcript-visitor-title');
+      const statusSelect = document.getElementById('transcript-status-select');
+      const whatsappBtn = document.getElementById('transcript-whatsapp-btn');
+      const deleteBtn = document.getElementById('delete-conversation-btn');
+
+      if (!panel || !list) return;
+
+      activeTranscriptConvId = sessionId;
+      const conv = adminConversationsCache.find(c => c.session_id === sessionId);
+      if (title) title.textContent = `Transcript: ${conv?.visitor_name || conv?.visitor_email || 'Visitor'} (${sessionId})`;
+      if (statusSelect && conv) statusSelect.value = conv.status || 'needs_reply';
+
+      if (whatsappBtn) {
+        if (conv?.visitor_phone) {
+          whatsappBtn.href = `https://wa.me/${conv.visitor_phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello ${conv.visitor_name || ''}! This is Oluwafemi David following up on your portfolio inquiry.`)}`;
+          whatsappBtn.classList.remove('hidden');
+        } else {
+          whatsappBtn.classList.add('hidden');
+        }
+      }
+
+      panel.classList.remove('hidden');
+      list.innerHTML = `<div class="p-3 text-center text-xs text-gray-500 italic">Loading messages...</div>`;
+
+      try {
+        const client = window.supabaseClient || supabaseClient;
+        const { data, error } = await client
+          .from('chat_messages')
+          .select('*')
+          .eq('conversation_session_id', sessionId)
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          list.innerHTML = `<div class="p-3 text-center text-xs text-gray-400 italic">No stored message logs for this session.</div>`;
+          return;
+        }
+
+        list.innerHTML = data.map(m => {
+          const isUser = m.sender === 'user';
+          return `
+            <div class="p-2 rounded text-xs ${isUser ? 'bg-orange-50 border border-orange-200 text-orange-950 font-bold' : 'bg-gray-50 border border-gray-200 text-gray-800'}">
+              <span class="text-[10px] uppercase tracking-wider text-gray-400 block">${isUser ? 'Visitor' : 'Femi AI'}:</span>
+              <div class="mt-0.5">${escapeHtml(m.message_text).replace(/\n/g, '<br>')}</div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        list.innerHTML = `<div class="p-3 text-center text-xs text-red-500 italic">Failed to load transcript: ${escapeHtml(err.message)}</div>`;
+      }
+    };
+
+    window.deleteAdminChatbotConversation = function(sessionId) {
+      showCustomConfirm("Permanently delete this conversation and its transcript?", async () => {
+        try {
+          const client = window.supabaseClient || supabaseClient;
+          await client.from('chat_messages').delete().eq('conversation_session_id', sessionId);
+          await client.from('chat_conversations').delete().eq('session_id', sessionId);
+          showCustomToast("Deleted conversation.");
+          const panel = document.getElementById('admin-transcript-panel');
+          if (panel) panel.classList.add('hidden');
+          loadAdminChatbotConversations();
+        } catch (err) {
+          showCustomToast("Could not delete conversation: " + err.message, "error");
+        }
+      });
+    };
+
+    // Attach Admin Chat Tab listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      const refreshBtn = document.getElementById('refresh-chats-btn');
+      if (refreshBtn) refreshBtn.addEventListener('click', loadAdminChatbotConversations);
+
+      const searchInput = document.getElementById('chat-search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          adminChatSearchQuery = searchInput.value.trim();
+          renderAdminChatbotList();
+        });
+      }
+
+      const filterPills = document.querySelectorAll('#chat-filter-pills .chat-tab-filter-btn');
+      filterPills.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterPills.forEach(b => {
+            b.className = "chat-tab-filter-btn px-2.5 py-1 rounded-md bg-stone-100 text-gray-700 hover:bg-stone-200 font-bold";
+          });
+          btn.className = "chat-tab-filter-btn px-2.5 py-1 rounded-md bg-stone-900 text-white font-bold";
+          adminChatFilter = btn.getAttribute('data-filter') || 'all';
+          renderAdminChatbotList();
+        });
+      });
+
+      const closeTranscriptBtn = document.getElementById('close-transcript-btn');
+      if (closeTranscriptBtn) {
+        closeTranscriptBtn.addEventListener('click', () => {
+          const panel = document.getElementById('admin-transcript-panel');
+          if (panel) panel.classList.add('hidden');
+        });
+      }
+
+      const transcriptStatusSelect = document.getElementById('transcript-status-select');
+      if (transcriptStatusSelect) {
+        transcriptStatusSelect.addEventListener('change', () => {
+          if (activeTranscriptConvId) {
+            updateAdminChatbotStatus(activeTranscriptConvId, transcriptStatusSelect.value);
+          }
+        });
+      }
+
+      const deleteConvBtn = document.getElementById('delete-conversation-btn');
+      if (deleteConvBtn) {
+        deleteConvBtn.addEventListener('click', () => {
+          if (activeTranscriptConvId) {
+            deleteAdminChatbotConversation(activeTranscriptConvId);
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>
