@@ -2,6 +2,7 @@ import express from 'express';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
 import chatHandler from './api/chat.js';
+import trackHandler from './api/track.js';
 
 dotenv.config();
 
@@ -9,6 +10,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+// Visitor Activity Tracking API Route (mirrors /api/track Vercel Serverless Function)
+app.post('/api/track', async (req, res) => {
+  try {
+    await trackHandler(req, res);
+  } catch (error: any) {
+    console.error('Server /api/track error:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Internal server error processing tracking event.', ok: false });
+    }
+  }
+});
 
 // Chat API Route (mirrors /api/chat Vercel Serverless Function)
 app.post('/api/chat', async (req, res) => {

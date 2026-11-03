@@ -38,6 +38,17 @@ let activeTranscriptConvId = null;
 let savedScrollPosition = 0;
 let savedActiveElement = null;
 
+// Visitor Activity & Realtime Notification State
+let adminNotificationsCache = [];
+let adminVisitorsCache = [];
+let adminSessionsCache = [];
+let adminNotifFilter = 'all';
+let adminVisitorFilter = 'all';
+let adminVisitorSearchQuery = '';
+let realtimeChannel = null;
+let visitorPollingTimer = null;
+let activeDrawerVisitorId = null;
+
 function escapeHtml(str) {
   if (!str) return '';
   return String(str)
@@ -643,9 +654,35 @@ function getAdminModalsHTML() {
             Private Portfolio Workspace
           </h3>
         </div>
-        <button id="header-signout-btn" class="px-3 py-1.5 rounded-lg border-2 border-black bg-red-100 hover:bg-red-200 text-red-800 font-mono text-xs font-bold flex items-center gap-1 transition-all">
-          <span>🚪 Sign out</span>
-        </button>
+        <div class="flex items-center gap-2.5">
+          <!-- Live Active Visitor Pill -->
+          <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-emerald-100 border border-emerald-400 text-emerald-900 text-xs font-mono font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="admin-active-visitors-count">0</span> Active Now
+          </div>
+
+          <!-- Notification Bell Button -->
+          <div class="relative">
+            <button 
+              type="button" 
+              id="admin-notification-bell-btn" 
+              class="relative p-2 rounded-lg border-2 border-black bg-white hover:bg-orange-50 text-gray-800 font-bold transition-all shadow-[2px_2px_0px_#000] active:translate-y-0.5" 
+              aria-label="Visitor Activity Notifications" 
+              title="Visitor Activity Notifications"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+              <span id="admin-notif-badge" class="hidden absolute -top-1.5 -right-1.5 bg-red-600 text-white font-mono font-bold text-[10px] rounded-full px-1.5 py-0.5 leading-none shadow border border-white">
+                0
+              </span>
+            </button>
+          </div>
+
+          <button id="header-signout-btn" class="px-3 py-1.5 rounded-lg border-2 border-black bg-red-100 hover:bg-red-200 text-red-800 font-mono text-xs font-bold flex items-center gap-1 transition-all">
+            <span>🚪 Sign out</span>
+          </button>
+        </div>
       </div>
 
       <!-- Tabs Navigation -->
@@ -656,17 +693,20 @@ function getAdminModalsHTML() {
         <button id="tab-btn-testimonials" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
           <span>💬</span> Reviews (<span id="modal-review-count">0</span>)
         </button>
+        <button id="tab-btn-visitors" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
+          <span>👥</span> Visitors (<span id="modal-visitors-count">0</span>)
+        </button>
+        <button id="tab-btn-chatbot" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
+          <span>🤖</span> Leads (<span id="modal-chatbot-count">0</span>)
+        </button>
         <button id="tab-btn-backup" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
           <span>💾</span> Backup
         </button>
         <button id="tab-btn-security" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
-          <span>🛡️</span> Security & MFA
+          <span>🛡️</span> Security &amp; MFA
         </button>
         <button id="tab-btn-logs" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
-          <span>📜</span> Security Logs
-        </button>
-        <button id="tab-btn-chatbot" class="px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1">
-          <span>🤖</span> Chatbot Leads (<span id="modal-chatbot-count">0</span>)
+          <span>📜</span> Logs
         </button>
       </div>
 
@@ -993,8 +1033,239 @@ function getAdminModalsHTML() {
         </div>
       </div>
 
+      <!-- Tab 7: Visitors Management & Realtime Activity Content -->
+      <div id="tab-content-visitors" class="space-y-6 hidden">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-stone-100 p-4 rounded-xl border border-gray-300 font-mono text-xs">
+          <div>
+            <div class="font-bold text-sm text-gray-900 flex items-center gap-1.5">
+              <span>👥</span> Visitor Activity &amp; Session Analytics
+            </div>
+            <p class="text-[11px] text-gray-600 mt-0.5">
+              Live sessions, returning visitors, page journey, and NDPA 2023 compliant telemetry.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" id="ignore-my-device-toggle-btn" class="px-2.5 py-1.5 rounded border border-stone-400 bg-white hover:bg-stone-50 font-mono text-[11px] font-bold text-gray-800">
+              📱 Ignore My Device
+            </button>
+            <button type="button" id="refresh-visitors-btn" class="btn-outline text-xs py-1.5 px-2.5 font-mono border-black">
+              <span>🔄 Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs">
+          <div class="p-3 bg-emerald-50 border border-emerald-300 rounded-lg">
+            <div class="text-[10px] text-emerald-800 uppercase flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active Now
+            </div>
+            <div id="stat-active-visitors" class="text-xl font-bold text-emerald-900 mt-0.5">0</div>
+          </div>
+          <div class="p-3 bg-stone-50 border border-gray-200 rounded-lg">
+            <div class="text-[10px] text-gray-500 uppercase">Total Today</div>
+            <div id="stat-visitors-today" class="text-xl font-bold text-gray-900 mt-0.5">0</div>
+          </div>
+          <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div class="text-[10px] text-blue-700 uppercase">Returning Rate</div>
+            <div id="stat-returning-rate" class="text-xl font-bold text-blue-800 mt-0.5">0%</div>
+          </div>
+          <div class="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+            <div class="text-[10px] text-purple-700 uppercase">Avg. Duration</div>
+            <div id="stat-avg-duration" class="text-xl font-bold text-purple-800 mt-0.5">0s</div>
+          </div>
+        </div>
+
+        <!-- 7-Day Activity Chart Card -->
+        <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-sm font-mono text-xs space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="font-bold text-gray-900 flex items-center gap-1">
+              <span>📊</span> 7-Day Visitor Volume &amp; Return Rate
+            </div>
+            <div class="flex items-center gap-3 text-[10px] text-gray-500">
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-orange-500 rounded-sm"></span> New Visits</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-blue-600 rounded-sm"></span> Returning</span>
+            </div>
+          </div>
+          <div id="visitor-activity-chart-wrap" class="w-full h-36 pt-2">
+            <!-- Rendered SVG Chart -->
+          </div>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap gap-1.5 font-mono text-xs" id="visitor-filter-pills">
+            <button type="button" class="visitor-filter-btn px-2.5 py-1 rounded-md bg-stone-900 text-white font-bold" data-filter="all">All Visitors</button>
+            <button type="button" class="visitor-filter-btn px-2.5 py-1 rounded-md bg-stone-100 text-gray-700 hover:bg-stone-200 font-bold" data-filter="active">🟢 Active Now</button>
+            <button type="button" class="visitor-filter-btn px-2.5 py-1 rounded-md bg-stone-100 text-gray-700 hover:bg-stone-200 font-bold" data-filter="returning">🔄 Returning</button>
+            <button type="button" class="visitor-filter-btn px-2.5 py-1 rounded-md bg-stone-100 text-gray-700 hover:bg-stone-200 font-bold" data-filter="leads">🎯 Has Lead Info</button>
+          </div>
+          <input 
+            type="text" 
+            id="visitor-search-input" 
+            placeholder="Search by city, country, device, or notes..." 
+            class="px-2.5 py-1 border border-gray-300 rounded text-xs font-mono bg-stone-50 w-full sm:w-60"
+          />
+        </div>
+
+        <!-- Visitors Table -->
+        <div class="border border-gray-300 rounded-xl overflow-hidden bg-white shadow-sm font-mono text-xs">
+          <div class="max-h-80 overflow-y-auto">
+            <table class="w-full text-left">
+              <thead class="bg-stone-100 border-b border-gray-200 sticky top-0 font-bold text-gray-700">
+                <tr>
+                  <th class="p-2.5">Visitor / Status</th>
+                  <th class="p-2.5">Location</th>
+                  <th class="p-2.5">Device / OS</th>
+                  <th class="p-2.5">Visits</th>
+                  <th class="p-2.5">Last Seen</th>
+                  <th class="p-2.5 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="visitors-table-tbody" class="divide-y divide-gray-100">
+                <tr><td colspan="6" class="p-4 text-center text-gray-500 italic">Click Refresh to load visitor directory.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NOTIFICATION CENTER DROPDOWN PANEL -->
+    <div id="admin-notification-center" class="hidden absolute top-20 right-4 sm:right-8 z-[100005] w-[92vw] sm:w-96 bg-stone-50 rounded-2xl border-3 border-black shadow-[8px_8px_0px_#000] p-4 font-mono text-xs space-y-3">
+      <div class="flex items-center justify-between border-b-2 border-black pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🔔</span>
+          <span class="font-bold text-sm text-gray-900">Activity Notifications</span>
+          <span id="notif-unread-count-pill" class="px-2 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-300 text-[10px] font-bold">0 New</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button type="button" id="notif-sound-toggle-btn" class="p-1 rounded bg-white hover:bg-stone-100 border border-gray-300 text-gray-700 text-sm" title="Toggle Sound Chime">
+            🔔
+          </button>
+          <button type="button" id="notif-push-toggle-btn" class="p-1 rounded bg-white hover:bg-stone-100 border border-gray-300 text-gray-700 text-sm" title="Toggle Push Notifications">
+            📲
+          </button>
+          <button type="button" id="close-notif-center-btn" class="p-1 rounded hover:bg-red-50 text-gray-600 hover:text-red-600 font-bold text-sm">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Controls & Quiet Hours -->
+      <div class="flex items-center justify-between text-[11px] text-gray-600 bg-white p-2 rounded-lg border border-gray-200">
+        <div class="flex items-center gap-1.5">
+          <span id="quiet-hours-indicator" title="Quiet Hours 23:00 - 07:00 WAT">🌙 Quiet: 23:00-07:00</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="notif-mark-all-read-btn" class="text-orange-600 hover:underline font-bold">Mark all read</button>
+          <span>·</span>
+          <button type="button" id="notif-clear-all-btn" class="text-gray-500 hover:text-red-600 font-bold">Clear</button>
+        </div>
+      </div>
+
+      <!-- Notification Filters -->
+      <div class="flex flex-wrap gap-1" id="notif-filter-pills">
+        <button type="button" class="notif-filter-btn px-2 py-0.5 rounded bg-stone-900 text-white font-bold text-[10px]" data-filter="all">All</button>
+        <button type="button" class="notif-filter-btn px-2 py-0.5 rounded bg-white text-gray-700 border border-gray-200 hover:bg-stone-100 font-bold text-[10px]" data-filter="unread">Unread</button>
+        <button type="button" class="notif-filter-btn px-2 py-0.5 rounded bg-white text-gray-700 border border-gray-200 hover:bg-stone-100 font-bold text-[10px]" data-filter="arrival">Arrivals</button>
+        <button type="button" class="notif-filter-btn px-2 py-0.5 rounded bg-white text-gray-700 border border-gray-200 hover:bg-stone-100 font-bold text-[10px]" data-filter="departure">Departures</button>
+        <button type="button" class="notif-filter-btn px-2 py-0.5 rounded bg-white text-gray-700 border border-gray-200 hover:bg-stone-100 font-bold text-[10px]" data-filter="leads">Leads / Actions</button>
+      </div>
+
+      <!-- Notifications Feed -->
+      <div id="admin-notifications-feed" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+        <div class="p-6 text-center text-xs text-gray-400 italic">No activity notifications yet.</div>
+      </div>
+    </div>
+
+    <!-- VISITOR DETAIL DRAWER (SLIDE OVER) -->
+    <div id="visitor-detail-drawer" class="hidden fixed inset-y-0 right-0 z-[100010] w-full max-w-md bg-stone-50 border-l-3 border-black shadow-[-8px_0px_0px_rgba(0,0,0,0.4)] p-6 font-mono text-xs overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between border-b-2 border-black pb-3">
+        <div>
+          <div class="text-[10px] text-gray-500 uppercase tracking-wider">Visitor Profile</div>
+          <div id="drawer-visitor-title" class="text-base font-extrabold text-gray-900">Visitor Details</div>
+        </div>
+        <button type="button" id="close-visitor-drawer-btn" class="w-8 h-8 rounded-full bg-white border-2 border-black flex items-center justify-center font-bold hover:bg-red-50 text-gray-700 hover:text-red-600 transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Status & Geo Card -->
+      <div class="bg-white p-3.5 rounded-xl border border-gray-300 space-y-2">
+        <div class="flex items-center justify-between">
+          <span id="drawer-live-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-700">Offline</span>
+          <span id="drawer-visits-count" class="text-[11px] font-bold text-orange-600">1 visit</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 pt-1 text-[11px]">
+          <div>
+            <span class="text-gray-400 block text-[10px]">Location:</span>
+            <span id="drawer-location" class="font-bold text-gray-800">Nigeria</span>
+          </div>
+          <div>
+            <span class="text-gray-400 block text-[10px]">Device &amp; OS:</span>
+            <span id="drawer-device" class="font-bold text-gray-800">Mobile (Android)</span>
+          </div>
+          <div>
+            <span class="text-gray-400 block text-[10px]">Browser:</span>
+            <span id="drawer-browser" class="font-bold text-gray-800">Chrome</span>
+          </div>
+          <div>
+            <span class="text-gray-400 block text-[10px]">First Seen:</span>
+            <span id="drawer-first-seen" class="font-bold text-gray-800">Today</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linked Lead Info (if any) -->
+      <div id="drawer-lead-card" class="hidden bg-emerald-50 border border-emerald-300 p-3.5 rounded-xl space-y-1.5">
+        <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
+          <span>🎯</span> Identified Client Lead
+        </div>
+        <div id="drawer-lead-details" class="text-[11px] text-emerald-950 space-y-0.5"></div>
+      </div>
+
+      <!-- Journey & Timeline -->
+      <div class="bg-white p-3.5 rounded-xl border border-gray-300 space-y-2">
+        <div class="font-bold text-gray-900 text-xs flex items-center gap-1.5">
+          <span>🧭</span> Session Journey &amp; Actions
+        </div>
+        <div id="drawer-timeline" class="space-y-2 pt-1 max-h-56 overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- Notes & Labels -->
+      <div class="bg-white p-3.5 rounded-xl border border-gray-300 space-y-2">
+        <div class="font-bold text-gray-900 text-xs flex items-center gap-1.5">
+          <span>📝</span> Admin Notes &amp; Labels
+        </div>
+        <textarea id="drawer-notes-input" rows="2" placeholder="Add custom notes (e.g., Interested in E-commerce quote)..." class="w-full p-2 border border-gray-300 rounded text-xs bg-stone-50"></textarea>
+        <div class="flex items-center justify-between pt-1">
+          <button type="button" id="save-drawer-notes-btn" class="px-3 py-1 bg-stone-900 text-white rounded font-bold text-[11px]">
+            Save Note
+          </button>
+          <button type="button" id="drawer-toggle-ignore-btn" class="px-2.5 py-1 text-red-600 hover:bg-red-50 rounded border border-red-200 text-[11px] font-bold">
+            Ignore Device
+          </button>
+        </div>
+      </div>
     </div>
   </div>
+
+  <style>
+    @keyframes bellShake {
+      0% { transform: rotate(0); }
+      15% { transform: rotate(14deg); }
+      30% { transform: rotate(-14deg); }
+      45% { transform: rotate(10deg); }
+      60% { transform: rotate(-10deg); }
+      75% { transform: rotate(6deg); }
+      100% { transform: rotate(0); }
+    }
+    .bell-shake {
+      animation: bellShake 0.6s ease-in-out;
+    }
+  </style>
   `;
 }
 
@@ -1326,24 +1597,26 @@ function setupAdminEventListeners() {
   // Tab switching
   const tabWebsites = document.getElementById('tab-btn-websites');
   const tabReviews = document.getElementById('tab-btn-testimonials');
+  const tabVisitors = document.getElementById('tab-btn-visitors');
+  const tabChatbot = document.getElementById('tab-btn-chatbot');
   const tabBackup = document.getElementById('tab-btn-backup');
   const tabSecurity = document.getElementById('tab-btn-security');
   const tabLogs = document.getElementById('tab-btn-logs');
-  const tabChatbot = document.getElementById('tab-btn-chatbot');
 
   const contentWebsites = document.getElementById('tab-content-websites');
   const contentReviews = document.getElementById('tab-content-testimonials');
+  const contentVisitors = document.getElementById('tab-content-visitors');
+  const contentChatbot = document.getElementById('tab-content-chatbot');
   const contentBackup = document.getElementById('tab-content-backup');
   const contentSecurity = document.getElementById('tab-content-security');
   const contentLogs = document.getElementById('tab-content-logs');
-  const contentChatbot = document.getElementById('tab-content-chatbot');
 
   function switchTab(name) {
-    [tabWebsites, tabReviews, tabBackup, tabSecurity, tabLogs, tabChatbot].forEach(t => {
+    [tabWebsites, tabReviews, tabVisitors, tabChatbot, tabBackup, tabSecurity, tabLogs].forEach(t => {
       if (!t) return;
       t.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-transparent rounded-t-lg bg-white/70 text-gray-700 hover:bg-stone-200 transition-colors flex items-center gap-1";
     });
-    [contentWebsites, contentReviews, contentBackup, contentSecurity, contentLogs, contentChatbot].forEach(c => c && c.classList.add('hidden'));
+    [contentWebsites, contentReviews, contentVisitors, contentChatbot, contentBackup, contentSecurity, contentLogs].forEach(c => c && c.classList.add('hidden'));
 
     if (name === 'websites') {
       tabWebsites.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-500 text-white flex items-center gap-1 font-bold";
@@ -1351,6 +1624,14 @@ function setupAdminEventListeners() {
     } else if (name === 'testimonials') {
       tabReviews.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-emerald-600 text-white flex items-center gap-1 font-bold";
       contentReviews?.classList.remove('hidden');
+    } else if (name === 'visitors') {
+      tabVisitors.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-orange-600 text-white flex items-center gap-1 font-bold";
+      contentVisitors?.classList.remove('hidden');
+      loadAdminVisitors();
+    } else if (name === 'chatbot') {
+      tabChatbot.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-teal-600 text-white flex items-center gap-1 font-bold";
+      contentChatbot?.classList.remove('hidden');
+      loadAdminChatbotConversations();
     } else if (name === 'backup') {
       tabBackup.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-stone-900 text-white flex items-center gap-1 font-bold";
       contentBackup?.classList.remove('hidden');
@@ -1361,19 +1642,146 @@ function setupAdminEventListeners() {
       tabLogs.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-purple-600 text-white flex items-center gap-1 font-bold";
       contentLogs?.classList.remove('hidden');
       loadSecurityLogs();
-    } else if (name === 'chatbot') {
-      tabChatbot.className = "px-3 py-2 border-t-2 border-l-2 border-r-2 border-black rounded-t-lg bg-teal-600 text-white flex items-center gap-1 font-bold";
-      contentChatbot?.classList.remove('hidden');
-      loadAdminChatbotConversations();
     }
   }
 
   if (tabWebsites) tabWebsites.addEventListener('click', () => switchTab('websites'));
   if (tabReviews) tabReviews.addEventListener('click', () => switchTab('testimonials'));
+  if (tabVisitors) tabVisitors.addEventListener('click', () => switchTab('visitors'));
+  if (tabChatbot) tabChatbot.addEventListener('click', () => switchTab('chatbot'));
   if (tabBackup) tabBackup.addEventListener('click', () => switchTab('backup'));
   if (tabSecurity) tabSecurity.addEventListener('click', () => switchTab('security'));
   if (tabLogs) tabLogs.addEventListener('click', () => switchTab('logs'));
-  if (tabChatbot) tabChatbot.addEventListener('click', () => switchTab('chatbot'));
+
+  // Notification Bell Toggle
+  const bellBtn = document.getElementById('admin-notification-bell-btn');
+  const notifCenter = document.getElementById('admin-notification-center');
+  const closeNotifCenterBtn = document.getElementById('close-notif-center-btn');
+
+  if (bellBtn && notifCenter) {
+    bellBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isHidden = notifCenter.classList.contains('hidden');
+      if (isHidden) {
+        notifCenter.classList.remove('hidden');
+        loadAdminNotifications();
+      } else {
+        notifCenter.classList.add('hidden');
+      }
+    });
+  }
+
+  if (closeNotifCenterBtn && notifCenter) {
+    closeNotifCenterBtn.addEventListener('click', () => {
+      notifCenter.classList.add('hidden');
+    });
+  }
+
+  // Sound Chime Toggle
+  const soundToggleBtn = document.getElementById('notif-sound-toggle-btn');
+  if (soundToggleBtn) {
+    const isMuted = localStorage.getItem('femi_admin_sound_muted') === 'true';
+    soundToggleBtn.textContent = isMuted ? '🔕' : '🔔';
+    soundToggleBtn.addEventListener('click', () => {
+      const currentlyMuted = localStorage.getItem('femi_admin_sound_muted') === 'true';
+      if (currentlyMuted) {
+        localStorage.removeItem('femi_admin_sound_muted');
+        soundToggleBtn.textContent = '🔔';
+        showToast('Notification chime unmuted.');
+        playNotificationChime('arrival');
+      } else {
+        localStorage.setItem('femi_admin_sound_muted', 'true');
+        soundToggleBtn.textContent = '🔕';
+        showToast('Notification chime muted.');
+      }
+    });
+  }
+
+  // Push Notifications Toggle
+  const pushToggleBtn = document.getElementById('notif-push-toggle-btn');
+  if (pushToggleBtn) {
+    pushToggleBtn.addEventListener('click', () => {
+      requestPushNotificationPermission();
+    });
+  }
+
+  // Mark all read button
+  const markAllReadBtn = document.getElementById('notif-mark-all-read-btn');
+  if (markAllReadBtn) {
+    markAllReadBtn.addEventListener('click', markAllNotificationsAsRead);
+  }
+
+  // Clear notifications button
+  const clearNotifsBtn = document.getElementById('notif-clear-all-btn');
+  if (clearNotifsBtn) {
+    clearNotifsBtn.addEventListener('click', clearArchivedNotifications);
+  }
+
+  // Notification Filter Pills
+  const notifFilterBtns = document.querySelectorAll('#notif-filter-pills .notif-filter-btn');
+  notifFilterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      notifFilterBtns.forEach(b => {
+        b.className = "notif-filter-btn px-2 py-0.5 rounded bg-white text-gray-700 border border-gray-200 hover:bg-stone-100 font-bold text-[10px]";
+      });
+      btn.className = "notif-filter-btn px-2 py-0.5 rounded bg-stone-900 text-white font-bold text-[10px]";
+      adminNotifFilter = btn.getAttribute('data-filter') || 'all';
+      renderAdminNotificationsFeed();
+    });
+  });
+
+  // Visitors Refresh & Ignore Device Buttons
+  const refreshVisitorsBtn = document.getElementById('refresh-visitors-btn');
+  if (refreshVisitorsBtn) refreshVisitorsBtn.addEventListener('click', loadAdminVisitors);
+
+  const ignoreDeviceBtn = document.getElementById('ignore-my-device-toggle-btn');
+  if (ignoreDeviceBtn) {
+    const isDeviceIgnored = localStorage.getItem('femi_ignore_device') === 'true';
+    ignoreDeviceBtn.textContent = isDeviceIgnored ? '✅ My Device Ignored' : '📱 Ignore My Device';
+    ignoreDeviceBtn.addEventListener('click', () => {
+      const isCurrentlyIgnored = localStorage.getItem('femi_ignore_device') === 'true';
+      if (isCurrentlyIgnored) {
+        localStorage.removeItem('femi_ignore_device');
+        ignoreDeviceBtn.textContent = '📱 Ignore My Device';
+        showToast('Your device tracking is re-enabled.');
+      } else {
+        localStorage.setItem('femi_ignore_device', 'true');
+        ignoreDeviceBtn.textContent = '✅ My Device Ignored';
+        showToast('This device will now be ignored from visitor tracking.');
+      }
+    });
+  }
+
+  // Visitor Filter Pills
+  const visitorFilterBtns = document.querySelectorAll('#visitor-filter-pills .visitor-filter-btn');
+  visitorFilterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      visitorFilterBtns.forEach(b => {
+        b.className = "visitor-filter-btn px-2.5 py-1 rounded-md bg-stone-100 text-gray-700 hover:bg-stone-200 font-bold";
+      });
+      btn.className = "visitor-filter-btn px-2.5 py-1 rounded-md bg-stone-900 text-white font-bold";
+      adminVisitorFilter = btn.getAttribute('data-filter') || 'all';
+      renderAdminVisitorsTable();
+    });
+  });
+
+  // Visitor Search Input
+  const visitorSearchInput = document.getElementById('visitor-search-input');
+  if (visitorSearchInput) {
+    visitorSearchInput.addEventListener('input', () => {
+      adminVisitorSearchQuery = visitorSearchInput.value.trim();
+      renderAdminVisitorsTable();
+    });
+  }
+
+  // Visitor Detail Drawer Close
+  const closeVisitorDrawerBtn = document.getElementById('close-visitor-drawer-btn');
+  if (closeVisitorDrawerBtn) {
+    closeVisitorDrawerBtn.addEventListener('click', () => {
+      const drawer = document.getElementById('visitor-detail-drawer');
+      if (drawer) drawer.classList.add('hidden');
+    });
+  }
 
   // Website form submit
   const webForm = document.getElementById('website-sample-form');
@@ -1584,6 +1992,9 @@ function openStorageModal(tab = 'websites') {
 
   renderModalLists();
   startInactivityEngine();
+  startRealtimeNotifications();
+  loadAdminNotifications();
+  loadAdminVisitors();
 }
 
 function closeStorageModal() {
@@ -1962,6 +2373,734 @@ async function openAdminChatbotTranscript(sessionId) {
   }
 }
 
+// ==============================================================
+// VISITOR ACTIVITY NOTIFICATIONS & REALTIME TELEMETRY ENGINE
+// ==============================================================
+
+// Web Audio API Synthesizer for pleasant notifications
+function playNotificationChime(type = 'arrival') {
+  if (localStorage.getItem('femi_admin_sound_muted') === 'true') return;
+
+  // Quiet Hours check (23:00 to 07:00 WAT)
+  const hour = new Date().getHours();
+  if (hour >= 23 || hour < 7) {
+    return;
+  }
+
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    if (type === 'lead_form' || type === 'lead_chat' || type === 'whatsapp_click' || type === 'call_click') {
+      // Double upbeat chime for leads
+      osc.frequency.setValueAtTime(587.33, now); // D5
+      osc.frequency.setValueAtTime(880, now + 0.12); // A5
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      osc.start(now);
+      osc.stop(now + 0.4);
+    } else {
+      // Single gentle bell for visitor arrivals
+      osc.frequency.setValueAtTime(659.25, now); // E5
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.start(now);
+      osc.stop(now + 0.3);
+    }
+  } catch (e) {}
+}
+
+function requestPushNotificationPermission() {
+  if ('Notification' in window) {
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        showToast('Browser notifications enabled!');
+      } else {
+        showToast('Browser notifications permission denied.', 'error');
+      }
+    });
+  } else {
+    showToast('Push notifications not supported on this browser.', 'error');
+  }
+}
+
+function sendBrowserPushNotification(title, body) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try {
+      new Notification(title, {
+        body,
+        icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>'
+      });
+    } catch (e) {}
+  }
+}
+
+function updateAdminPageTitleWithUnread(count) {
+  if (count > 0) {
+    document.title = `(${count}) ${NEUTRAL_ADMIN_TITLE}`;
+  } else {
+    document.title = NEUTRAL_ADMIN_TITLE;
+  }
+}
+
+// REALTIME SUBSCRIPTIONS
+function startRealtimeNotifications() {
+  stopRealtimeNotifications();
+
+  const client = getSupabase();
+  if (!client || typeof client.channel !== 'function') return;
+
+  try {
+    realtimeChannel = client
+      .channel('admin-visitor-activity')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'notifications'
+      }, (payload) => {
+        const newNotif = payload.new;
+        if (!newNotif) return;
+
+        adminNotificationsCache.unshift(newNotif);
+        playNotificationChime(newNotif.type);
+        sendBrowserPushNotification(newNotif.title, newNotif.message);
+
+        // Shake bell icon
+        const bellBtn = document.getElementById('admin-notification-bell-btn');
+        if (bellBtn) {
+          bellBtn.classList.remove('bell-shake');
+          void bellBtn.offsetWidth; // trigger reflow
+          bellBtn.classList.add('bell-shake');
+        }
+
+        renderAdminNotificationsFeed();
+        updateUnreadBadges();
+      })
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'visitor_sessions'
+      }, () => {
+        loadAdminVisitors();
+      })
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('Realtime notification channel active.');
+        }
+      });
+
+    // 30-Second Polling Fallback
+    visitorPollingTimer = setInterval(() => {
+      loadAdminVisitors();
+      loadAdminNotifications();
+    }, 30000);
+
+  } catch (err) {
+    console.warn('Realtime subscription error:', err);
+  }
+}
+
+function stopRealtimeNotifications() {
+  if (realtimeChannel) {
+    try {
+      const client = getSupabase();
+      if (client?.removeChannel) client.removeChannel(realtimeChannel);
+    } catch (e) {}
+    realtimeChannel = null;
+  }
+  if (visitorPollingTimer) {
+    clearInterval(visitorPollingTimer);
+    visitorPollingTimer = null;
+  }
+  updateAdminPageTitleWithUnread(0);
+}
+
+// NOTIFICATION OPERATIONS
+async function loadAdminNotifications() {
+  const container = document.getElementById('admin-notifications-feed');
+  if (!container) return;
+
+  try {
+    const client = getSupabase();
+    if (!client) return;
+
+    const { data, error } = await client
+      .from('notifications')
+      .select('*')
+      .eq('is_archived', false)
+      .order('created_at', { ascending: false })
+      .limit(60);
+
+    if (error) throw error;
+    adminNotificationsCache = data || [];
+    renderAdminNotificationsFeed();
+    updateUnreadBadges();
+  } catch (err) {
+    console.warn('Error loading notifications:', err);
+  }
+}
+
+function updateUnreadBadges() {
+  const unreadCount = adminNotificationsCache.filter(n => !n.is_read).length;
+  const badge = document.getElementById('admin-notif-badge');
+  const pill = document.getElementById('notif-unread-count-pill');
+
+  if (badge) {
+    if (unreadCount > 0) {
+      badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+
+  if (pill) {
+    pill.textContent = `${unreadCount} New`;
+  }
+
+  updateAdminPageTitleWithUnread(unreadCount);
+}
+
+function formatRelativeTime(dateStr) {
+  if (!dateStr) return 'Just now';
+  const diffSec = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (diffSec < 15) return 'Just now';
+  if (diffSec < 60) return `${diffSec}s ago`;
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffHour < 24) return `${diffHour}h ago`;
+  const diffDays = Math.floor(diffHour / 24);
+  return `${diffDays}d ago`;
+}
+
+function renderAdminNotificationsFeed() {
+  const container = document.getElementById('admin-notifications-feed');
+  if (!container) return;
+
+  let filtered = [...adminNotificationsCache];
+  if (adminNotifFilter === 'unread') {
+    filtered = filtered.filter(n => !n.is_read);
+  } else if (adminNotifFilter === 'arrival') {
+    filtered = filtered.filter(n => n.type === 'arrival_new' || n.type === 'arrival_returning');
+  } else if (adminNotifFilter === 'departure') {
+    filtered = filtered.filter(n => n.type === 'departure');
+  } else if (adminNotifFilter === 'leads') {
+    filtered = filtered.filter(n => n.type !== 'arrival_new' && n.type !== 'arrival_returning' && n.type !== 'departure');
+  }
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="p-6 text-center text-xs text-gray-400 italic">No activity notifications found in this filter.</div>`;
+    return;
+  }
+
+  const iconMap = {
+    arrival_new: '🟢',
+    arrival_returning: '🔄',
+    departure: '👋',
+    lead_form: '✍️',
+    lead_chat: '🤖',
+    whatsapp_click: '💬',
+    call_click: '📞',
+    discount_claim: '🔥',
+    high_intent: '🎯'
+  };
+
+  container.innerHTML = filtered.map(item => {
+    const icon = iconMap[item.type] || '🔔';
+    const isUnread = !item.is_read;
+    const timeAgo = formatRelativeTime(item.created_at);
+
+    return `
+      <div 
+        class="notif-card p-2.5 rounded-xl border transition-all cursor-pointer ${isUnread ? 'bg-orange-50/80 border-orange-300 shadow-sm' : 'bg-white border-gray-200 hover:border-black'}"
+        data-id="${escapeHtml(item.id)}"
+        data-visitor-id="${escapeHtml(item.visitor_id || '')}"
+        data-session-id="${escapeHtml(item.session_id || '')}"
+      >
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex items-start gap-2">
+            <span class="text-base flex-shrink-0 mt-0.5">${icon}</span>
+            <div>
+              <div class="font-bold text-gray-900 ${isUnread ? 'text-orange-950 font-extrabold' : ''}">${escapeHtml(item.title)}</div>
+              <p class="text-[11px] text-gray-600 leading-snug mt-0.5">${escapeHtml(item.message)}</p>
+            </div>
+          </div>
+          <div class="text-[10px] text-gray-400 whitespace-nowrap flex-shrink-0 flex flex-col items-end gap-1">
+            <span>${timeAgo}</span>
+            ${isUnread ? `<button type="button" class="mark-single-read-btn text-orange-600 hover:underline font-bold text-[10px]" data-id="${escapeHtml(item.id)}">Read</button>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Event handlers
+  container.querySelectorAll('.notif-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.mark-single-read-btn')) return;
+      const vId = card.getAttribute('data-visitor-id');
+      const sId = card.getAttribute('data-session-id');
+      const nId = card.getAttribute('data-id');
+      if (nId) markNotificationAsRead(nId);
+      if (vId) openVisitorDetailDrawer(vId, sId);
+    });
+  });
+
+  container.querySelectorAll('.mark-single-read-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const nId = btn.getAttribute('data-id');
+      if (nId) markNotificationAsRead(nId);
+    });
+  });
+}
+
+async function markNotificationAsRead(notifId) {
+  const item = adminNotificationsCache.find(n => n.id === notifId);
+  if (item) item.is_read = true;
+  updateUnreadBadges();
+  renderAdminNotificationsFeed();
+
+  try {
+    const client = getSupabase();
+    if (client) {
+      await client.from('notifications').update({ is_read: true }).eq('id', notifId);
+    }
+  } catch (e) {}
+}
+
+async function markAllNotificationsAsRead() {
+  adminNotificationsCache.forEach(n => n.is_read = true);
+  updateUnreadBadges();
+  renderAdminNotificationsFeed();
+
+  try {
+    const client = getSupabase();
+    if (client) {
+      await client.from('notifications').update({ is_read: true }).eq('is_read', false);
+    }
+    showToast("All notifications marked as read.");
+  } catch (e) {}
+}
+
+async function clearArchivedNotifications() {
+  adminNotificationsCache = adminNotificationsCache.filter(n => !n.is_read);
+  updateUnreadBadges();
+  renderAdminNotificationsFeed();
+
+  try {
+    const client = getSupabase();
+    if (client) {
+      await client.from('notifications').update({ is_archived: true }).eq('is_read', true);
+    }
+    showToast("Cleared read notifications.");
+  } catch (e) {}
+}
+
+// VISITOR DIRECTORY & ANALYTICS
+async function loadAdminVisitors() {
+  const tbody = document.getElementById('visitors-table-tbody');
+  const countBadge = document.getElementById('modal-visitors-count');
+
+  try {
+    const client = getSupabase();
+    if (!client) return;
+
+    // 1. Run stale session cleanup RPC
+    try {
+      if (typeof client.rpc === 'function') {
+        await client.rpc('cleanup_stale_sessions');
+      }
+    } catch (e) {}
+
+    // 2. Fetch Sessions
+    const { data: sessions, error: sessErr } = await client
+      .from('visitor_sessions')
+      .select('*')
+      .order('started_at', { ascending: false })
+      .limit(100);
+
+    if (sessErr) throw sessErr;
+    adminSessionsCache = sessions || [];
+
+    // 3. Fetch Visitors
+    const { data: visitors, error: visErr } = await client
+      .from('visitors')
+      .select('*')
+      .order('last_seen_at', { ascending: false })
+      .limit(50);
+
+    if (visErr) throw visErr;
+    adminVisitorsCache = visitors || [];
+
+    if (countBadge) countBadge.textContent = adminVisitorsCache.length;
+
+    // 4. Calculate stats
+    const now = Date.now();
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    let activeCount = 0;
+    let todaySessionsCount = 0;
+    let returningSessionsCount = 0;
+    let totalDuration = 0;
+
+    adminSessionsCache.forEach(s => {
+      const started = new Date(s.started_at).getTime();
+      const lastActive = new Date(s.last_active_at || s.started_at).getTime();
+
+      // Active if is_active is true and active within last 2 minutes
+      if (s.is_active && (now - lastActive < 120000)) {
+        activeCount++;
+      }
+
+      if (started >= startOfToday.getTime()) {
+        todaySessionsCount++;
+        if (s.session_number > 1) returningSessionsCount++;
+        totalDuration += (s.duration_seconds || 0);
+      }
+    });
+
+    const returningRate = todaySessionsCount > 0 ? Math.round((returningSessionsCount / todaySessionsCount) * 100) : 0;
+    const avgDurationSec = todaySessionsCount > 0 ? Math.round(totalDuration / todaySessionsCount) : 0;
+
+    const topActiveEl = document.getElementById('admin-active-visitors-count');
+    const statActiveEl = document.getElementById('stat-active-visitors');
+    const statTodayEl = document.getElementById('stat-visitors-today');
+    const statRateEl = document.getElementById('stat-returning-rate');
+    const statAvgDurEl = document.getElementById('stat-avg-duration');
+
+    if (topActiveEl) topActiveEl.textContent = activeCount;
+    if (statActiveEl) statActiveEl.textContent = activeCount;
+    if (statTodayEl) statTodayEl.textContent = todaySessionsCount;
+    if (statRateEl) statRateEl.textContent = `${returningRate}%`;
+    if (statAvgDurEl) {
+      statAvgDurEl.textContent = avgDurationSec < 60 ? `${avgDurationSec}s` : `${Math.round(avgDurationSec / 60)}m`;
+    }
+
+    renderVisitorActivityChart();
+    renderAdminVisitorsTable();
+
+  } catch (err) {
+    console.warn('Error loading visitors:', err);
+    if (tbody) {
+      tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-500 italic">Could not query visitor data: ${escapeHtml(err.message)}</td></tr>`;
+    }
+  }
+}
+
+function renderVisitorActivityChart() {
+  const container = document.getElementById('visitor-activity-chart-wrap');
+  if (!container) return;
+
+  // Build 7-day stats
+  const days = [];
+  const now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+    const dayLabel = d.toLocaleDateString('en-US', { weekday: 'short' });
+    const dayKey = d.toISOString().split('T')[0];
+    days.push({ dayLabel, dayKey, newCount: 0, retCount: 0 });
+  }
+
+  adminSessionsCache.forEach(s => {
+    if (!s.started_at) return;
+    const sDate = s.started_at.split('T')[0];
+    const match = days.find(d => d.dayKey === sDate);
+    if (match) {
+      if (s.session_number > 1) match.retCount++;
+      else match.newCount++;
+    }
+  });
+
+  const maxVal = Math.max(1, ...days.map(d => d.newCount + d.retCount));
+  const svgHeight = 100;
+
+  const chartBars = days.map((d, idx) => {
+    const total = d.newCount + d.retCount;
+    const totalHeight = Math.round((total / maxVal) * (svgHeight - 20));
+    const newHeight = total > 0 ? Math.round((d.newCount / total) * totalHeight) : 0;
+    const retHeight = totalHeight - newHeight;
+
+    const x = idx * 56 + 20;
+    const yNew = svgHeight - newHeight;
+    const yRet = yNew - retHeight;
+
+    return `
+      <g class="chart-col group">
+        <title>${d.dayLabel} (${d.dayKey}): ${d.newCount} New, ${d.retCount} Returning</title>
+        <!-- Returning bar -->
+        ${retHeight > 0 ? `<rect x="${x}" y="${yRet}" width="26" height="${retHeight}" rx="3" fill="#2563eb" />` : ''}
+        <!-- New visitor bar -->
+        ${newHeight > 0 ? `<rect x="${x}" y="${yNew}" width="26" height="${newHeight}" rx="3" fill="#ea580c" />` : ''}
+        <!-- Label -->
+        <text x="${x + 13}" y="${svgHeight + 14}" text-anchor="middle" font-size="10" font-family="monospace" fill="#4b5563">${d.dayLabel}</text>
+        <text x="${x + 13}" y="${Math.max(12, yRet - 3)}" text-anchor="middle" font-size="9" font-family="monospace" font-weight="bold" fill="#111827">${total}</text>
+      </g>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <svg viewBox="0 0 420 125" class="w-full h-full overflow-visible">
+      <line x1="15" y1="${svgHeight}" x2="410" y2="${svgHeight}" stroke="#e5e7eb" stroke-width="1.5" />
+      ${chartBars}
+    </svg>
+  `;
+}
+
+function renderAdminVisitorsTable() {
+  const tbody = document.getElementById('visitors-table-tbody');
+  if (!tbody) return;
+
+  let filtered = [...adminVisitorsCache];
+  const now = Date.now();
+
+  if (adminVisitorFilter === 'active') {
+    filtered = filtered.filter(v => {
+      const activeSession = adminSessionsCache.find(s => s.visitor_id === v.id && s.is_active && (now - new Date(s.last_active_at).getTime() < 120000));
+      return Boolean(activeSession);
+    });
+  } else if (adminVisitorFilter === 'returning') {
+    filtered = filtered.filter(v => (v.total_visits || 1) > 1);
+  } else if (adminVisitorFilter === 'leads') {
+    filtered = filtered.filter(v => Boolean(v.lead_email || v.lead_phone || v.lead_name));
+  }
+
+  if (adminVisitorSearchQuery) {
+    const q = adminVisitorSearchQuery.toLowerCase();
+    filtered = filtered.filter(v =>
+      (v.last_city && v.last_city.toLowerCase().includes(q)) ||
+      (v.last_country && v.last_country.toLowerCase().includes(q)) ||
+      (v.last_device && v.last_device.toLowerCase().includes(q)) ||
+      (v.notes && v.notes.toLowerCase().includes(q)) ||
+      (v.visitor_uuid && v.visitor_uuid.toLowerCase().includes(q))
+    );
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-400 italic font-mono">No visitors match this query.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(visitor => {
+    const activeSession = adminSessionsCache.find(s => s.visitor_id === visitor.id && s.is_active && (now - new Date(s.last_active_at).getTime() < 120000));
+    const isActive = Boolean(activeSession);
+    const location = visitor.last_city && visitor.last_city !== 'Unknown' 
+      ? `${visitor.last_city}, ${visitor.last_country || 'Nigeria'}`
+      : (visitor.last_country || 'Nigeria');
+    
+    const timeAgo = formatRelativeTime(visitor.last_seen_at);
+    const shortUuid = (visitor.visitor_uuid || 'vis').slice(-8);
+
+    return `
+      <tr class="hover:bg-stone-50 transition-colors">
+        <td class="p-2.5 whitespace-nowrap">
+          <div class="flex items-center gap-1.5 font-bold text-gray-900">
+            <span class="w-2 h-2 rounded-full ${isActive ? 'bg-emerald-500 animate-pulse' : 'bg-gray-300'}"></span>
+            <span>#${escapeHtml(shortUuid)}</span>
+            ${visitor.is_ignored ? `<span class="px-1.5 py-0.2 rounded bg-stone-200 text-stone-600 text-[9px]">Ignored</span>` : ''}
+          </div>
+        </td>
+        <td class="p-2.5 whitespace-nowrap text-gray-700 font-medium">
+          <span>🇳🇬 ${escapeHtml(location)}</span>
+        </td>
+        <td class="p-2.5 whitespace-nowrap text-gray-600 text-[11px]">
+          ${escapeHtml(visitor.last_device || 'Mobile')} · ${escapeHtml(visitor.last_browser || 'Chrome')}
+        </td>
+        <td class="p-2.5 whitespace-nowrap">
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold ${visitor.total_visits > 1 ? 'bg-blue-100 text-blue-800' : 'bg-stone-100 text-stone-800'}">
+            ${visitor.total_visits} ${visitor.total_visits === 1 ? 'visit' : 'visits'}
+          </span>
+        </td>
+        <td class="p-2.5 whitespace-nowrap text-gray-500 text-[11px]">
+          ${timeAgo}
+        </td>
+        <td class="p-2.5 whitespace-nowrap text-right">
+          <button 
+            type="button" 
+            class="open-drawer-btn px-2.5 py-1 bg-stone-100 hover:bg-orange-50 hover:text-orange-700 rounded border border-gray-300 font-bold text-[11px] transition-colors"
+            data-visitor-id="${escapeHtml(visitor.id)}"
+          >
+            Journey ↗
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  tbody.querySelectorAll('.open-drawer-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const vId = btn.getAttribute('data-visitor-id');
+      if (vId) openVisitorDetailDrawer(vId);
+    });
+  });
+}
+
+// VISITOR DETAIL DRAWER IMPLEMENTATION
+async function openVisitorDetailDrawer(visitorId, targetSessionId = null) {
+  const drawer = document.getElementById('visitor-detail-drawer');
+  if (!drawer) return;
+
+  activeDrawerVisitorId = visitorId;
+  drawer.classList.remove('hidden');
+
+  const visitor = adminVisitorsCache.find(v => v.id === visitorId);
+  const titleEl = document.getElementById('drawer-visitor-title');
+  const liveBadge = document.getElementById('drawer-live-badge');
+  const visitsEl = document.getElementById('drawer-visits-count');
+  const locEl = document.getElementById('drawer-location');
+  const devEl = document.getElementById('drawer-device');
+  const browserEl = document.getElementById('drawer-browser');
+  const seenEl = document.getElementById('drawer-first-seen');
+  const leadCard = document.getElementById('drawer-lead-card');
+  const leadDetails = document.getElementById('drawer-lead-details');
+  const timelineEl = document.getElementById('drawer-timeline');
+  const notesInput = document.getElementById('drawer-notes-input');
+  const ignoreBtn = document.getElementById('drawer-toggle-ignore-btn');
+
+  if (titleEl) titleEl.textContent = `Visitor #${visitor?.visitor_uuid?.slice(-8) || 'Details'}`;
+  if (notesInput) notesInput.value = visitor?.notes || '';
+  if (ignoreBtn) {
+    ignoreBtn.textContent = visitor?.is_ignored ? '✅ Un-Ignore Device' : '⛔ Ignore Device';
+    ignoreBtn.onclick = () => toggleIgnoreDevice(visitorId, !visitor?.is_ignored);
+  }
+
+  const saveNotesBtn = document.getElementById('save-drawer-notes-btn');
+  if (saveNotesBtn) {
+    saveNotesBtn.onclick = () => saveVisitorNotes(visitorId, notesInput ? notesInput.value.trim() : '');
+  }
+
+  // Populate basic info
+  if (visitor) {
+    if (visitsEl) visitsEl.textContent = `${visitor.total_visits} total visit(s)`;
+    if (locEl) locEl.textContent = `${visitor.last_city || 'Unknown'}, ${visitor.last_country || 'Nigeria'}`;
+    if (devEl) devEl.textContent = `${visitor.last_device || 'Mobile'} (${visitor.last_os || 'Android'})`;
+    if (browserEl) browserEl.textContent = visitor.last_browser || 'Chrome';
+    if (seenEl) seenEl.textContent = new Date(visitor.first_seen_at).toLocaleDateString();
+
+    // Lead Check
+    if (visitor.lead_name || visitor.lead_email || visitor.lead_phone) {
+      if (leadCard) leadCard.classList.remove('hidden');
+      if (leadDetails) {
+        leadDetails.innerHTML = `
+          <div><strong>Name:</strong> ${escapeHtml(visitor.lead_name || 'N/A')}</div>
+          <div><strong>Email:</strong> ${escapeHtml(visitor.lead_email || 'N/A')}</div>
+          <div><strong>Phone:</strong> ${escapeHtml(visitor.lead_phone || 'N/A')}</div>
+        `;
+      }
+    } else {
+      if (leadCard) leadCard.classList.add('hidden');
+    }
+  }
+
+  // Fetch session history for visitor
+  if (timelineEl) {
+    timelineEl.innerHTML = `<div class="p-3 text-center text-xs text-gray-400 italic font-mono">Loading session timeline...</div>`;
+    try {
+      const client = getSupabase();
+      const { data: vSessions } = await client
+        .from('visitor_sessions')
+        .select('*')
+        .eq('visitor_id', visitorId)
+        .order('started_at', { ascending: false });
+
+      if (!vSessions || vSessions.length === 0) {
+        timelineEl.innerHTML = `<div class="p-3 text-center text-xs text-gray-400 italic">No session logs available.</div>`;
+        return;
+      }
+
+      const active = vSessions.find(s => s.is_active && (Date.now() - new Date(s.last_active_at).getTime() < 120000));
+      if (liveBadge) {
+        liveBadge.textContent = active ? '🟢 Active Now' : 'Offline';
+        liveBadge.className = active ? 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800' : 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-stone-100 text-stone-700';
+      }
+
+      timelineEl.innerHTML = vSessions.map((sess) => {
+        const sessTime = new Date(sess.started_at).toLocaleString();
+        const duration = sess.duration_seconds < 60 ? `${sess.duration_seconds}s` : `${Math.round(sess.duration_seconds / 60)}m`;
+        const sections = Array.isArray(sess.sections_viewed) ? sess.sections_viewed : [];
+        const actions = Array.isArray(sess.key_actions) ? sess.key_actions : [];
+
+        return `
+          <div class="p-3 rounded-lg border border-gray-200 bg-stone-50 font-mono text-xs space-y-1.5">
+            <div class="flex items-center justify-between font-bold text-gray-900">
+              <span>Session #${sess.session_number}</span>
+              <span class="text-gray-500 font-normal text-[10px]">${sessTime}</span>
+            </div>
+            <div class="text-[11px] text-gray-600">
+              <span>⏱️ Duration: <strong>${duration}</strong></span>
+              <span class="text-stone-300">·</span>
+              <span>Landing: <code>${escapeHtml(sess.landing_page || '/')}</code></span>
+            </div>
+            ${sections.length > 0 ? `
+              <div class="pt-1">
+                <span class="text-[10px] text-gray-500 block mb-0.5">Sections Explored:</span>
+                <div class="flex flex-wrap gap-1">
+                  ${sections.map(s => `<span class="px-1.5 py-0.2 bg-white border border-gray-300 rounded text-[10px] text-gray-700">#${escapeHtml(s)}</span>`).join('')}
+                </div>
+              </div>
+            ` : ''}
+            ${actions.length > 0 ? `
+              <div class="pt-1">
+                <span class="text-[10px] text-gray-500 block mb-0.5">Key Events (${actions.length}):</span>
+                <div class="space-y-1 text-[11px] text-gray-800">
+                  ${actions.map(a => `
+                    <div class="flex items-center gap-1.5 bg-white p-1 rounded border border-gray-200">
+                      <span>⚡</span>
+                      <strong>${escapeHtml(a.name)}</strong>
+                      <span class="text-gray-400 text-[10px] ml-auto">${new Date(a.time).toLocaleTimeString()}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      timelineEl.innerHTML = `<div class="p-3 text-center text-xs text-red-500 italic">Error: ${escapeHtml(e.message)}</div>`;
+    }
+  }
+}
+
+async function saveVisitorNotes(visitorId, notes) {
+  try {
+    const client = getSupabase();
+    if (client) {
+      await client.from('visitors').update({ notes }).eq('id', visitorId);
+      const v = adminVisitorsCache.find(x => x.id === visitorId);
+      if (v) v.notes = notes;
+      showToast('Visitor note saved.');
+    }
+  } catch (err) {
+    showToast('Failed to save note: ' + err.message, 'error');
+  }
+}
+
+async function toggleIgnoreDevice(visitorId, shouldIgnore) {
+  try {
+    const client = getSupabase();
+    if (client) {
+      await client.from('visitors').update({ is_ignored: shouldIgnore }).eq('id', visitorId);
+      const v = adminVisitorsCache.find(x => x.id === visitorId);
+      if (v) v.is_ignored = shouldIgnore;
+      showToast(shouldIgnore ? 'Device will be ignored from tracking.' : 'Device tracking re-enabled.');
+      openVisitorDetailDrawer(visitorId);
+      renderAdminVisitorsTable();
+    }
+  } catch (err) {
+    showToast('Failed to toggle ignore state: ' + err.message, 'error');
+  }
+}
+
 // PUBLIC EXPORTS: MOUNT AND UNMOUNT LIFECYCLE
 export function mountAndOpenAdmin(mode = 'login', tab = 'websites') {
   savedScrollPosition = window.scrollY || document.documentElement.scrollTop;
@@ -2004,6 +3143,7 @@ export function mountAndOpenAdmin(mode = 'login', tab = 'websites') {
 
 export function closeAndUnmountAdmin() {
   stopInactivityEngine();
+  stopRealtimeNotifications();
 
   // Clear memory credentials
   clearLockoutState();

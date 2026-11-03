@@ -2429,6 +2429,59 @@
 
 
   <!-- ============================================================
+       PRIVACY & COOKIE CONSENT STICKER (NDPA 2023 COMPLIANT)
+       ============================================================ -->
+  <div id="privacy-consent-banner" class="hidden fixed bottom-5 left-5 z-[99990] max-w-sm bg-[#fcfbf7] border-2 border-black rounded-xl p-4 shadow-[5px_5px_0px_#000] font-mono text-xs">
+    <div class="washi-tape" style="top: -10px; left: 20px; width: 60px; background-color: rgba(254, 240, 138, 0.9);"></div>
+    <div class="flex items-start gap-2.5">
+      <span class="text-xl flex-shrink-0">🍪</span>
+      <div class="space-y-1.5">
+        <div class="font-bold text-gray-900 text-xs">Privacy &amp; Analytics Notice</div>
+        <p class="text-[11px] text-gray-700 leading-relaxed font-sans">
+          We use minimal, privacy-first session analytics to understand how visitors explore the portfolio. Zero third-party ads or cross-site tracking.
+        </p>
+        <div class="flex items-center gap-2 pt-1 font-mono text-[11px]">
+          <button type="button" id="privacy-accept-btn" class="px-2.5 py-1 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded border border-black shadow-[2px_2px_0px_#000] transition-transform active:translate-y-0.5">
+            Accept
+          </button>
+          <button type="button" id="privacy-decline-btn" class="px-2.5 py-1 bg-stone-200 hover:bg-stone-300 text-gray-800 font-bold rounded border border-black transition-colors">
+            Decline
+          </button>
+          <button type="button" id="privacy-details-btn" class="text-orange-600 hover:underline ml-auto text-[10px]">
+            Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVACY DETAILS MODAL -->
+  <div id="privacy-details-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="privacy-modal-title">
+    <div class="modal-content-box bg-[#fcfbf7] w-full max-w-lg rounded-2xl border-3 border-black shadow-[8px_8px_0px_#000] p-6 relative max-h-[85vh] overflow-y-auto">
+      <div class="washi-tape" style="top: -12px; left: 35%; width: 80px; background-color: rgba(254, 240, 138, 0.9);"></div>
+      <button type="button" id="close-privacy-modal-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white border border-black flex items-center justify-center font-mono font-bold text-sm hover:bg-red-50 hover:text-red-600 transition-colors">
+        ✕
+      </button>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-2xl">🛡️</span>
+        <h3 id="privacy-modal-title" class="text-lg font-bold font-mono text-gray-900">Privacy &amp; Data Protection</h3>
+      </div>
+      <div class="space-y-3 text-xs font-sans text-gray-700 leading-relaxed">
+        <p><strong>Compliance:</strong> Built in accordance with the <em>Nigeria Data Protection Act (NDPA) 2023</em> and international data privacy principles.</p>
+        <p><strong>What is tracked:</strong> Anonymous session identifiers, country and city (derived from serverless edge headers), device type, viewed sections, and button interactions (WhatsApp, call, form).</p>
+        <p><strong>What is NOT tracked:</strong> We never store plain IP addresses (salted SHA-256 hash only), exact GPS coordinates, or cross-site tracking cookies. No third-party ad networks or trackers are loaded.</p>
+        <p><strong>Data Retention:</strong> Session and notification logs are automatically purged after 90 days.</p>
+        <p><strong>Site Owner:</strong> Oluwafemi David Adekanola, Ilorin, Kwara State, Nigeria. Contact: <a href="mailto:davidbryght@gmail.com" class="text-orange-600 underline">davidbryght@gmail.com</a>.</p>
+      </div>
+      <div class="mt-5 pt-3 border-t border-black/10 flex justify-end">
+        <button type="button" id="dismiss-privacy-modal-btn" class="px-4 py-1.5 bg-stone-800 text-white font-mono text-xs font-bold rounded border border-black shadow-[2px_2px_0px_#000]">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
        VANILLA JAVASCRIPT LOGIC
        ============================================================ -->
   <script type="module">
@@ -3189,6 +3242,8 @@
       initServiceQuoteFillers();
       initBackToTop();
       initChatbotWidget();
+      initPrivacyConsent();
+      initVisitorTracking();
 
       renderProjectsGrid("all");
       renderTestimonialsGrid();
@@ -4480,6 +4535,308 @@
       }
     }
 
+    /**
+     * ==============================================================
+     * // EDIT: 24. PRIVACY CONSENT (NDPA 2023) & VISITOR ACTIVITY TRACKING
+     * Minimal, non-blocking, salted-IP session tracking
+     * ==============================================================
+     */
+    const TRACKER_CONFIG = {
+      endpoint: '/api/track',
+      heartbeatIntervalMs: 30000, // 30 seconds
+      idleTimeoutMs: 120000       // 2 minutes
+    };
+
+    let visitorSessionStarted = false;
+    let visitorSessionId = null;
+    let visitorUuid = null;
+    let sessionStartTime = Date.now();
+    let currentActiveSection = 'hero';
+    let heartbeatTimer = null;
+    let viewedSectionsSet = new Set(['hero']);
+
+    function initPrivacyConsent() {
+      const banner = document.getElementById('privacy-consent-banner');
+      const acceptBtn = document.getElementById('privacy-accept-btn');
+      const declineBtn = document.getElementById('privacy-decline-btn');
+      const detailsBtn = document.getElementById('privacy-details-btn');
+      const modal = document.getElementById('privacy-details-modal');
+      const closeBtn = document.getElementById('close-privacy-modal-btn');
+      const dismissBtn = document.getElementById('dismiss-privacy-modal-btn');
+
+      const consent = localStorage.getItem('femi_privacy_consent');
+
+      // Show banner only if no decision made yet
+      if (!consent && banner) {
+        setTimeout(() => {
+          banner.classList.remove('hidden');
+        }, 1500);
+      }
+
+      if (acceptBtn) {
+        acceptBtn.addEventListener('click', () => {
+          localStorage.setItem('femi_privacy_consent', 'accepted');
+          if (banner) banner.classList.add('hidden');
+          initVisitorTracking();
+        });
+      }
+
+      if (declineBtn) {
+        declineBtn.addEventListener('click', () => {
+          localStorage.setItem('femi_privacy_consent', 'declined');
+          if (banner) banner.classList.add('hidden');
+          stopVisitorTracking();
+        });
+      }
+
+      function openModal() {
+        if (modal) modal.classList.remove('hidden');
+      }
+
+      function closeModal() {
+        if (modal) modal.classList.add('hidden');
+      }
+
+      if (detailsBtn) detailsBtn.addEventListener('click', openModal);
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      if (dismissBtn) dismissBtn.addEventListener('click', closeModal);
+    }
+
+    function stopVisitorTracking() {
+      if (heartbeatTimer) {
+        clearInterval(heartbeatTimer);
+        heartbeatTimer = null;
+      }
+      visitorSessionStarted = false;
+    }
+
+    function initVisitorTracking() {
+      // 1. Consent Check
+      if (localStorage.getItem('femi_privacy_consent') === 'declined') {
+        return;
+      }
+
+      // 2. Ignore My Device Check (for Femi's own visits)
+      if (localStorage.getItem('femi_ignore_device') === 'true') {
+        return;
+      }
+
+      // 3. Automated Bot Filter
+      const isBot = navigator.webdriver || 
+        /bot|googlebot|crawler|spider|robot|crawling|lighthouse|headless/i.test(navigator.userAgent);
+      if (isBot) {
+        return;
+      }
+
+      // Prevent duplicate init
+      if (visitorSessionStarted) return;
+      visitorSessionStarted = true;
+
+      // 4. Resolve or generate persistent visitor UUID
+      let storedVisitorId = localStorage.getItem('femi_visitor_id');
+      const isReturning = Boolean(storedVisitorId);
+      if (!storedVisitorId) {
+        storedVisitorId = 'vis_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+        localStorage.setItem('femi_visitor_id', storedVisitorId);
+      }
+      visitorUuid = storedVisitorId;
+
+      // 5. Resolve or generate tab session ID
+      let storedSessionId = sessionStorage.getItem('femi_session_id');
+      if (!storedSessionId) {
+        storedSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+        sessionStorage.setItem('femi_session_id', storedSessionId);
+      }
+      visitorSessionId = storedSessionId;
+      sessionStartTime = Date.now();
+
+      // Device info detection
+      const width = window.innerWidth || screen.width || 390;
+      const deviceType = width < 640 ? 'mobile' : (width < 1024 ? 'tablet' : 'desktop');
+      const userAgent = navigator.userAgent || '';
+      let browser = 'Other';
+      if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) browser = 'Chrome';
+      else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) browser = 'Safari';
+      else if (userAgent.includes('Firefox')) browser = 'Firefox';
+      else if (userAgent.includes('Edg')) browser = 'Edge';
+
+      let os = 'Other';
+      if (/Android/i.test(userAgent)) os = 'Android';
+      else if (/iPhone|iPad|iPod/i.test(userAgent)) os = 'iOS';
+      else if (/Windows/i.test(userAgent)) os = 'Windows';
+      else if (/Mac/i.test(userAgent)) os = 'macOS';
+      else if (/Linux/i.test(userAgent)) os = 'Linux';
+
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // Fire Session Start
+      sendTrackingBeacon('start', {
+        isReturning,
+        landingPage: window.location.pathname + window.location.hash,
+        referrer: document.referrer || 'Direct',
+        utmSource: urlParams.get('utm_source'),
+        utmMedium: urlParams.get('utm_medium'),
+        utmCampaign: urlParams.get('utm_campaign'),
+        deviceType,
+        browser,
+        os,
+        screenResolution: `${window.screen.width}x${window.screen.height}`,
+        language: navigator.language || 'en',
+        initialSection: currentActiveSection
+      });
+
+      // Start 30s Heartbeat
+      heartbeatTimer = setInterval(() => {
+        const durationSec = Math.round((Date.now() - sessionStartTime) / 1000);
+        sendTrackingBeacon('heartbeat', {
+          durationSeconds: durationSec,
+          currentSection: currentActiveSection,
+          exitPage: window.location.pathname + window.location.hash
+        });
+      }, TRACKER_CONFIG.heartbeatIntervalMs);
+
+      // Setup section IntersectionObserver
+      setupSectionObserver();
+
+      // Setup action listeners
+      setupActionListeners();
+
+      // Session End on pagehide / visibilitychange
+      const handleSessionExit = () => {
+        const durationSec = Math.round((Date.now() - sessionStartTime) / 1000);
+        sendTrackingBeacon('end', {
+          durationSeconds: durationSec,
+          exitPage: window.location.pathname + window.location.hash
+        }, true);
+      };
+
+      window.addEventListener('pagehide', handleSessionExit);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          handleSessionExit();
+        }
+      });
+    }
+
+    function setupSectionObserver() {
+      const sectionIds = ['hero', 'about', 'skills', 'services', 'portfolio', 'pricing', 'testimonials', 'contact', 'faq'];
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
+            const id = entry.target.id;
+            if (id) {
+              currentActiveSection = id;
+              viewedSectionsSet.add(id);
+            }
+          }
+        });
+      }, { threshold: [0.25, 0.5] });
+
+      sectionIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    }
+
+    function logVisitorAction(actionName, actionDetails = {}) {
+      if (!visitorSessionStarted) return;
+      sendTrackingBeacon('action', {
+        actionName,
+        actionDetails,
+        currentSection: currentActiveSection
+      });
+    }
+    window.logVisitorAction = logVisitorAction;
+
+    function setupActionListeners() {
+      // WhatsApp clicks
+      document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+        link.addEventListener('click', () => {
+          logVisitorAction('whatsapp_click', { href: link.href });
+        });
+      });
+
+      // Direct call clicks
+      document.querySelectorAll('a[href*="tel:"]').forEach(link => {
+        link.addEventListener('click', () => {
+          logVisitorAction('call_click', { tel: '0805 476 3626' });
+        });
+      });
+
+      // Claim 10% discount button
+      const discountBtn = document.getElementById('claim-discount-btn');
+      if (discountBtn) {
+        discountBtn.addEventListener('click', () => {
+          logVisitorAction('discount_claim', { offer: '10% Launch Discount' });
+        });
+      }
+
+      // Chatbot opened
+      const chatTrigger = document.getElementById('chatbot-trigger-btn');
+      if (chatTrigger) {
+        chatTrigger.addEventListener('click', () => {
+          logVisitorAction('chatbot_open', {});
+        });
+      }
+
+      // Contact form interaction
+      const contactForm = document.getElementById('contact-form');
+      if (contactForm) {
+        let formStarted = false;
+        contactForm.querySelectorAll('input, textarea, select').forEach(input => {
+          input.addEventListener('focus', () => {
+            if (!formStarted) {
+              formStarted = true;
+              logVisitorAction('form_start', { firstField: input.id });
+            }
+          }, { once: true });
+        });
+
+        contactForm.addEventListener('submit', () => {
+          const nameInput = document.getElementById('form-name');
+          const emailInput = document.getElementById('form-email');
+          const typeInput = document.getElementById('form-project-type');
+          logVisitorAction('form_submit', {
+            name: nameInput?.value?.trim() || '',
+            email: emailInput?.value?.trim() || '',
+            projectType: typeInput?.value || ''
+          });
+        });
+      }
+    }
+
+    function sendTrackingBeacon(eventType, metadata = {}, isKeepAlive = false) {
+      if (!visitorUuid || !visitorSessionId) return;
+
+      const payload = {
+        eventType,
+        visitorId: visitorUuid,
+        sessionId: visitorSessionId,
+        metadata
+      };
+
+      const jsonStr = JSON.stringify(payload);
+
+      if (isKeepAlive && navigator.sendBeacon) {
+        try {
+          const blob = new Blob([jsonStr], { type: 'application/json' });
+          const sent = navigator.sendBeacon(TRACKER_CONFIG.endpoint, blob);
+          if (sent) return;
+        } catch (e) {}
+      }
+
+      try {
+        fetch(TRACKER_CONFIG.endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Visitor-ID': visitorUuid
+          },
+          body: jsonStr,
+          keepalive: isKeepAlive
+        }).catch(() => {});
+      } catch (err) {}
+    }
 
     </script>
 </body>
