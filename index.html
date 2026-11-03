@@ -2541,13 +2541,17 @@
     /**
      * ==============================================================
      * 2. PRIVATE ENTRANCE CONTROLLER & DYNAMIC LAZY-LOADER
-     * Secret route: #/ctrl-k8m2x9q4v7w1p3t6y5z0
+     * Secret route: #/ctrl-k8m2x9q4v7w1p3t6y5z0 (supports with/without trailing slash)
      * Secret reset: #/ctrl-k8m2x9q4v7w1p3t6y5z0/reset
-     * Gesture: Triple-click / tap on copyright text within 1.5s
-     * Shortcut: Ctrl+Shift+K
+     * Secret Shortcut: Ctrl+Shift+K
+     * Secret Gesture: Triple-click / tap on copyright text within 1.5s
      * Admin code is NEVER loaded for public visitors.
      * ==============================================================
      */
+    // Rollback & Compatibility Configuration Switches
+    const NOTIFICATIONS_ENABLED = true; // Set to false to disable visitor tracking & notification bell
+    const LEGACY_ADMIN_HASH_ENABLED = false; // When true, allows #admin and /#admin to open admin login
+
     const PRIVATE_ENTRANCE_CONFIG = {
       adminRoute: "#/ctrl-k8m2x9q4v7w1p3t6y5z0",
       resetRoute: "#/ctrl-k8m2x9q4v7w1p3t6y5z0/reset",
@@ -2570,22 +2574,56 @@
       }
     }
 
+    // Helper: Normalize hash by removing leading/trailing spaces and trailing slashes
+    function normalizeAdminHash(rawHash) {
+      if (!rawHash) return "";
+      return rawHash.trim().toLowerCase().replace(/\/+$/, '');
+    }
+
     function checkPrivateHashRoute() {
-      const hash = window.location.hash;
-      if (hash === PRIVATE_ENTRANCE_CONFIG.adminRoute) {
-        loadAndOpenAdmin("login");
-      } else if (hash === PRIVATE_ENTRANCE_CONFIG.resetRoute || (hash.startsWith(PRIVATE_ENTRANCE_CONFIG.resetRoute) && hash.includes("type=recovery"))) {
-        loadAndOpenAdmin("reset");
-      } else if (hash.toLowerCase() === "#admin" || hash.toLowerCase().startsWith("#admin")) {
-        // Silently neutralize old public admin route - redirect to clean homepage
-        try {
-          history.replaceState(null, document.title, window.location.pathname);
-        } catch (e) {
-          window.location.hash = "";
+      try {
+        const rawHash = window.location.hash;
+        if (!rawHash) return;
+        const normalized = normalizeAdminHash(rawHash);
+
+        // Target variants for secret login
+        const secretAdmin = normalizeAdminHash(PRIVATE_ENTRANCE_CONFIG.adminRoute);
+        const secretAdminNoSlash = secretAdmin.replace(/^#\//, '#');
+
+        // Target variants for secret reset
+        const secretReset = normalizeAdminHash(PRIVATE_ENTRANCE_CONFIG.resetRoute);
+        const secretResetNoSlash = secretReset.replace(/^#\//, '#');
+
+        if (normalized === secretAdmin || normalized === secretAdminNoSlash) {
+          loadAndOpenAdmin("login");
+          return;
         }
+
+        if (normalized === secretReset || normalized === secretResetNoSlash || (normalized.startsWith(secretReset) && rawHash.includes("type=recovery"))) {
+          loadAndOpenAdmin("reset");
+          return;
+        }
+
+        // Legacy #admin support
+        if (normalized === "#admin" || normalized === "#/admin") {
+          if (LEGACY_ADMIN_HASH_ENABLED) {
+            loadAndOpenAdmin("login");
+          } else {
+            // Silently neutralize old public admin route - redirect to clean homepage
+            try {
+              history.replaceState(null, document.title, window.location.pathname + window.location.search);
+            } catch (e) {
+              window.location.hash = "";
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Router error:", err);
       }
     }
 
+    // Execute route check immediately upon script evaluation
+    checkPrivateHashRoute();
     window.addEventListener("hashchange", checkPrivateHashRoute);
 
     // Password recovery listener
@@ -2602,29 +2640,25 @@
     function setupSecretGesture() {
       const copyrightEl = document.getElementById("copyright-text");
       if (copyrightEl && PRIVATE_ENTRANCE_CONFIG.gestureEnabled) {
-        copyrightEl.addEventListener("click", () => {
+        const handleGesture = (e) => {
           const now = Date.now();
           clickHistory.push(now);
           clickHistory = clickHistory.filter(t => now - t <= PRIVATE_ENTRANCE_CONFIG.tripleClickWindowMs);
           if (clickHistory.length >= 3) {
             clickHistory = [];
-            try {
-              window.location.hash = PRIVATE_ENTRANCE_CONFIG.adminRoute;
-            } catch (err) {
-              loadAndOpenAdmin("login");
-            }
+            if (e && e.cancelable) e.preventDefault();
+            loadAndOpenAdmin("login");
           }
-        });
+        };
+
+        copyrightEl.addEventListener("click", handleGesture);
+        copyrightEl.addEventListener("touchend", handleGesture, { passive: false });
       }
 
       window.addEventListener("keydown", (e) => {
         if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "K" || e.key === "k")) {
           e.preventDefault();
-          try {
-            window.location.hash = PRIVATE_ENTRANCE_CONFIG.adminRoute;
-          } catch (err) {
-            loadAndOpenAdmin("login");
-          }
+          loadAndOpenAdmin("login");
         }
       });
     }
@@ -3242,8 +3276,16 @@
       initServiceQuoteFillers();
       initBackToTop();
       initChatbotWidget();
-      initPrivacyConsent();
-      initVisitorTracking();
+
+      // Isolated visitor tracking initialization
+      if (NOTIFICATIONS_ENABLED) {
+        try {
+          initPrivacyConsent();
+          initVisitorTracking();
+        } catch (trackInitErr) {
+          console.warn("Visitor tracking initialization caught (isolated):", trackInitErr);
+        }
+      }
 
       renderProjectsGrid("all");
       renderTestimonialsGrid();
@@ -4556,6 +4598,7 @@
     let viewedSectionsSet = new Set(['hero']);
 
     function initPrivacyConsent() {
+      if (!NOTIFICATIONS_ENABLED) return;
       const banner = document.getElementById('privacy-consent-banner');
       const acceptBtn = document.getElementById('privacy-accept-btn');
       const declineBtn = document.getElementById('privacy-decline-btn');
@@ -4611,6 +4654,7 @@
     }
 
     function initVisitorTracking() {
+      if (!NOTIFICATIONS_ENABLED) return;
       // 1. Consent Check
       if (localStorage.getItem('femi_privacy_consent') === 'declined') {
         return;

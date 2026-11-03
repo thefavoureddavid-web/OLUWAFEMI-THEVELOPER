@@ -16,6 +16,9 @@ const ADMIN_CONFIG = {
   maxBackgroundHiddenMs: 10 * 60 * 1000 // Sign out if tab hidden > 10 minutes
 };
 
+// Rollback Switch: Controls notification bell, feed & realtime subscriptions
+const NOTIFICATIONS_ENABLED = true;
+
 const ORIGINAL_PAGE_TITLE = "Oluwafemi David Adekanola | Full-Stack Web Developer in Ilorin, Nigeria";
 const NEUTRAL_ADMIN_TITLE = "Oluwafemi David Adekanola | Portfolio";
 
@@ -1658,17 +1661,21 @@ function setupAdminEventListeners() {
   const notifCenter = document.getElementById('admin-notification-center');
   const closeNotifCenterBtn = document.getElementById('close-notif-center-btn');
 
-  if (bellBtn && notifCenter) {
-    bellBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isHidden = notifCenter.classList.contains('hidden');
-      if (isHidden) {
-        notifCenter.classList.remove('hidden');
-        loadAdminNotifications();
-      } else {
-        notifCenter.classList.add('hidden');
-      }
-    });
+  if (bellBtn) {
+    if (!NOTIFICATIONS_ENABLED) {
+      bellBtn.classList.add('hidden');
+    } else if (notifCenter) {
+      bellBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isHidden = notifCenter.classList.contains('hidden');
+        if (isHidden) {
+          notifCenter.classList.remove('hidden');
+          loadAdminNotifications();
+        } else {
+          notifCenter.classList.add('hidden');
+        }
+      });
+    }
   }
 
   if (closeNotifCenterBtn && notifCenter) {
@@ -1992,9 +1999,17 @@ function openStorageModal(tab = 'websites') {
 
   renderModalLists();
   startInactivityEngine();
-  startRealtimeNotifications();
-  loadAdminNotifications();
-  loadAdminVisitors();
+
+  // Fully isolated notification initialization
+  if (NOTIFICATIONS_ENABLED) {
+    try {
+      startRealtimeNotifications();
+      loadAdminNotifications();
+      loadAdminVisitors();
+    } catch (notifErr) {
+      console.warn("Notifications startup caught (isolated):", notifErr);
+    }
+  }
 }
 
 function closeStorageModal() {
@@ -2453,11 +2468,12 @@ function updateAdminPageTitleWithUnread(count) {
 // REALTIME SUBSCRIPTIONS
 function startRealtimeNotifications() {
   stopRealtimeNotifications();
-
-  const client = getSupabase();
-  if (!client || typeof client.channel !== 'function') return;
+  if (!NOTIFICATIONS_ENABLED) return;
 
   try {
+    const client = getSupabase();
+    if (!client || typeof client.channel !== 'function') return;
+
     realtimeChannel = client
       .channel('admin-visitor-activity')
       .on('postgres_changes', {
@@ -2465,30 +2481,36 @@ function startRealtimeNotifications() {
         schema: 'public',
         table: 'notifications'
       }, (payload) => {
-        const newNotif = payload.new;
-        if (!newNotif) return;
+        try {
+          const newNotif = payload.new;
+          if (!newNotif) return;
 
-        adminNotificationsCache.unshift(newNotif);
-        playNotificationChime(newNotif.type);
-        sendBrowserPushNotification(newNotif.title, newNotif.message);
+          adminNotificationsCache.unshift(newNotif);
+          playNotificationChime(newNotif.type);
+          sendBrowserPushNotification(newNotif.title, newNotif.message);
 
-        // Shake bell icon
-        const bellBtn = document.getElementById('admin-notification-bell-btn');
-        if (bellBtn) {
-          bellBtn.classList.remove('bell-shake');
-          void bellBtn.offsetWidth; // trigger reflow
-          bellBtn.classList.add('bell-shake');
+          // Shake bell icon
+          const bellBtn = document.getElementById('admin-notification-bell-btn');
+          if (bellBtn) {
+            bellBtn.classList.remove('bell-shake');
+            void bellBtn.offsetWidth; // trigger reflow
+            bellBtn.classList.add('bell-shake');
+          }
+
+          renderAdminNotificationsFeed();
+          updateUnreadBadges();
+        } catch (payloadErr) {
+          console.warn('Realtime event processing error:', payloadErr);
         }
-
-        renderAdminNotificationsFeed();
-        updateUnreadBadges();
       })
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
         table: 'visitor_sessions'
       }, () => {
-        loadAdminVisitors();
+        try {
+          loadAdminVisitors();
+        } catch (e) {}
       })
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
@@ -2498,12 +2520,14 @@ function startRealtimeNotifications() {
 
     // 30-Second Polling Fallback
     visitorPollingTimer = setInterval(() => {
-      loadAdminVisitors();
-      loadAdminNotifications();
+      try {
+        loadAdminVisitors();
+        loadAdminNotifications();
+      } catch (pollErr) {}
     }, 30000);
 
   } catch (err) {
-    console.warn('Realtime subscription error:', err);
+    console.warn('Realtime subscription error (handled):', err);
   }
 }
 
@@ -2527,9 +2551,14 @@ async function loadAdminNotifications() {
   const container = document.getElementById('admin-notifications-feed');
   if (!container) return;
 
+  if (!NOTIFICATIONS_ENABLED) {
+    container.innerHTML = `<div class="p-6 text-center text-xs text-gray-400 italic font-mono">Activity notifications paused.</div>`;
+    return;
+  }
+
   try {
     const client = getSupabase();
-    if (!client) return;
+    if (!client) throw new Error("Database client not available");
 
     const { data, error } = await client
       .from('notifications')
@@ -2544,6 +2573,22 @@ async function loadAdminNotifications() {
     updateUnreadBadges();
   } catch (err) {
     console.warn('Error loading notifications:', err);
+    container.innerHTML = `
+      <div class="p-6 text-center text-xs text-stone-400 font-mono space-y-2.5">
+        <div class="text-amber-500 font-bold">⚠️ Notifications temporarily unavailable</div>
+        <p class="text-[11px] text-gray-500 font-sans">Could not fetch notifications from database.</p>
+        <button type="button" id="retry-notifs-btn" class="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-600 rounded font-bold text-xs transition-colors shadow-sm">
+          ↻ Retry Connection
+        </button>
+      </div>
+    `;
+    const retryBtn = document.getElementById('retry-notifs-btn');
+    if (retryBtn) {
+      retryBtn.addEventListener('click', () => {
+        container.innerHTML = `<div class="p-6 text-center text-xs text-gray-400 italic font-mono">Retrying connection...</div>`;
+        loadAdminNotifications();
+      });
+    }
   }
 }
 
