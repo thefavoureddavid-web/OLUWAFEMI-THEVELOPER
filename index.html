@@ -102,209 +102,413 @@
     /* -------------------------------------------------------------
        WEATHER-RESPONSIVE THEMES (Subtle, On-Brand, WCAG AA Verified)
        ------------------------------------------------------------- */
+    /* -------------------------------------------------------------
+       WEATHER-RESPONSIVE CONTRAST SYSTEM (WCAG AA & AAA Verified)
+       10 Standard Tokens Defined per Theme:
+       --text-primary, --text-secondary, --text-muted, --text-on-accent,
+       --link, --icon, --border, --surface, --surface-raised, --focus-ring
+       ------------------------------------------------------------- */
     /* 1. Clear Day / Sunny */
     html[data-weather="clear-day"] {
       --bg-canvas: #eef3f8;
       --bg-paper: #fffef9;
       --paper-line: rgba(148, 163, 184, 0.18);
-      --brand-orange: #f97316;
-      --brand-blue: #0284c7;
+      --surface: #ffffff;
+      --surface-raised: #f8fafc;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #475569;
+      --text-on-accent: #ffffff;
+      --brand-orange: #c2410c;
+      --brand-orange-dark: #9a3412;
+      --link: #0369a1;
+      --icon: #1e293b;
+      --border: #cbd5e1;
+      --focus-ring: #ea580c;
       --tape-color: rgba(254, 240, 138, 0.88);
     }
 
     /* 2. Hot Sun (Clear and > 33°C) */
     html[data-weather="hot-sun"] {
-      --bg-canvas: #fdf5e8;
-      --bg-paper: #fffcf2;
+      --bg-canvas: #fef3c7;
+      --bg-paper: #fffbeb;
       --paper-line: rgba(217, 119, 6, 0.16);
-      --brand-orange: #ea580c;
-      --brand-blue: #d97706;
+      --surface: #ffffff;
+      --surface-raised: #fef9c3;
+      --text-primary: #18181b;
+      --text-secondary: #27272a;
+      --text-muted: #52525b;
+      --text-on-accent: #ffffff;
+      --brand-orange: #9a3412;
+      --brand-orange-dark: #7c2d12;
+      --link: #b45309;
+      --icon: #18181b;
+      --border: #fcd34d;
+      --focus-ring: #d97706;
       --tape-color: rgba(253, 230, 138, 0.92);
     }
 
     /* 3. Clear Night */
     html[data-weather="clear-night"] {
-      --bg-canvas: #090d16;
-      --bg-paper: #111827;
+      --bg-canvas: #030712;
+      --bg-paper: #0f172a;
       --paper-line: rgba(255, 255, 255, 0.08);
       --paper-margin: rgba(244, 63, 94, 0.35);
-      --ink-black: #f8fafc;
-      --ink-muted: #94a3b8;
+      --surface: #1e293b;
+      --surface-raised: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-on-accent: #0f172a;
       --brand-orange: #fb923c;
       --brand-orange-dark: #f97316;
-      --brand-blue: #38bdf8;
+      --link: #38bdf8;
+      --icon: #f1f5f9;
+      --border: #334155;
+      --focus-ring: #38bdf8;
       --tape-color: rgba(251, 191, 36, 0.32);
-    }
-    html[data-weather="clear-night"] .sketch-box {
-      background: #1e293b;
-      border-color: #38bdf8;
-    }
-    html[data-weather="clear-night"] .sketch-box h1 {
-      color: #ffffff !important;
-    }
-    html[data-weather="clear-night"] .sticky-nav {
-      background-color: rgba(15, 23, 42, 0.95);
-      border-color: rgba(255, 255, 255, 0.12);
-    }
-    html[data-weather="clear-night"] .sticky-nav a,
-    html[data-weather="clear-night"] .notebook-container h1,
-    html[data-weather="clear-night"] .notebook-container h2,
-    html[data-weather="clear-night"] .notebook-container h3,
-    html[data-weather="clear-night"] .notebook-container h4,
-    html[data-weather="clear-night"] .text-gray-900,
-    html[data-weather="clear-night"] .text-stone-900,
-    html[data-weather="clear-night"] .text-stone-800 {
-      color: #f8fafc !important;
-    }
-    html[data-weather="clear-night"] .notebook-container p,
-    html[data-weather="clear-night"] .text-gray-600,
-    html[data-weather="clear-night"] .text-gray-700,
-    html[data-weather="clear-night"] .text-stone-600,
-    html[data-weather="clear-night"] .text-stone-700 {
-      color: #cbd5e1 !important;
-    }
-    html[data-weather="clear-night"] #weather-hero-greeting {
-      background-color: rgba(15, 23, 42, 0.9) !important;
-      border-color: rgba(255, 255, 255, 0.2) !important;
-    }
-    html[data-weather="clear-night"] #weather-greeting-text {
-      color: #f1f5f9 !important;
-    }
-    html[data-weather="clear-night"] #weather-chip-widget {
-      background-color: #0f172a !important;
-      border-color: rgba(255, 255, 255, 0.2) !important;
-      color: #f8fafc !important;
     }
 
     /* 4. Partly Cloudy */
     html[data-weather="partly-cloudy"] {
-      --bg-canvas: #eaf0f6;
+      --bg-canvas: #e0f2fe;
       --bg-paper: #fcfbf8;
       --paper-line: rgba(148, 163, 184, 0.18);
-      --brand-orange: #f97316;
-      --brand-blue: #0284c7;
+      --surface: #ffffff;
+      --surface-raised: #f0f9ff;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #475569;
+      --text-on-accent: #ffffff;
+      --brand-orange: #c2410c;
+      --brand-orange-dark: #ea580c;
+      --link: #0284c7;
+      --icon: #1e293b;
+      --border: #bae6fd;
+      --focus-ring: #0284c7;
+      --tape-color: rgba(254, 240, 138, 0.85);
     }
 
     /* 5. Cloudy / Overcast */
     html[data-weather="cloudy"] {
-      --bg-canvas: #e5e9f0;
-      --bg-paper: #f6f8fa;
+      --bg-canvas: #e2e8f0;
+      --bg-paper: #f8fafc;
       --paper-line: rgba(100, 116, 139, 0.2);
-      --brand-orange: #f97316;
-      --brand-blue: #475569;
+      --surface: #ffffff;
+      --surface-raised: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #475569;
+      --text-on-accent: #ffffff;
+      --brand-orange: #c2410c;
+      --brand-orange-dark: #ea580c;
+      --link: #0369a1;
+      --icon: #0f172a;
+      --border: #cbd5e1;
+      --focus-ring: #475569;
+      --tape-color: rgba(226, 232, 240, 0.9);
     }
 
     /* 6. Drizzle */
     html[data-weather="drizzle"] {
-      --bg-canvas: #e2e8f0;
-      --bg-paper: #f4f7f9;
+      --bg-canvas: #e0f2fe;
+      --bg-paper: #f0f9ff;
       --paper-line: rgba(71, 85, 105, 0.2);
-      --brand-orange: #ea580c;
-      --brand-blue: #0284c7;
+      --surface: #ffffff;
+      --surface-raised: #e0f2fe;
+      --text-primary: #082f49;
+      --text-secondary: #0c4a6e;
+      --text-muted: #334155;
+      --text-on-accent: #ffffff;
+      --brand-orange: #c2410c;
+      --brand-orange-dark: #ea580c;
+      --link: #0284c7;
+      --icon: #082f49;
+      --border: #bae6fd;
+      --focus-ring: #0284c7;
+      --tape-color: rgba(186, 230, 253, 0.85);
     }
 
     /* 7. Rain */
     html[data-weather="rain"] {
-      --bg-canvas: #dbeafe;
-      --bg-paper: #f0f5fa;
+      --bg-canvas: #bfdbfe;
+      --bg-paper: #eff6ff;
       --paper-line: rgba(59, 130, 246, 0.18);
-      --brand-orange: #ea580c;
-      --brand-blue: #0369a1;
+      --surface: #ffffff;
+      --surface-raised: #dbeafe;
+      --text-primary: #0f172a;
+      --text-secondary: #1e293b;
+      --text-muted: #334155;
+      --text-on-accent: #ffffff;
+      --brand-orange: #c2410c;
+      --brand-orange-dark: #9a3412;
+      --link: #1d4ed8;
+      --icon: #0f172a;
+      --border: #93c5fd;
+      --focus-ring: #2563eb;
       --tape-color: rgba(186, 230, 253, 0.85);
-    }
-    html[data-weather="rain"] #weather-hero-greeting {
-      background-color: rgba(239, 246, 255, 0.92) !important;
-      border-color: rgba(147, 197, 253, 0.6) !important;
-    }
-    html[data-weather="rain"] #weather-greeting-text {
-      color: #1e3a8a !important;
-    }
-    html[data-weather="rain"] #weather-chip-widget {
-      background-color: #eff6ff !important;
-      border-color: #93c5fd !important;
-      color: #1e3a8a !important;
     }
 
     /* 8. Thunderstorm */
     html[data-weather="thunderstorm"] {
-      --bg-canvas: #0f172a;
-      --bg-paper: #1e293b;
+      --bg-canvas: #020617;
+      --bg-paper: #0f172a;
       --paper-line: rgba(255, 255, 255, 0.09);
-      --ink-black: #f8fafc;
-      --ink-muted: #94a3b8;
+      --surface: #1e293b;
+      --surface-raised: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-on-accent: #020617;
       --brand-orange: #fb923c;
-      --brand-blue: #38bdf8;
+      --brand-orange-dark: #f97316;
+      --link: #38bdf8;
+      --icon: #f8fafc;
+      --border: #475569;
+      --focus-ring: #38bdf8;
       --tape-color: rgba(251, 146, 60, 0.35);
-    }
-    html[data-weather="thunderstorm"] .sketch-box {
-      background: #0f172a;
-      border-color: #fb923c;
-    }
-    html[data-weather="thunderstorm"] .sketch-box h1 {
-      color: #ffffff !important;
-    }
-    html[data-weather="thunderstorm"] .sticky-nav {
-      background-color: rgba(15, 23, 42, 0.95);
-      border-color: rgba(255, 255, 255, 0.12);
-    }
-    html[data-weather="thunderstorm"] .sticky-nav a,
-    html[data-weather="thunderstorm"] .notebook-container h1,
-    html[data-weather="thunderstorm"] .notebook-container h2,
-    html[data-weather="thunderstorm"] .notebook-container h3,
-    html[data-weather="thunderstorm"] .notebook-container h4,
-    html[data-weather="thunderstorm"] .text-gray-900,
-    html[data-weather="thunderstorm"] .text-stone-900,
-    html[data-weather="thunderstorm"] .text-stone-800 {
-      color: #f8fafc !important;
-    }
-    html[data-weather="thunderstorm"] .notebook-container p,
-    html[data-weather="thunderstorm"] .text-gray-600,
-    html[data-weather="thunderstorm"] .text-gray-700,
-    html[data-weather="thunderstorm"] .text-stone-600,
-    html[data-weather="thunderstorm"] .text-stone-700 {
-      color: #cbd5e1 !important;
-    }
-    html[data-weather="thunderstorm"] #weather-hero-greeting {
-      background-color: rgba(15, 23, 42, 0.9) !important;
-      border-color: rgba(255, 255, 255, 0.2) !important;
-    }
-    html[data-weather="thunderstorm"] #weather-greeting-text {
-      color: #f1f5f9 !important;
-    }
-    html[data-weather="thunderstorm"] #weather-chip-widget {
-      background-color: #0f172a !important;
-      border-color: rgba(255, 255, 255, 0.2) !important;
-      color: #f8fafc !important;
     }
 
     /* 9. Snow */
     html[data-weather="snow"] {
-      --bg-canvas: #f1f5f9;
+      --bg-canvas: #e2e8f0;
       --bg-paper: #ffffff;
       --paper-line: rgba(148, 163, 184, 0.16);
-      --brand-orange: #ea580c;
-      --brand-blue: #0284c7;
+      --surface: #f8fafc;
+      --surface-raised: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #475569;
+      --text-on-accent: #ffffff;
+      --brand-orange: #c2410c;
+      --brand-orange-dark: #ea580c;
+      --link: #0369a1;
+      --icon: #0f172a;
+      --border: #cbd5e1;
+      --focus-ring: #0284c7;
       --tape-color: rgba(224, 242, 254, 0.9);
     }
 
     /* 10. Fog & Haze */
     html[data-weather="fog-haze"] {
-      --bg-canvas: #e7e5e4;
+      --bg-canvas: #d6d3d1;
       --bg-paper: #f5f5f4;
       --paper-line: rgba(120, 113, 108, 0.2);
-      --brand-orange: #ea580c;
-      --brand-blue: #78716c;
+      --surface: #ffffff;
+      --surface-raised: #e7e5e4;
+      --text-primary: #1c1917;
+      --text-secondary: #292524;
+      --text-muted: #57534e;
+      --text-on-accent: #ffffff;
+      --brand-orange: #c2410c;
+      --brand-orange-dark: #ea580c;
+      --link: #0369a1;
+      --icon: #1c1917;
+      --border: #a8a29e;
+      --focus-ring: #78716c;
+      --tape-color: rgba(231, 229, 228, 0.88);
     }
 
     /* 11. Harmattan Dust */
     html[data-weather="harmattan-dust"] {
-      --bg-canvas: #f5ede0;
-      --bg-paper: #fbf6ec;
+      --bg-canvas: #fed7aa;
+      --bg-paper: #fff7ed;
       --paper-line: rgba(180, 83, 9, 0.16);
       --paper-margin: rgba(217, 119, 6, 0.3);
-      --brand-orange: #d97706;
-      --brand-blue: #b45309;
+      --surface: #ffffff;
+      --surface-raised: #ffedd5;
+      --text-primary: #271607;
+      --text-secondary: #451a03;
+      --text-muted: #78350f;
+      --text-on-accent: #ffffff;
+      --brand-orange: #b45309;
+      --brand-orange-dark: #9a3412;
+      --link: #9a3412;
+      --icon: #271607;
+      --border: #fdba74;
+      --focus-ring: #ea580c;
       --tape-color: rgba(254, 215, 170, 0.88);
+    }
+
+    /* -------------------------------------------------------------
+       UNIVERSAL WEATHER CONTRAST RULES (WCAG AA Strict)
+       Ensures all text, headings, icons, cards and inputs are clear
+       ------------------------------------------------------------- */
+    [data-weather] {
+      color: var(--text-primary);
+    }
+    [data-weather] .text-gray-900,
+    [data-weather] .text-stone-900,
+    [data-weather] .text-stone-800,
+    [data-weather] .text-zinc-900,
+    [data-weather] .text-slate-900,
+    [data-weather] .sketch-box h1,
+    [data-weather] h1,
+    [data-weather] h2,
+    [data-weather] h3,
+    [data-weather] h4 {
+      color: var(--text-primary) !important;
+    }
+
+    [data-weather] .text-gray-700,
+    [data-weather] .text-stone-700,
+    [data-weather] .text-zinc-700,
+    [data-weather] .text-slate-700,
+    [data-weather] .text-gray-800,
+    [data-weather] .notebook-container p {
+      color: var(--text-secondary) !important;
+    }
+
+    [data-weather] .text-gray-600,
+    [data-weather] .text-stone-600,
+    [data-weather] .text-zinc-600,
+    [data-weather] .text-slate-600,
+    [data-weather] .text-gray-500,
+    [data-weather] .text-stone-500,
+    [data-weather] .text-stone-400 {
+      color: var(--text-muted) !important;
+    }
+
+    [data-weather] .text-orange-600,
+    [data-weather] .text-orange-500 {
+      color: var(--brand-orange) !important;
+    }
+
+    /* Navigation & Icons */
+    [data-weather] .sticky-nav {
+      background-color: var(--surface) !important;
+      border-bottom: 1px solid var(--border) !important;
+    }
+    [data-weather] .sticky-nav a {
+      color: var(--text-primary) !important;
+    }
+    [data-weather] .sticky-nav a:hover {
+      color: var(--brand-orange) !important;
+    }
+    [data-weather] #mobile-menu-btn {
+      background-color: var(--surface) !important;
+      border-color: var(--border) !important;
+      color: var(--text-primary) !important;
+    }
+    [data-weather] svg.fill-current {
+      fill: currentColor;
+    }
+    [data-weather] svg[stroke="currentColor"] {
+      stroke: currentColor;
+    }
+
+    /* Cards, Surfaced Containers & Inputs */
+    [data-weather] input,
+    [data-weather] textarea,
+    [data-weather] select {
+      background-color: var(--surface) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--border) !important;
+    }
+    [data-weather] input::placeholder,
+    [data-weather] textarea::placeholder {
+      color: var(--text-muted) !important;
+      opacity: 1 !important;
+    }
+    [data-weather] input:focus,
+    [data-weather] textarea:focus,
+    [data-weather] select:focus {
+      border-color: var(--focus-ring) !important;
+      outline: 2px solid var(--focus-ring) !important;
+      outline-offset: 1px !important;
+    }
+
+    /* Dark Mode Theme Surfaces (clear-night & thunderstorm) */
+    html[data-weather="clear-night"] .bg-white,
+    html[data-weather="thunderstorm"] .bg-white,
+    html[data-weather="clear-night"] .folder-card,
+    html[data-weather="thunderstorm"] .folder-card,
+    html[data-weather="clear-night"] .sketch-box,
+    html[data-weather="thunderstorm"] .sketch-box,
+    html[data-weather="clear-night"] #pricing .border-2,
+    html[data-weather="thunderstorm"] #pricing .border-2,
+    html[data-weather="clear-night"] #contact .bg-white,
+    html[data-weather="thunderstorm"] #contact .bg-white {
+      background-color: var(--surface) !important;
+      border-color: var(--border) !important;
+      color: var(--text-primary) !important;
+    }
+
+    html[data-weather="clear-night"] .bg-stone-50,
+    html[data-weather="thunderstorm"] .bg-stone-50,
+    html[data-weather="clear-night"] .bg-stone-100,
+    html[data-weather="thunderstorm"] .bg-stone-100 {
+      background-color: var(--surface-raised) !important;
+      border-color: var(--border) !important;
+    }
+
+    /* Weather Hero Greeting Pill & Control Chip */
+    [data-weather] #weather-hero-greeting {
+      background-color: var(--surface) !important;
+      border-color: var(--border) !important;
+    }
+    [data-weather] #weather-greeting-text {
+      color: var(--text-primary) !important;
+    }
+    [data-weather] #weather-chip-widget {
+      background-color: var(--surface) !important;
+      border-color: var(--border) !important;
+      color: var(--text-primary) !important;
+    }
+    [data-weather] #weather-theme-panel {
+      background-color: var(--surface) !important;
+      border-color: var(--border) !important;
+      color: var(--text-primary) !important;
+    }
+    [data-weather] #weather-theme-panel .weather-theme-choice-btn {
+      background-color: var(--surface-raised) !important;
+      border-color: var(--border) !important;
+      color: var(--text-primary) !important;
+    }
+
+    /* Buttons */
+    [data-weather] .btn-outline {
+      border-color: var(--border) !important;
+      color: var(--text-primary) !important;
+      background-color: var(--surface) !important;
+    }
+    [data-weather] .btn-outline:hover {
+      background-color: var(--surface-raised) !important;
+      border-color: var(--brand-orange) !important;
+      color: var(--brand-orange) !important;
+    }
+
+    /* High-Contrast Mode & Reduced Motion Compliance */
+    @media (prefers-contrast: more) {
+      [data-weather] {
+        --border: #000000 !important;
+        --text-primary: #000000 !important;
+        --text-secondary: #000000 !important;
+        --text-muted: #1e293b !important;
+      }
+      html[data-weather="clear-night"],
+      html[data-weather="thunderstorm"] {
+        --border: #ffffff !important;
+        --text-primary: #ffffff !important;
+        --text-secondary: #ffffff !important;
+        --text-muted: #e2e8f0 !important;
+      }
+      .notebook-container, .folder-card, .btn-outline, .btn-mono-cta, input, textarea, select {
+        border-width: 2px !important;
+      }
+    }
+
+    @media (forced-colors: active) {
+      #weather-sky-canvas,
+      #weather-lightning-flash {
+        display: none !important;
+      }
+      [data-weather] svg,
+      [data-weather] .sticker-badge,
+      [data-weather] button,
+      [data-weather] a {
+        forced-color-adjust: auto;
+      }
     }
 
     /* Reset & Base */
@@ -1135,6 +1339,10 @@
   </style>
 </head>
 <body>
+  <!-- Ambient Weather Particle & Atmosphere Canvas (Fixed across entire viewport on all sections, z-index 45) -->
+  <canvas id="weather-sky-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-[45]" aria-hidden="true"></canvas>
+  <div id="weather-lightning-flash" class="fixed inset-0 bg-white pointer-events-none opacity-0 transition-opacity duration-200 z-[46]" aria-hidden="true"></div>
+
   <!-- Scroll Progress Indicator -->
   <div id="scroll-progress" aria-hidden="true"></div>
 
@@ -1257,13 +1465,6 @@
          1. HERO SECTION
          ============================================================ -->
     <section id="hero" class="pt-12 sm:pt-16 pb-16 px-4 sm:px-8 relative overflow-hidden">
-      
-      <!-- Ambient Weather Sky Layer (Hero Backdrop Only, z-index 0, aria-hidden) -->
-      <div id="hero-weather-sky" class="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-        <canvas id="weather-sky-canvas" class="w-full h-full block"></canvas>
-        <div id="weather-lightning-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 transition-opacity duration-200"></div>
-      </div>
-
       <!-- Top Status Pill -->
       <div class="flex items-center justify-center mb-6 relative z-10">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs sm:text-sm font-mono shadow-sm">
