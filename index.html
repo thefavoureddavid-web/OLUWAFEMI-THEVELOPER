@@ -70,6 +70,169 @@
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
+    /* Smooth 600ms cross-fade between weather themes */
+    body, .notebook-container, #navbar, .sticky-nav, .sketch-box, .folder-card, .sticky-note {
+      transition: background-color 0.6s ease, border-color 0.6s ease, color 0.6s ease, box-shadow 0.6s ease;
+    }
+
+    /* -------------------------------------------------------------
+       WEATHER-RESPONSIVE THEMES (Subtle, On-Brand, WCAG AA Verified)
+       ------------------------------------------------------------- */
+    /* 1. Clear Day / Sunny */
+    html[data-weather="clear-day"] {
+      --bg-canvas: #eef3f8;
+      --bg-paper: #fffef9;
+      --paper-line: rgba(148, 163, 184, 0.18);
+      --brand-orange: #f97316;
+      --brand-blue: #0284c7;
+      --tape-color: rgba(254, 240, 138, 0.88);
+    }
+
+    /* 2. Hot Sun (Clear and > 33°C) */
+    html[data-weather="hot-sun"] {
+      --bg-canvas: #fdf5e8;
+      --bg-paper: #fffcf2;
+      --paper-line: rgba(217, 119, 6, 0.16);
+      --brand-orange: #ea580c;
+      --brand-blue: #d97706;
+      --tape-color: rgba(253, 230, 138, 0.92);
+    }
+
+    /* 3. Clear Night */
+    html[data-weather="clear-night"] {
+      --bg-canvas: #090d16;
+      --bg-paper: #111827;
+      --paper-line: rgba(255, 255, 255, 0.08);
+      --paper-margin: rgba(244, 63, 94, 0.35);
+      --ink-black: #f8fafc;
+      --ink-muted: #94a3b8;
+      --brand-orange: #fb923c;
+      --brand-orange-dark: #f97316;
+      --brand-blue: #38bdf8;
+      --tape-color: rgba(251, 191, 36, 0.32);
+    }
+    html[data-weather="clear-night"] .sketch-box {
+      background: #1e293b;
+      border-color: #38bdf8;
+    }
+    html[data-weather="clear-night"] .sketch-box h1 {
+      color: #ffffff;
+    }
+    html[data-weather="clear-night"] .sticky-nav {
+      background-color: rgba(15, 23, 42, 0.95);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    html[data-weather="clear-night"] .sticky-nav a,
+    html[data-weather="clear-night"] .notebook-container h2,
+    html[data-weather="clear-night"] .notebook-container h3 {
+      color: #f8fafc;
+    }
+    html[data-weather="clear-night"] .notebook-container p,
+    html[data-weather="clear-night"] .text-gray-600,
+    html[data-weather="clear-night"] .text-gray-700 {
+      color: #cbd5e1;
+    }
+
+    /* 4. Partly Cloudy */
+    html[data-weather="partly-cloudy"] {
+      --bg-canvas: #eaf0f6;
+      --bg-paper: #fcfbf8;
+      --paper-line: rgba(148, 163, 184, 0.18);
+      --brand-orange: #f97316;
+      --brand-blue: #0284c7;
+    }
+
+    /* 5. Cloudy / Overcast */
+    html[data-weather="cloudy"] {
+      --bg-canvas: #e5e9f0;
+      --bg-paper: #f6f8fa;
+      --paper-line: rgba(100, 116, 139, 0.2);
+      --brand-orange: #f97316;
+      --brand-blue: #475569;
+    }
+
+    /* 6. Drizzle */
+    html[data-weather="drizzle"] {
+      --bg-canvas: #e2e8f0;
+      --bg-paper: #f4f7f9;
+      --paper-line: rgba(71, 85, 105, 0.2);
+      --brand-orange: #ea580c;
+      --brand-blue: #0284c7;
+    }
+
+    /* 7. Rain */
+    html[data-weather="rain"] {
+      --bg-canvas: #dbeafe;
+      --bg-paper: #f0f5fa;
+      --paper-line: rgba(59, 130, 246, 0.18);
+      --brand-orange: #ea580c;
+      --brand-blue: #0369a1;
+      --tape-color: rgba(186, 230, 253, 0.85);
+    }
+
+    /* 8. Thunderstorm */
+    html[data-weather="thunderstorm"] {
+      --bg-canvas: #0f172a;
+      --bg-paper: #1e293b;
+      --paper-line: rgba(255, 255, 255, 0.09);
+      --ink-black: #f8fafc;
+      --ink-muted: #94a3b8;
+      --brand-orange: #fb923c;
+      --brand-blue: #38bdf8;
+      --tape-color: rgba(251, 146, 60, 0.35);
+    }
+    html[data-weather="thunderstorm"] .sketch-box {
+      background: #0f172a;
+      border-color: #fb923c;
+    }
+    html[data-weather="thunderstorm"] .sketch-box h1 {
+      color: #ffffff;
+    }
+    html[data-weather="thunderstorm"] .sticky-nav {
+      background-color: rgba(15, 23, 42, 0.95);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+    html[data-weather="thunderstorm"] .sticky-nav a,
+    html[data-weather="thunderstorm"] .notebook-container h2,
+    html[data-weather="thunderstorm"] .notebook-container h3 {
+      color: #f8fafc;
+    }
+    html[data-weather="thunderstorm"] .notebook-container p,
+    html[data-weather="thunderstorm"] .text-gray-600,
+    html[data-weather="thunderstorm"] .text-gray-700 {
+      color: #cbd5e1;
+    }
+
+    /* 9. Snow */
+    html[data-weather="snow"] {
+      --bg-canvas: #f1f5f9;
+      --bg-paper: #ffffff;
+      --paper-line: rgba(148, 163, 184, 0.16);
+      --brand-orange: #ea580c;
+      --brand-blue: #0284c7;
+      --tape-color: rgba(224, 242, 254, 0.9);
+    }
+
+    /* 10. Fog & Haze */
+    html[data-weather="fog-haze"] {
+      --bg-canvas: #e7e5e4;
+      --bg-paper: #f5f5f4;
+      --paper-line: rgba(120, 113, 108, 0.2);
+      --brand-orange: #ea580c;
+      --brand-blue: #78716c;
+    }
+
+    /* 11. Harmattan Dust */
+    html[data-weather="harmattan-dust"] {
+      --bg-canvas: #f5ede0;
+      --bg-paper: #fbf6ec;
+      --paper-line: rgba(180, 83, 9, 0.16);
+      --paper-margin: rgba(217, 119, 6, 0.3);
+      --brand-orange: #d97706;
+      --brand-blue: #b45309;
+      --tape-color: rgba(254, 215, 170, 0.88);
+    }
+
     /* Reset & Base */
     *, *::before, *::after {
       box-sizing: border-box;
@@ -1021,8 +1184,14 @@
          ============================================================ -->
     <section id="hero" class="pt-12 sm:pt-16 pb-16 px-4 sm:px-8 relative overflow-hidden">
       
+      <!-- Ambient Weather Sky Layer (Hero Backdrop Only, z-index 0, aria-hidden) -->
+      <div id="hero-weather-sky" class="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+        <canvas id="weather-sky-canvas" class="w-full h-full block"></canvas>
+        <div id="weather-lightning-flash" class="absolute inset-0 bg-white pointer-events-none opacity-0 transition-opacity duration-200"></div>
+      </div>
+
       <!-- Top Status Pill -->
-      <div class="flex items-center justify-center mb-6">
+      <div class="flex items-center justify-center mb-6 relative z-10">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs sm:text-sm font-mono shadow-sm">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
           <span class="font-bold">● Open to new work</span>
@@ -1032,7 +1201,7 @@
       </div>
 
       <!-- Hero Visual Composition with Name & Stickers -->
-      <div class="relative max-w-4xl mx-auto text-center pt-4 pb-8">
+      <div class="relative max-w-4xl mx-auto text-center pt-4 pb-8 z-10">
         
         <!-- Floating circular orange-bordered Avatar #1 (Top Left) -->
         <div class="absolute -top-3 left-2 sm:left-10 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-orange-500 shadow-lg overflow-hidden idle-float hidden xs:block z-10 bg-slate-900">
@@ -1111,6 +1280,14 @@
             <span class="text-orange-600 bg-orange-100 px-2.5 py-0.5 rounded border border-orange-300" id="rotating-text">
               Frontend & UI Design
             </span>
+          </div>
+
+          <!-- Weather-Responsive Dynamic Greeting Line -->
+          <div class="mt-4 flex justify-center">
+            <div id="weather-hero-greeting" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-mono border border-black/15 bg-white/85 shadow-sm transition-all duration-700 opacity-0 transform -translate-y-1 backdrop-blur-sm" aria-live="polite">
+              <span id="weather-greeting-icon" class="text-base">🌤️</span>
+              <span id="weather-greeting-text" class="text-stone-800 font-medium">I build fast, beautiful websites that turn visitors into customers.</span>
+            </div>
           </div>
 
           <p class="mt-4 text-gray-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
@@ -2175,11 +2352,75 @@
 
         </div>
 
-        <!-- Copyright & Bottom Credit -->
+        <!-- Copyright & Bottom Credit & Weather Theme Widget -->
         <div class="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-stone-500 gap-3 text-center sm:text-left">
           <div id="copyright-text" class="select-none">
             © 2026 Oluwafemi David Adekanola. All rights reserved.
           </div>
+
+          <!-- Weather Theme Control Chip (User Preference) -->
+          <div class="relative inline-block text-left">
+            <button
+              type="button"
+              id="weather-chip-widget"
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-stone-300 text-stone-800 text-[11px] font-mono shadow-sm hover:border-orange-500 hover:text-orange-600 transition-all cursor-pointer"
+              aria-label="Change weather-responsive theme"
+              aria-haspopup="true"
+            >
+              <span id="weather-chip-label">🌤️ Weather Theme</span>
+              <span class="text-[9px] text-stone-400">▾</span>
+            </button>
+
+            <!-- Mini Dropdown Selection Panel -->
+            <div
+              id="weather-theme-panel"
+              class="hidden absolute bottom-full mb-2 left-1/2 sm:left-auto sm:right-0 transform -translate-x-1/2 sm:translate-x-0 w-64 bg-[#fcfbf7] border-2 border-black rounded-xl p-3 shadow-[4px_4px_0px_#000] z-[9990] text-xs font-mono text-stone-800"
+              role="menu"
+            >
+              <div class="flex items-center justify-between border-b border-stone-200 pb-1.5 mb-2">
+                <span class="font-bold text-[11px]">🎨 Ambient Theme</span>
+                <button type="button" id="close-weather-panel-btn" class="text-stone-400 hover:text-black font-bold text-sm leading-none">&times;</button>
+              </div>
+
+              <div id="weather-panel-status" class="text-[10px] text-stone-500 mb-2 truncate">Auto detected</div>
+
+              <div class="grid grid-cols-2 gap-1.5 mb-2.5">
+                <button type="button" class="weather-theme-choice-btn px-2 py-1 text-left rounded bg-white hover:bg-orange-50 hover:text-orange-600 border border-stone-200 text-[11px] flex items-center gap-1 transition-colors" data-mode="auto">
+                  <span>🌐</span> Auto
+                </button>
+                <button type="button" class="weather-theme-choice-btn px-2 py-1 text-left rounded bg-white hover:bg-orange-50 hover:text-orange-600 border border-stone-200 text-[11px] flex items-center gap-1 transition-colors" data-mode="clear-day">
+                  <span>☀️</span> Sunny
+                </button>
+                <button type="button" class="weather-theme-choice-btn px-2 py-1 text-left rounded bg-white hover:bg-orange-50 hover:text-orange-600 border border-stone-200 text-[11px] flex items-center gap-1 transition-colors" data-mode="rain">
+                  <span>🌧️</span> Rainy
+                </button>
+                <button type="button" class="weather-theme-choice-btn px-2 py-1 text-left rounded bg-white hover:bg-orange-50 hover:text-orange-600 border border-stone-200 text-[11px] flex items-center gap-1 transition-colors" data-mode="clear-night">
+                  <span>🌙</span> Night
+                </button>
+                <button type="button" class="weather-theme-choice-btn px-2 py-1 text-left rounded bg-white hover:bg-orange-50 hover:text-orange-600 border border-stone-200 text-[11px] flex items-center gap-1 transition-colors" data-mode="cloudy">
+                  <span>⛅</span> Cloudy
+                </button>
+                <button type="button" class="weather-theme-choice-btn px-2 py-1 text-left rounded bg-white hover:bg-red-50 hover:text-red-600 border border-stone-200 text-[11px] flex items-center gap-1 transition-colors" data-mode="off">
+                  <span>⊘</span> Off
+                </button>
+              </div>
+
+              <!-- Optional Exact Location Chip -->
+              <div class="border-t border-stone-200 pt-2 flex flex-col gap-1.5">
+                <button
+                  type="button"
+                  id="use-exact-location-btn"
+                  class="w-full py-1 px-2 bg-stone-900 hover:bg-orange-600 text-white rounded text-[10px] font-bold transition-colors text-center cursor-pointer"
+                >
+                  📍 Use my exact location
+                </button>
+                <span class="text-[9px] text-stone-400 text-center leading-tight">
+                  No IP stored · Powered by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" class="underline hover:text-stone-700">Open-Meteo</a>
+                </span>
+              </div>
+            </div>
+          </div>
+
           <div class="flex items-center gap-4">
             <span>Crafted with passion in Ilorin, Kwara State, Nigeria 🇳🇬</span>
           </div>
@@ -2469,6 +2710,7 @@
       <div class="space-y-3 text-xs font-sans text-gray-700 leading-relaxed">
         <p><strong>Compliance:</strong> Built in accordance with the <em>Nigeria Data Protection Act (NDPA) 2023</em> and international data privacy principles.</p>
         <p><strong>What is tracked:</strong> Anonymous session identifiers, country and city (derived from serverless edge headers), device type, viewed sections, and button interactions (WhatsApp, call, form).</p>
+        <p><strong>Weather-Responsive Theme:</strong> When permitted, approximate regional coordinates derived from edge headers are used once to adapt the page theme to local weather and daylight via Open-Meteo (<a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" class="text-orange-600 underline">open-meteo.com</a>). No coordinates or IPs are ever stored.</p>
         <p><strong>What is NOT tracked:</strong> We never store plain IP addresses (salted SHA-256 hash only), exact GPS coordinates, or cross-site tracking cookies. No third-party ad networks or trackers are loaded.</p>
         <p><strong>Data Retention:</strong> Session and notification logs are automatically purged after 90 days.</p>
         <p><strong>Site Owner:</strong> Oluwafemi David Adekanola, Ilorin, Kwara State, Nigeria. Contact: <a href="mailto:davidbryght@gmail.com" class="text-orange-600 underline">davidbryght@gmail.com</a>.</p>
@@ -3291,6 +3533,17 @@
       renderTestimonialsGrid();
       setupSecretGesture();
       checkPrivateHashRoute();
+
+      // Non-blocking idle initialization of Weather-Responsive Theme
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          import('/src/weather-theme.js').then(m => m.initWeatherTheme()).catch(() => {});
+        });
+      } else {
+        setTimeout(() => {
+          import('/src/weather-theme.js').then(m => m.initWeatherTheme()).catch(() => {});
+        }, 350);
+      }
     });
 
     /**

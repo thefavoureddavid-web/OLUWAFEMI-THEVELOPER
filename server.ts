@@ -3,6 +3,7 @@ import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
 import chatHandler from './api/chat.js';
 import trackHandler from './api/track.js';
+import weatherHandler from './api/weather.js';
 
 dotenv.config();
 
@@ -10,6 +11,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+// Weather-Responsive Theme API Route (mirrors /api/weather Vercel Serverless Function)
+app.get('/api/weather', async (req, res) => {
+  try {
+    await weatherHandler(req, res);
+  } catch (error: any) {
+    console.error('Server /api/weather error:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Internal server error processing weather request.', fallback: true });
+    }
+  }
+});
 
 // Visitor Activity Tracking API Route (mirrors /api/track Vercel Serverless Function)
 app.post('/api/track', async (req, res) => {
