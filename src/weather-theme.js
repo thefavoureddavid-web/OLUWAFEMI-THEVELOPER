@@ -6,20 +6,22 @@
  * ==============================================================
  */
 
-// EDIT: MASTER CONFIGURATION & FEATURE FLAGS
+// MASTER CONFIGURATION & FEATURE SWITCHES
 export const WEATHER_CONFIG = {
-  enabled: true,                       // Master switch to turn weather theming on/off
-  allowPreview: true,                   // Allow testing via ?wx=rain, ?wx=night, ?wx=sunny, etc.
+  enabled: true,                       // Master switch to turn weather theming on/off (Rollback Switch)
+  debug: true,                         // Master switch to enable ?wxdebug=1 diagnostic HUD
+  allowPreview: true,                  // Allow testing via ?wx=rain, ?wx=night, ?wx=sunny, etc.
   cacheMinutes: 30,                    // SessionStorage cache duration in minutes
   apiEndpoint: '/api/weather',         // Serverless edge helper
+  directOpenMeteoFallback: true,       // Direct client fallback to Open-Meteo if edge helper is unavailable
   maxRainDrops: 35,                    // Particle cap for rain
   maxSnowFlakes: 25,                   // Particle cap for snow
-  maxStars: 22,                        // Particle cap for night stars
+  maxStars: 24,                        // Particle cap for night stars
   lightningIntervalMinMs: 9000,        // Seizure-safe minimum delay between flashes (9s)
   lightningIntervalMaxMs: 16000,       // Seizure-safe maximum delay between flashes (16s)
   lightningMaxOpacity: 0.12,           // Very gentle, low-opacity ambient flash
 
-  // EDIT: HERO GREETING TEMPLATES (Tokens: {city})
+  // HERO GREETING TEMPLATES (Tokens: {city})
   greetings: {
     'clear-day': {
       dawn: "Good morning 🌅 Crisp morning in {city}! Perfect time to build something great.",
@@ -69,6 +71,41 @@ export const WEATHER_CONFIG = {
   }
 };
 
+// Aliases for URL preview testing (?wx=...)
+const WX_ALIASES = {
+  sunny: 'clear-day',
+  sun: 'clear-day',
+  'clear-day': 'clear-day',
+  day: 'clear-day',
+  hot: 'hot-sun',
+  'hot-sun': 'hot-sun',
+  heat: 'hot-sun',
+  night: 'clear-night',
+  'clear-night': 'clear-night',
+  dark: 'clear-night',
+  rain: 'rain',
+  rainy: 'rain',
+  drizzle: 'drizzle',
+  thunder: 'thunderstorm',
+  storm: 'thunderstorm',
+  thunderstorm: 'thunderstorm',
+  lightning: 'thunderstorm',
+  cloudy: 'cloudy',
+  clouds: 'cloudy',
+  overcast: 'cloudy',
+  'partly-cloudy': 'partly-cloudy',
+  partlycloudy: 'partly-cloudy',
+  snow: 'snow',
+  snowy: 'snow',
+  fog: 'fog-haze',
+  haze: 'fog-haze',
+  'fog-haze': 'fog-haze',
+  mist: 'fog-haze',
+  dust: 'harmattan-dust',
+  harmattan: 'harmattan-dust',
+  'harmattan-dust': 'harmattan-dust'
+};
+
 // Global state
 let activeThemeState = {
   category: 'clear-day',
@@ -80,6 +117,21 @@ let activeThemeState = {
   isExactLocation: false
 };
 
+// Diagnostic & Debug HUD state (Exposed safely without coordinates or IPs)
+const debugState = {
+  enabled: WEATHER_CONFIG.enabled,
+  parsedWxParam: null,
+  activeCategory: 'clear-day',
+  activePhase: 'day',
+  consentState: 'none',
+  themeSource: 'INITIAL',
+  apiStatus: 'not_requested',
+  apiLatencyMs: 0,
+  cacheState: 'none',
+  lastError: null,
+  tempAndCity: ''
+};
+
 let skyAnimationId = null;
 let skyCanvas = null;
 let skyCtx = null;
@@ -87,11 +139,12 @@ let particles = [];
 let lightningTimer = null;
 let isHeroVisible = true;
 let isTabVisible = true;
+let debugPanelElement = null;
 
 /**
  * Derives fallback theme strictly from local system clock
  */
-function getLocalTimeFallbackTheme() {
+export function getLocalTimeFallbackTheme() {
   const hour = new Date().getHours();
   let phase = 'day';
   let isDay = true;
@@ -118,6 +171,7 @@ function getLocalTimeFallbackTheme() {
 
   return {
     category,
+    weatherCategory: category,
     phase,
     temperature: isDay ? 30 : 24,
     city: '',
@@ -150,24 +204,59 @@ function getGreetingPhrase(category, phase, rawCity) {
 /**
  * Apply theme variables & data attributes to document
  */
-function applyTheme(data) {
-  if (!WEATHER_CONFIG.enabled) return;
-
-  activeThemeState = { ...activeThemeState, ...data };
+export function applyTheme(data, source = 'UNKNOWN') {
   const root = document.documentElement;
 
-  // Set data-weather and data-time-phase attributes
-  root.setAttribute('data-weather', data.category);
-  root.setAttribute('data-time-phase', data.phase || 'day');
+  // Master switch / Rollback check
+  if (!WEATHER_CONFIG.enabled) {
+    root.removeAttribute('data-weather');
+    root.removeAttribute('data-time-phase');
+    stopSkyCanvasAnimation();
+    const heroSky = document.getElementById('hero-weather-sky');
+    if (heroSky) heroSky.classList.add('hidden');
+    const greeting = document.getElementById('weather-hero-greeting');
+    if (greeting) greeting.classList.add('opacity-0');
+    debugState.enabled = false;
+    debugState.themeSource = 'DISABLED';
+    updateDebugPanelUI();
+    return;
+  }
+
+  // Normalize category from both weatherCategory and category keys
+  const category = (data.category || data.weatherCategory || 'clear-day').toLowerCase();
+  const phase = data.phase || (data.isDay === false ? 'night' : 'day');
+  const temp = typeof data.temperature === 'number' ? data.temperature : (phase === 'night' ? 24 : 29);
+  const city = data.city || '';
+
+  activeThemeState = {
+    ...activeThemeState,
+    ...data,
+    category,
+    phase,
+    temperature: temp,
+    city
+  };
+
+  debugState.activeCategory = category;
+  debugState.activePhase = phase;
+  debugState.themeSource = source;
+  debugState.tempAndCity = `${temp}°C ${city ? '· ' + city : ''}`.trim();
+
+  // Set data-weather and data-time-phase attributes on <html>
+  root.setAttribute('data-weather', category);
+  root.setAttribute('data-time-phase', phase);
 
   // Update hero greeting line
-  updateHeroGreeting(data.category, data.phase, data.city);
+  updateHeroGreeting(category, phase, city);
 
   // Update weather chip UI
-  updateWeatherChipUI(data);
+  updateWeatherChipUI(activeThemeState);
 
   // Re-initialize or adjust sky canvas particles
-  initSkyCanvasAnimation(data.category);
+  initSkyCanvasAnimation(category);
+
+  // Refresh debug panel HUD
+  updateDebugPanelUI();
 }
 
 /**
@@ -235,72 +324,95 @@ function updateWeatherChipUI(data) {
 }
 
 /**
- * Fetch weather from serverless API with caching
+ * Resolve WMO code for direct client-side Open-Meteo fallback
  */
-async function fetchWeather(customCoords = null) {
-  // Check Privacy Consent: If visitor explicitly declined cookie/tracking, do not call location API
-  try {
-    if (localStorage.getItem('femi_privacy_consent') === 'declined') {
-      applyTheme(getLocalTimeFallbackTheme());
+function resolveCategoryFromWMO(wmoCode, isDay, temp) {
+  if ([95, 96, 99].includes(wmoCode)) return 'thunderstorm';
+  if ([71, 73, 75, 77, 85, 86].includes(wmoCode)) return 'snow';
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(wmoCode)) return 'rain';
+  if ([51, 53, 55, 56, 57].includes(wmoCode)) return 'drizzle';
+  if ([45, 48].includes(wmoCode)) return 'fog-haze';
+  if (wmoCode === 3) return 'cloudy';
+  if (wmoCode === 2) return 'partly-cloudy';
+  if (isDay) {
+    return temp >= 33 ? 'hot-sun' : 'clear-day';
+  }
+  return 'clear-night';
+}
+
+/**
+ * Fetch weather from serverless API with caching and error fallbacks
+ */
+export async function fetchWeather(customCoords = null) {
+  if (!WEATHER_CONFIG.enabled) {
+    applyTheme({}, 'DISABLED');
+    return;
+  }
+
+  // 1. PRIORITY #1: URL PREVIEW OVERRIDE (?wx=rain, ?wx=night, etc.)
+  // Must execute BEFORE privacy or localStorage checks so test links always work immediately!
+  if (WEATHER_CONFIG.allowPreview) {
+    const params = new URLSearchParams(window.location.search);
+    const wxParam = params.get('wx');
+    if (wxParam) {
+      debugState.parsedWxParam = wxParam;
+      const lower = wxParam.toLowerCase().trim();
+      const previewCat = WX_ALIASES[lower] || lower;
+      const isNight = previewCat === 'clear-night';
+
+      applyTheme({
+        category: previewCat,
+        weatherCategory: previewCat,
+        phase: isNight ? 'night' : (previewCat === 'clear-day' ? 'day' : 'day'),
+        temperature: previewCat === 'hot-sun' ? 36 : (isNight ? 23 : 28),
+        city: 'Preview Mode',
+        country: '',
+        isDay: !isNight,
+        preview: true
+      }, 'URL_OVERRIDE');
       return;
     }
-  } catch (e) {}
+  }
 
-  // Check custom override mode in localStorage
+  // 2. PRIORITY #2: USER MANUAL PREFERENCE IN LOCAL STORAGE
   try {
     const userMode = localStorage.getItem('femi_weather_mode');
     if (userMode && userMode !== 'auto') {
       if (userMode === 'off') {
         document.documentElement.removeAttribute('data-weather');
         document.documentElement.removeAttribute('data-time-phase');
+        stopSkyCanvasAnimation();
+        const greeting = document.getElementById('weather-hero-greeting');
+        if (greeting) greeting.classList.add('opacity-0');
+        debugState.themeSource = 'USER_OFF';
+        updateDebugPanelUI();
         return;
       }
+      const isNight = userMode === 'clear-night';
       applyTheme({
         category: userMode,
-        phase: userMode === 'clear-night' ? 'night' : 'day',
-        temperature: 28,
-        city: 'Preview',
+        weatherCategory: userMode,
+        phase: isNight ? 'night' : 'day',
+        temperature: isNight ? 24 : 30,
+        city: 'Manual Mode',
         country: '',
-        isDay: userMode !== 'clear-night'
-      });
+        isDay: !isNight
+      }, 'LOCAL_STORAGE');
       return;
     }
   } catch (e) {}
 
-  // Check URL Preview Override (if enabled)
-  if (WEATHER_CONFIG.allowPreview) {
-    const params = new URLSearchParams(window.location.search);
-    const wxParam = params.get('wx');
-    if (wxParam) {
-      const aliasMap = {
-        sunny: 'clear-day',
-        hot: 'hot-sun',
-        night: 'clear-night',
-        rain: 'rain',
-        thunder: 'thunderstorm',
-        storm: 'thunderstorm',
-        fog: 'fog-haze',
-        haze: 'fog-haze',
-        dust: 'harmattan-dust',
-        harmattan: 'harmattan-dust',
-        cloudy: 'cloudy',
-        snow: 'snow'
-      };
-      const previewCat = aliasMap[wxParam.toLowerCase()] || wxParam;
-      applyTheme({
-        category: previewCat,
-        phase: previewCat === 'clear-night' ? 'night' : 'day',
-        temperature: previewCat === 'hot-sun' ? 36 : 28,
-        city: 'Preview Mode',
-        country: '',
-        isDay: previewCat !== 'clear-night',
-        preview: true
-      });
+  // 3. PRIORITY #3: PRIVACY CONSENT CHECK
+  try {
+    const consent = localStorage.getItem('femi_privacy_consent') || 'none';
+    debugState.consentState = consent;
+    if (consent === 'declined' && !customCoords) {
+      applyTheme(getLocalTimeFallbackTheme(), 'CONSENT_DECLINED_CLOCK');
       return;
     }
-  }
+  } catch (e) {}
 
-  // Check SessionStorage Cache (unless customCoords provided)
+  // 4. PRIORITY #4: SESSION STORAGE CACHE (Skip if customCoords requested)
   const now = Date.now();
   if (!customCoords) {
     try {
@@ -308,42 +420,103 @@ async function fetchWeather(customCoords = null) {
       if (cachedRaw) {
         const cached = JSON.parse(cachedRaw);
         if (cached && now - cached.timestamp < WEATHER_CONFIG.cacheMinutes * 60 * 1000) {
-          applyTheme(cached.data);
+          debugState.cacheState = 'HIT';
+          applyTheme(cached.data, 'SESSION_CACHE');
           return;
         }
       }
     } catch (e) {}
   }
+  debugState.cacheState = 'MISS';
 
-  // Query Serverless Function /api/weather
+  // 5. QUERY SERVERLESS EDGE FUNCTION (/api/weather)
+  const startTime = Date.now();
   try {
     let url = WEATHER_CONFIG.apiEndpoint;
     if (customCoords) {
       url += `?lat=${encodeURIComponent(customCoords.lat)}&lon=${encodeURIComponent(customCoords.lon)}`;
     }
 
+    const controller = new AbortController();
+    const fetchTimeout = setTimeout(() => controller.abort(), 4500);
+
     const res = await fetch(url, {
       method: 'GET',
-      headers: { 'Accept': 'application/json' }
+      headers: { 'Accept': 'application/json' },
+      signal: controller.signal
     });
+    clearTimeout(fetchTimeout);
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const latency = Date.now() - startTime;
+    debugState.apiLatencyMs = latency;
+    debugState.apiStatus = `HTTP ${res.status}`;
+
+    if (!res.ok) throw new Error(`Edge API HTTP ${res.status}`);
     const data = await res.json();
 
     if (data && data.success) {
-      applyTheme(data);
+      applyTheme(data, 'API_VERCEL');
       try {
         sessionStorage.setItem('femi_weather_cache', JSON.stringify({
           timestamp: now,
           data
         }));
       } catch (e) {}
+      return;
     } else {
-      throw new Error("Invalid payload format");
+      throw new Error("Invalid payload structure from /api/weather");
     }
-  } catch (err) {
-    // Silent fallback to local time-of-day theme
-    applyTheme(getLocalTimeFallbackTheme());
+
+  } catch (apiErr) {
+    debugState.lastError = apiErr.message || String(apiErr);
+    console.warn("Weather serverless API call failed, evaluating client fallback:", apiErr);
+
+    // 6. DIRECT CLIENT OPEN-METEO FALLBACK (Free, Public, No Secrets, Allowed by CSP)
+    if (WEATHER_CONFIG.directOpenMeteoFallback) {
+      try {
+        const lat = customCoords ? customCoords.lat : 8.4966; // Default to Ilorin, Nigeria
+        const lon = customCoords ? customCoords.lon : 4.5421;
+        const roundedLat = Math.round(lat * 10) / 10;
+        const roundedLon = Math.round(lon * 10) / 10;
+
+        const directController = new AbortController();
+        const directTimeout = setTimeout(() => directController.abort(), 3500);
+
+        const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${roundedLat}&longitude=${roundedLon}&current=temperature_2m,weather_code,is_day&daily=sunrise,sunset&timezone=auto`;
+        const directRes = await fetch(openMeteoUrl, {
+          signal: directController.signal,
+          headers: { 'Accept': 'application/json' }
+        });
+        clearTimeout(directTimeout);
+
+        if (directRes.ok) {
+          const mData = await directRes.json();
+          const cur = mData.current || {};
+          const isDay = cur.is_day === 1 || cur.is_day === true;
+          const temp = Math.round(cur.temperature_2m ?? 28);
+          const wmo = cur.weather_code ?? 0;
+          const category = resolveCategoryFromWMO(wmo, isDay, temp);
+
+          debugState.apiStatus = 'DIRECT_OPEN_METEO (HTTP 200)';
+          applyTheme({
+            category,
+            weatherCategory: category,
+            temperature: temp,
+            isDay,
+            phase: isDay ? 'day' : 'night',
+            city: customCoords ? 'Your Area' : 'Ilorin',
+            country: 'Nigeria',
+            weatherCode: wmo
+          }, 'DIRECT_METEO');
+          return;
+        }
+      } catch (directErr) {
+        debugState.lastError = `Direct Open-Meteo failed: ${directErr.message}`;
+      }
+    }
+
+    // 7. FINAL ERROR-FREE FALLBACK: SYSTEM CLOCK DIURNAL CYCLE
+    applyTheme(getLocalTimeFallbackTheme(), 'CLOCK_FALLBACK');
   }
 }
 
@@ -353,7 +526,7 @@ async function fetchWeather(customCoords = null) {
  * ==============================================================
  */
 function initSkyCanvasAnimation(category) {
-  // Check reduced motion
+  // Check reduced motion preference
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     stopSkyCanvasAnimation();
     return;
@@ -373,7 +546,7 @@ function initSkyCanvasAnimation(category) {
 
   particles = [];
   if (lightningTimer) {
-    clearInterval(lightningTimer);
+    clearTimeout(lightningTimer);
     lightningTimer = null;
   }
 
@@ -381,7 +554,7 @@ function initSkyCanvasAnimation(category) {
   const h = skyCanvas.height;
 
   if (category === 'rain' || category === 'drizzle' || category === 'thunderstorm') {
-    const count = Math.round((category === 'drizzle' ? 20 : WEATHER_CONFIG.maxRainDrops) * particleScale);
+    const count = Math.round((category === 'drizzle' ? 18 : WEATHER_CONFIG.maxRainDrops) * particleScale);
     for (let i = 0; i < count; i++) {
       particles.push({
         type: 'rain',
@@ -624,6 +797,206 @@ function scheduleNextLightningFlash() {
 
 /**
  * ==============================================================
+ * STEP 2: DEBUG PANEL (?wxdebug=1)
+ * Diagnostic HUD showing theme states without exposing coordinates or IPs
+ * ==============================================================
+ */
+function initDebugPanel() {
+  if (!WEATHER_CONFIG.debug) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const isDebugRequested = params.get('wxdebug') === '1' || params.has('wxdebug');
+  if (!isDebugRequested) return;
+
+  if (document.getElementById('weather-debug-hud')) return;
+
+  const hud = document.createElement('div');
+  hud.id = 'weather-debug-hud';
+  hud.className = 'fixed bottom-4 left-4 z-[99999] max-w-sm w-[340px] bg-stone-950/95 text-stone-200 border-2 border-amber-500 rounded-xl shadow-[4px_4px_0px_#000] p-3 text-xs font-mono backdrop-blur-md transition-all select-none';
+  hud.innerHTML = `
+    <div class="flex items-center justify-between border-b border-stone-800 pb-1.5 mb-2">
+      <div class="flex items-center gap-1.5 font-bold text-amber-400">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>⚡ WEATHER DEBUG HUD</span>
+      </div>
+      <div class="flex items-center gap-1 text-[11px]">
+        <button id="wx-hud-minimize-btn" class="px-1.5 py-0.5 rounded bg-stone-800 hover:bg-stone-700 text-stone-300">_</button>
+        <button id="wx-hud-close-btn" class="px-1.5 py-0.5 rounded bg-stone-800 hover:bg-red-700 text-stone-300 font-bold">&times;</button>
+      </div>
+    </div>
+
+    <div id="wx-hud-body" class="space-y-1.5 text-[11px]">
+      <div class="flex justify-between py-0.5 border-b border-stone-900">
+        <span class="text-stone-400">Engine State:</span>
+        <span id="wx-hud-enabled" class="font-bold text-emerald-400">ENABLED</span>
+      </div>
+      <div class="flex justify-between py-0.5 border-b border-stone-900">
+        <span class="text-stone-400">Parsed ?wx Param:</span>
+        <span id="wx-hud-param" class="font-bold text-amber-300">none</span>
+      </div>
+      <div class="flex justify-between py-0.5 border-b border-stone-900">
+        <span class="text-stone-400">data-weather:</span>
+        <span id="wx-hud-data-weather" class="font-bold text-sky-400">clear-day</span>
+      </div>
+      <div class="flex justify-between py-0.5 border-b border-stone-900">
+        <span class="text-stone-400">data-time-phase:</span>
+        <span id="wx-hud-data-phase" class="text-stone-300">day</span>
+      </div>
+      <div class="flex justify-between py-0.5 border-b border-stone-900">
+        <span class="text-stone-400">Theme Source:</span>
+        <span id="wx-hud-source" class="font-bold text-orange-400">INITIAL</span>
+      </div>
+      <div class="flex justify-between py-0.5 border-b border-stone-900">
+        <span class="text-stone-400">Consent State:</span>
+        <span id="wx-hud-consent" class="text-stone-300">none</span>
+      </div>
+      <div class="flex justify-between py-0.5 border-b border-stone-900">
+        <span class="text-stone-400">API Call / Status:</span>
+        <span id="wx-hud-api" class="text-stone-300">pending</span>
+      </div>
+      <div class="flex justify-between py-0.5 border-b border-stone-900">
+        <span class="text-stone-400">Session Cache:</span>
+        <span id="wx-hud-cache" class="text-stone-300">none</span>
+      </div>
+      <div class="flex justify-between py-0.5 border-b border-stone-900">
+        <span class="text-stone-400">Detected Temp / City:</span>
+        <span id="wx-hud-temp-city" class="text-stone-200">28°C</span>
+      </div>
+      <div id="wx-hud-error-row" class="hidden py-0.5 text-red-400 border-b border-stone-900 text-[10px]">
+        <span>Error:</span> <span id="wx-hud-error-text"></span>
+      </div>
+
+      <!-- Quick Test Swatch Buttons -->
+      <div class="pt-1.5">
+        <div class="text-[10px] text-stone-400 mb-1">Instant Preview Overrides:</div>
+        <div class="grid grid-cols-4 gap-1">
+          <button type="button" class="wx-test-btn px-1.5 py-1 bg-stone-900 hover:bg-amber-600 hover:text-white rounded border border-stone-700 text-[10px] text-center" data-val="rain">🌧️ Rain</button>
+          <button type="button" class="wx-test-btn px-1.5 py-1 bg-stone-900 hover:bg-amber-600 hover:text-white rounded border border-stone-700 text-[10px] text-center" data-val="night">🌙 Night</button>
+          <button type="button" class="wx-test-btn px-1.5 py-1 bg-stone-900 hover:bg-amber-600 hover:text-white rounded border border-stone-700 text-[10px] text-center" data-val="sunny">☀️ Sunny</button>
+          <button type="button" class="wx-test-btn px-1.5 py-1 bg-stone-900 hover:bg-amber-600 hover:text-white rounded border border-stone-700 text-[10px] text-center" data-val="storm">⛈️ Storm</button>
+          <button type="button" class="wx-test-btn px-1.5 py-1 bg-stone-900 hover:bg-amber-600 hover:text-white rounded border border-stone-700 text-[10px] text-center" data-val="hot">🔥 Hot</button>
+          <button type="button" class="wx-test-btn px-1.5 py-1 bg-stone-900 hover:bg-amber-600 hover:text-white rounded border border-stone-700 text-[10px] text-center" data-val="cloudy">⛅ Cloudy</button>
+          <button type="button" class="wx-test-btn px-1.5 py-1 bg-stone-900 hover:bg-amber-600 hover:text-white rounded border border-stone-700 text-[10px] text-center" data-val="dust">🏜️ Dust</button>
+          <button type="button" id="wx-hud-refresh-btn" class="px-1.5 py-1 bg-emerald-950 hover:bg-emerald-600 hover:text-white rounded border border-emerald-700 text-[10px] text-center text-emerald-300">🔄 Auto</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(hud);
+  debugPanelElement = hud;
+
+  // Minimize handler
+  const minBtn = document.getElementById('wx-hud-minimize-btn');
+  const bodyEl = document.getElementById('wx-hud-body');
+  if (minBtn && bodyEl) {
+    let minimized = false;
+    minBtn.addEventListener('click', () => {
+      minimized = !minimized;
+      bodyEl.style.display = minimized ? 'none' : 'block';
+      minBtn.textContent = minimized ? '+' : '_';
+    });
+  }
+
+  // Close handler
+  const closeBtn = document.getElementById('wx-hud-close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => hud.remove());
+  }
+
+  // Swatch test buttons
+  hud.querySelectorAll('.wx-test-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = btn.getAttribute('data-val');
+      if (val) {
+        const cat = WX_ALIASES[val] || val;
+        applyTheme({
+          category: cat,
+          weatherCategory: cat,
+          phase: cat === 'clear-night' ? 'night' : 'day',
+          temperature: cat === 'hot-sun' ? 36 : (cat === 'clear-night' ? 24 : 29),
+          city: 'Preview HUD',
+          country: '',
+          isDay: cat !== 'clear-night',
+          preview: true
+        }, `HUD_OVERRIDE (${val})`);
+      }
+    });
+  });
+
+  const refreshBtn = document.getElementById('wx-hud-refresh-btn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', () => {
+      try {
+        sessionStorage.removeItem('femi_weather_cache');
+        localStorage.removeItem('femi_weather_mode');
+      } catch (e) {}
+      fetchWeather();
+    });
+  }
+
+  updateDebugPanelUI();
+}
+
+/**
+ * Update UI inside the Debug HUD
+ */
+function updateDebugPanelUI() {
+  if (!debugPanelElement) return;
+
+  const elEnabled = document.getElementById('wx-hud-enabled');
+  const elParam = document.getElementById('wx-hud-param');
+  const elDataWeather = document.getElementById('wx-hud-data-weather');
+  const elDataPhase = document.getElementById('wx-hud-data-phase');
+  const elSource = document.getElementById('wx-hud-source');
+  const elConsent = document.getElementById('wx-hud-consent');
+  const elApi = document.getElementById('wx-hud-api');
+  const elCache = document.getElementById('wx-hud-cache');
+  const elTempCity = document.getElementById('wx-hud-temp-city');
+  const elErrRow = document.getElementById('wx-hud-error-row');
+  const elErrText = document.getElementById('wx-hud-error-text');
+
+  if (elEnabled) {
+    elEnabled.textContent = WEATHER_CONFIG.enabled ? 'ENABLED' : 'DISABLED';
+    elEnabled.className = WEATHER_CONFIG.enabled ? 'font-bold text-emerald-400' : 'font-bold text-red-500';
+  }
+  if (elParam) {
+    elParam.textContent = debugState.parsedWxParam || 'none';
+  }
+  if (elDataWeather) {
+    elDataWeather.textContent = document.documentElement.getAttribute('data-weather') || activeThemeState.category || 'none';
+  }
+  if (elDataPhase) {
+    elDataPhase.textContent = document.documentElement.getAttribute('data-time-phase') || activeThemeState.phase || 'day';
+  }
+  if (elSource) {
+    elSource.textContent = debugState.themeSource;
+  }
+  if (elConsent) {
+    elConsent.textContent = debugState.consentState;
+  }
+  if (elApi) {
+    const latStr = debugState.apiLatencyMs ? ` (${debugState.apiLatencyMs}ms)` : '';
+    elApi.textContent = `${debugState.apiStatus}${latStr}`;
+  }
+  if (elCache) {
+    elCache.textContent = debugState.cacheState;
+  }
+  if (elTempCity) {
+    elTempCity.textContent = debugState.tempAndCity || `${activeThemeState.temperature}°C ${activeThemeState.city ? '· ' + activeThemeState.city : ''}`;
+  }
+  if (elErrRow && elErrText) {
+    if (debugState.lastError) {
+      elErrRow.classList.remove('hidden');
+      elErrText.textContent = debugState.lastError;
+    } else {
+      elErrRow.classList.add('hidden');
+    }
+  }
+}
+
+/**
+ * ==============================================================
  * USER CONTROL WIDGET INITIALIZATION
  * ==============================================================
  */
@@ -664,6 +1037,9 @@ function initWeatherControls() {
       if (panel) panel.classList.add('hidden');
 
       if (mode === 'auto') {
+        try {
+          sessionStorage.removeItem('femi_weather_cache');
+        } catch (e) {}
         fetchWeather();
       } else if (mode === 'off') {
         document.documentElement.removeAttribute('data-weather');
@@ -673,15 +1049,19 @@ function initWeatherControls() {
         if (greeting) greeting.classList.add('opacity-0');
         const label = document.getElementById('weather-chip-label');
         if (label) label.textContent = '⊘ Weather Theme Off';
+        debugState.themeSource = 'USER_OFF';
+        updateDebugPanelUI();
       } else {
+        const isNight = mode === 'clear-night';
         applyTheme({
           category: mode,
-          phase: mode === 'clear-night' ? 'night' : 'day',
-          temperature: mode === 'clear-night' ? 24 : 31,
+          weatherCategory: mode,
+          phase: isNight ? 'night' : 'day',
+          temperature: isNight ? 24 : 31,
           city: 'Manual Mode',
           country: '',
-          isDay: mode !== 'clear-night'
-        });
+          isDay: !isNight
+        }, 'USER_CLICK');
       }
     });
   });
@@ -726,7 +1106,7 @@ function initWeatherControls() {
             window.showCustomToast("Location permission was not granted. Using time-of-day theme.", "error");
           }
           // Silent fallback to time-of-day
-          applyTheme(getLocalTimeFallbackTheme());
+          applyTheme(getLocalTimeFallbackTheme(), 'GEOLOCATION_DENIED_FALLBACK');
         },
         { timeout: 8000, maximumAge: 600000, enableHighAccuracy: false }
       );
@@ -736,14 +1116,40 @@ function initWeatherControls() {
 
 /**
  * ==============================================================
- * MAIN ENTRY POINT (IDLE LOADED)
+ * SYNCHRONOUS EARLY CHECK FOR ?wx= PREVIEW & CACHE
+ * Executes immediately on module evaluation to eliminate theme flicker
+ * ==============================================================
+ */
+(function earlyPreviewCheck() {
+  if (typeof window === 'undefined') return;
+
+  const params = new URLSearchParams(window.location.search);
+  const wxParam = params.get('wx');
+
+  if (wxParam && WEATHER_CONFIG.enabled && WEATHER_CONFIG.allowPreview) {
+    debugState.parsedWxParam = wxParam;
+    const lower = wxParam.toLowerCase().trim();
+    const cat = WX_ALIASES[lower] || lower;
+    document.documentElement.setAttribute('data-weather', cat);
+    document.documentElement.setAttribute('data-time-phase', cat === 'clear-night' ? 'night' : 'day');
+  }
+})();
+
+/**
+ * ==============================================================
+ * MAIN ENTRY POINT
  * ==============================================================
  */
 export function initWeatherTheme() {
-  if (!WEATHER_CONFIG.enabled) return;
+  if (!WEATHER_CONFIG.enabled) {
+    document.documentElement.removeAttribute('data-weather');
+    document.documentElement.removeAttribute('data-time-phase');
+    return;
+  }
 
   try {
     initWeatherControls();
+    initDebugPanel();
 
     // IntersectionObserver to pause particles when hero is scrolled out
     const heroEl = document.getElementById('hero');
@@ -772,10 +1178,17 @@ export function initWeatherTheme() {
 
     window.addEventListener('resize', resizeSkyCanvas);
 
-    // Initial weather fetch
+    // Initial weather evaluation
     fetchWeather();
 
   } catch (err) {
     console.warn("Weather theming initialization swallowed (isolated):", err);
   }
+}
+
+// Self-initialize if loaded as standalone module script
+if (typeof window !== 'undefined' && document.readyState !== 'loading') {
+  initWeatherTheme();
+} else if (typeof window !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => initWeatherTheme());
 }

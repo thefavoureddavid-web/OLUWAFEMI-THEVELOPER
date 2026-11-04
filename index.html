@@ -40,6 +40,30 @@
   <!-- Supabase Official JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <!-- Immediate Zero-Flicker Weather Preview & Theme Initialization -->
+  <script>
+    (function() {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var wx = params.get('wx');
+        if (wx) {
+          var map = {
+            sunny: 'clear-day', sun: 'clear-day', day: 'clear-day',
+            hot: 'hot-sun', heat: 'hot-sun',
+            night: 'clear-night', dark: 'clear-night',
+            rain: 'rain', rainy: 'rain', drizzle: 'drizzle',
+            thunder: 'thunderstorm', storm: 'thunderstorm',
+            cloudy: 'cloudy', snow: 'snow', fog: 'fog-haze',
+            dust: 'harmattan-dust', harmattan: 'harmattan-dust'
+          };
+          var cat = map[wx.toLowerCase().trim()] || wx.toLowerCase().trim();
+          document.documentElement.setAttribute('data-weather', cat);
+          document.documentElement.setAttribute('data-time-phase', cat === 'clear-night' ? 'night' : 'day');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
   <style>
     /* -------------------------------------------------------------
        CSS VARIABLES & THEME SETUP
@@ -116,21 +140,40 @@
       border-color: #38bdf8;
     }
     html[data-weather="clear-night"] .sketch-box h1 {
-      color: #ffffff;
+      color: #ffffff !important;
     }
     html[data-weather="clear-night"] .sticky-nav {
       background-color: rgba(15, 23, 42, 0.95);
       border-color: rgba(255, 255, 255, 0.12);
     }
     html[data-weather="clear-night"] .sticky-nav a,
+    html[data-weather="clear-night"] .notebook-container h1,
     html[data-weather="clear-night"] .notebook-container h2,
-    html[data-weather="clear-night"] .notebook-container h3 {
-      color: #f8fafc;
+    html[data-weather="clear-night"] .notebook-container h3,
+    html[data-weather="clear-night"] .notebook-container h4,
+    html[data-weather="clear-night"] .text-gray-900,
+    html[data-weather="clear-night"] .text-stone-900,
+    html[data-weather="clear-night"] .text-stone-800 {
+      color: #f8fafc !important;
     }
     html[data-weather="clear-night"] .notebook-container p,
     html[data-weather="clear-night"] .text-gray-600,
-    html[data-weather="clear-night"] .text-gray-700 {
-      color: #cbd5e1;
+    html[data-weather="clear-night"] .text-gray-700,
+    html[data-weather="clear-night"] .text-stone-600,
+    html[data-weather="clear-night"] .text-stone-700 {
+      color: #cbd5e1 !important;
+    }
+    html[data-weather="clear-night"] #weather-hero-greeting {
+      background-color: rgba(15, 23, 42, 0.9) !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    html[data-weather="clear-night"] #weather-greeting-text {
+      color: #f1f5f9 !important;
+    }
+    html[data-weather="clear-night"] #weather-chip-widget {
+      background-color: #0f172a !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      color: #f8fafc !important;
     }
 
     /* 4. Partly Cloudy */
@@ -169,6 +212,18 @@
       --brand-blue: #0369a1;
       --tape-color: rgba(186, 230, 253, 0.85);
     }
+    html[data-weather="rain"] #weather-hero-greeting {
+      background-color: rgba(239, 246, 255, 0.92) !important;
+      border-color: rgba(147, 197, 253, 0.6) !important;
+    }
+    html[data-weather="rain"] #weather-greeting-text {
+      color: #1e3a8a !important;
+    }
+    html[data-weather="rain"] #weather-chip-widget {
+      background-color: #eff6ff !important;
+      border-color: #93c5fd !important;
+      color: #1e3a8a !important;
+    }
 
     /* 8. Thunderstorm */
     html[data-weather="thunderstorm"] {
@@ -186,21 +241,40 @@
       border-color: #fb923c;
     }
     html[data-weather="thunderstorm"] .sketch-box h1 {
-      color: #ffffff;
+      color: #ffffff !important;
     }
     html[data-weather="thunderstorm"] .sticky-nav {
       background-color: rgba(15, 23, 42, 0.95);
       border-color: rgba(255, 255, 255, 0.12);
     }
     html[data-weather="thunderstorm"] .sticky-nav a,
+    html[data-weather="thunderstorm"] .notebook-container h1,
     html[data-weather="thunderstorm"] .notebook-container h2,
-    html[data-weather="thunderstorm"] .notebook-container h3 {
-      color: #f8fafc;
+    html[data-weather="thunderstorm"] .notebook-container h3,
+    html[data-weather="thunderstorm"] .notebook-container h4,
+    html[data-weather="thunderstorm"] .text-gray-900,
+    html[data-weather="thunderstorm"] .text-stone-900,
+    html[data-weather="thunderstorm"] .text-stone-800 {
+      color: #f8fafc !important;
     }
     html[data-weather="thunderstorm"] .notebook-container p,
     html[data-weather="thunderstorm"] .text-gray-600,
-    html[data-weather="thunderstorm"] .text-gray-700 {
-      color: #cbd5e1;
+    html[data-weather="thunderstorm"] .text-gray-700,
+    html[data-weather="thunderstorm"] .text-stone-600,
+    html[data-weather="thunderstorm"] .text-stone-700 {
+      color: #cbd5e1 !important;
+    }
+    html[data-weather="thunderstorm"] #weather-hero-greeting {
+      background-color: rgba(15, 23, 42, 0.9) !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    html[data-weather="thunderstorm"] #weather-greeting-text {
+      color: #f1f5f9 !important;
+    }
+    html[data-weather="thunderstorm"] #weather-chip-widget {
+      background-color: #0f172a !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      color: #f8fafc !important;
     }
 
     /* 9. Snow */
@@ -3534,16 +3608,10 @@
       setupSecretGesture();
       checkPrivateHashRoute();
 
-      // Non-blocking idle initialization of Weather-Responsive Theme
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(() => {
-          import('/src/weather-theme.js').then(m => m.initWeatherTheme()).catch(() => {});
-        });
-      } else {
-        setTimeout(() => {
-          import('/src/weather-theme.js').then(m => m.initWeatherTheme()).catch(() => {});
-        }, 350);
-      }
+      // Immediate initialization of Weather-Responsive Theme (Instant execution for ?wx= preview, debug HUD & local weather)
+      import('/src/weather-theme.js').then(m => m.initWeatherTheme()).catch(err => {
+        console.warn("Weather theme loader notice:", err);
+      });
     });
 
     /**

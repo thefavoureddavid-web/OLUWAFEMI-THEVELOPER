@@ -270,6 +270,7 @@ export default async function handler(req, res) {
 
     const resultPayload = {
       success: true,
+      category: weatherCategory,
       weatherCategory,
       temperature,
       isDay,
@@ -298,6 +299,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
+      category: fallbackCategory,
       weatherCategory: fallbackCategory,
       temperature: isDay ? 30 : 24,
       isDay,
