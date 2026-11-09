@@ -19,7 +19,7 @@ const ADMIN_CONFIG = {
 // Rollback Switch: Controls notification bell, feed & realtime subscriptions
 const NOTIFICATIONS_ENABLED = true;
 
-const ORIGINAL_PAGE_TITLE = "Oluwafemi David Adekanola | Full-Stack Web Developer in Ilorin, Nigeria";
+const ORIGINAL_PAGE_TITLE = "Oluwafemi David Adekanola | Full-Stack Web Developer in Nigeria";
 const NEUTRAL_ADMIN_TITLE = "Oluwafemi David Adekanola | Portfolio";
 
 // In-memory Auth and MFA tracking

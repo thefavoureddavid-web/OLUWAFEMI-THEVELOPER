@@ -137,8 +137,8 @@ export default async function handler(req, res) {
   // 4. Geo Enrichment from Vercel Edge Headers
   const rawCountry = req.headers['x-vercel-ip-country'] || 'NG';
   const country = resolveCountryName(rawCountry);
-  const city = req.headers['x-vercel-ip-city'] ? decodeURIComponent(req.headers['x-vercel-ip-city']) : 'Ilorin';
-  const region = req.headers['x-vercel-ip-country-region'] || 'KW';
+  const city = req.headers['x-vercel-ip-city'] ? decodeURIComponent(req.headers['x-vercel-ip-city']) : 'Nigeria';
+  const region = req.headers['x-vercel-ip-country-region'] || 'NG';
 
   // 5. Payload Processing
   const payload = req.body || {};
