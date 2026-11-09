@@ -8,7 +8,12 @@ import weatherHandler from './api/weather.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// Cloud Run presets process.env.PORT=8080 where nginx reverse-proxy listens.
+// The Node.js Express/Vite backend must listen on port 3000 (or CLI --port).
+const args = process.argv.slice(2);
+const portArgIndex = args.indexOf('--port');
+const portFromArgs = portArgIndex !== -1 ? args[portArgIndex + 1] : undefined;
+const PORT = Number(portFromArgs || (process.env.PORT && process.env.PORT !== '8080' ? process.env.PORT : 3000));
 
 app.use(express.json());
 
@@ -65,7 +70,7 @@ async function startServer() {
   } else {
     // Development mode with Vite dev server middleware
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { middlewareMode: true, allowedHosts: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
