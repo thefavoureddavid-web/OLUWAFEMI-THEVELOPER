@@ -2413,7 +2413,7 @@ function playNotificationChime(type = 'arrival') {
     osc.connect(gain);
     gain.connect(ctx.destination);
 
-    if (type === 'lead_form' || type === 'lead_chat' || type === 'whatsapp_click' || type === 'call_click') {
+    if (type === 'lead_form' || type === 'lead_chat' || type === 'whatsapp_click' || type === 'call_click' || type === 'video_engagement') {
       // Double upbeat chime for leads
       osc.frequency.setValueAtTime(587.33, now); // D5
       osc.frequency.setValueAtTime(880, now + 0.12); // A5
@@ -2655,7 +2655,8 @@ function renderAdminNotificationsFeed() {
     whatsapp_click: '💬',
     call_click: '📞',
     discount_claim: '🔥',
-    high_intent: '🎯'
+    high_intent: '🎯',
+    video_engagement: '🎬'
   };
 
   container.innerHTML = filtered.map(item => {

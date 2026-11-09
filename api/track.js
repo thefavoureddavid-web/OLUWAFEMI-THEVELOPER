@@ -316,7 +316,11 @@ export default async function handler(req, res) {
           discount_claim: { type: 'discount_claim', title: '🔥 10% Discount Claimed', text: 'Visitor clicked to claim the first-5-clients 10% discount!' },
           form_start: { type: 'high_intent', title: '✍️ Project Form Started', text: 'Visitor is filling out the project contact form.' },
           form_submit: { type: 'lead_form', title: '🚀 Contact Form Submitted', text: `Project inquiry submitted by ${actionDetails.name || 'visitor'}.` },
-          chatbot_open: { type: 'high_intent', title: '🤖 AI Chatbot Opened', text: 'Visitor engaged the AI assistant widget.' }
+          chatbot_open: { type: 'high_intent', title: '🤖 AI Chatbot Opened', text: 'Visitor engaged the AI assistant widget.' },
+          video_play: { type: 'video_engagement', title: '🎬 Intro Video Played', text: 'Visitor started watching Femi\'s intro video.' },
+          video_complete: { type: 'video_engagement', title: '🎉 Intro Video Completed', text: 'Visitor watched Femi\'s intro video to the end!' },
+          video_cta_discount_click: { type: 'discount_claim', title: '🎁 Video CTA Discount Clicked', text: 'Visitor clicked Claim 10% Discount inside the intro video!' },
+          video_cta_consultation_click: { type: 'high_intent', title: '📅 Video CTA Consultation Clicked', text: 'Visitor clicked Book Free Consultation inside the intro video!' }
         };
 
         if (highIntentTypes[actionName]) {

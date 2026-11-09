@@ -16,6 +16,7 @@ const portFromArgs = portArgIndex !== -1 ? args[portArgIndex + 1] : undefined;
 const PORT = Number(portFromArgs || (process.env.PORT && process.env.PORT !== '8080' ? process.env.PORT : 3000));
 
 app.use(express.json());
+app.use(express.static('public'));
 
 // Weather-Responsive Theme API Route (mirrors /api/weather Vercel Serverless Function)
 app.get('/api/weather', async (req, res) => {

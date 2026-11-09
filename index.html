@@ -47,6 +47,21 @@
   }
   </script>
 
+  <!-- VideoObject Structured Data (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": "Meet Oluwafemi David Adekanola - Full-Stack Web Developer Intro",
+    "description": "Watch Oluwafemi's 1-minute intro: who I am, what I build, and how I can help your business grow with fast, secure, and beautiful websites.",
+    "thumbnailUrl": "https://res.cloudinary.com/mdfuivxi/video/upload/so_2,w_1000,q_auto,f_jpg/v1794214288/MY_intro_video.jpg",
+    "uploadDate": "2026-11-09T08:50:00+01:00",
+    "duration": "PT46S",
+    "contentUrl": "https://res.cloudinary.com/mdfuivxi/video/upload/v1794214288/MY_intro_video.mp4",
+    "embedUrl": "https://oluwafemi-theveloper.vercel.app/#video-intro"
+  }
+  </script>
+
   <!-- Favicon (Emoji Favicon) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
 
@@ -1399,6 +1414,9 @@
           <a href="#hero" class="hover:text-orange-600 transition-colors flex items-center gap-1">
             <span class="text-orange-500">#</span> Home
           </a>
+          <a href="#video-intro" class="hover:text-orange-600 transition-colors flex items-center gap-1">
+            <span class="text-orange-500">#</span> Meet Femi
+          </a>
           <a href="#about" class="hover:text-orange-600 transition-colors flex items-center gap-1">
             <span class="text-orange-500">#</span> About
           </a>
@@ -1469,6 +1487,7 @@
       <div id="mobile-menu" class="hidden md:hidden px-6 py-4 bg-amber-50 border-t border-b border-gray-300">
         <nav class="flex flex-col gap-3 font-mono font-bold text-base">
           <a href="#hero" class="mobile-nav-link text-gray-900 py-1">✦ Home</a>
+          <a href="#video-intro" class="mobile-nav-link text-gray-900 py-1">✦ Meet Femi</a>
           <a href="#about" class="mobile-nav-link text-gray-900 py-1">✦ About Me</a>
           <a href="#services" class="mobile-nav-link text-gray-900 py-1">✦ Services</a>
           <a href="#projects" class="mobile-nav-link text-gray-900 py-1">✦ Website Samples</a>
@@ -1654,6 +1673,238 @@
       </div>
 
     </div>
+
+
+    <!-- ============================================================
+         2.5 MEET FEMI - PERSONAL INTRO VIDEO SECTION
+         ============================================================ -->
+    <section id="video-intro" class="py-16 px-4 sm:px-10 border-t-2 border-dashed border-gray-300 relative transition-opacity duration-300">
+      
+      <!-- Section Header -->
+      <div class="max-w-4xl mx-auto text-center mb-10">
+        <div class="font-hand text-xl text-orange-600 font-bold mb-1 -rotate-1 select-none">
+          say hello 👋
+        </div>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight" id="video-section-heading">
+          Meet Femi, your full-stack developer
+        </h2>
+        <div class="w-20 h-1 bg-orange-500 mx-auto mt-3 rounded-full"></div>
+        <p class="text-gray-700 mt-3 text-sm sm:text-base max-w-2xl mx-auto font-sans leading-relaxed" id="video-section-subhead">
+          Watch my 1-minute intro: who I am, what I build, and how I can help your business grow.
+        </p>
+      </div>
+
+      <!-- Video Composition & Side-by-Side Presentation -->
+      <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        
+        <!-- Video Card in Sticker & Polaroid Notebook Style (7 cols desktop) -->
+        <div class="lg:col-span-7 flex flex-col items-center">
+          
+          <div id="video-card-container" class="w-full max-w-xl bg-white/95 p-3 sm:p-5 rounded-2xl border-3 border-black shadow-[6px_6px_0px_#000] relative group transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+            <!-- Washi tape at top left and top right -->
+            <div class="washi-tape washi-tape-slant-left" style="top: -12px; left: 20px;"></div>
+            <div class="washi-tape washi-tape-slant-right" style="top: -12px; right: 20px; background-color: rgba(191, 219, 254, 0.9);"></div>
+
+            <!-- Sticker Badges around frame -->
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+              <span class="sticker-badge bg-emerald-100 text-emerald-950 border-emerald-400 font-mono text-[11px] font-bold shadow-xs">
+                <span>✦</span> Real Person · Real Results
+              </span>
+            </div>
+
+            <!-- Video Player Outer Wrapper (Auto-adapts to 16:9 or 9:16 vertical on metadata load) -->
+            <div id="video-player-wrapper" class="w-full relative rounded-xl overflow-hidden bg-stone-950 border-2 border-stone-800 shadow-inner flex items-center justify-center transition-all duration-300" style="aspect-ratio: 16 / 9;">
+              
+              <!-- HTML5 Video Element -->
+              <video 
+                id="intro-video-element"
+                class="w-full h-full object-contain bg-black"
+                preload="none"
+                playsinline
+                poster="https://res.cloudinary.com/mdfuivxi/video/upload/so_2,w_1000,q_auto,f_jpg/v1794214288/MY_intro_video.jpg"
+                aria-label="Oluwafemi David Adekanola personal introduction video"
+              >
+                <source id="video-source-primary" src="https://res.cloudinary.com/mdfuivxi/video/upload/q_auto/v1794214288/MY_intro_video.mp4" type="video/mp4" />
+                <source id="video-source-fallback" src="https://res.cloudinary.com/mdfuivxi/video/upload/v1794214288/MY_intro_video.mp4" type="video/mp4" />
+                <track id="video-captions-track" kind="captions" src="/captions.vtt" srclang="en" label="English" default />
+                Your browser does not support HTML5 video playback.
+              </video>
+
+              <!-- Initial Poster & Play Button Overlay -->
+              <div id="video-poster-overlay" class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/30 backdrop-blur-[1px] cursor-pointer transition-opacity duration-300 group-hover:bg-black/20" role="button" tabindex="0" aria-label="Play intro video">
+                
+                <!-- Fallback image placeholder if poster fails -->
+                <div id="video-poster-fallback-avatar" class="hidden w-20 h-20 rounded-full border-4 border-orange-500 overflow-hidden mb-3 bg-stone-800 shadow-lg">
+                  <img src="https://res.cloudinary.com/luf95toj/image/upload/v1792675401/IMG-20261022-WA2850.jpg" alt="Oluwafemi David" class="w-full h-full object-cover" onerror="this.src='./profile.jpg';" />
+                </div>
+
+                <!-- Big Accessible Play Button -->
+                <button 
+                  type="button" 
+                  id="video-play-btn"
+                  class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-orange-600 hover:bg-orange-500 text-white flex items-center justify-center shadow-[4px_4px_0px_#000] border-2 border-black transition-transform active:scale-95 group-hover:scale-105 cursor-pointer focus:outline-none focus:ring-4 focus:ring-orange-300"
+                  aria-label="Play intro video"
+                >
+                  <svg class="w-8 h-8 sm:w-10 sm:h-10 ml-1 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+
+                <div class="mt-3 px-3 py-1 rounded-full bg-black/75 border border-white/20 text-white font-mono text-xs font-bold tracking-wide flex items-center gap-1.5 shadow-md">
+                  <span>⏱️ 46s</span>
+                  <span class="text-orange-400">·</span>
+                  <span>Tap to Watch</span>
+                </div>
+
+                <!-- Data saver badge (shown dynamically if navigator.connection.saveData is on) -->
+                <div id="video-save-data-badge" class="hidden mt-2 px-2.5 py-0.5 rounded bg-amber-500/90 text-stone-950 font-mono text-[10px] font-bold">
+                  Data Saver active · Tap to load
+                </div>
+              </div>
+
+              <!-- Loading Spinner Overlay -->
+              <div id="video-loading-overlay" class="hidden absolute inset-0 z-15 flex flex-col items-center justify-center bg-black/60 text-white font-mono text-xs gap-2" aria-live="polite">
+                <div class="w-8 h-8 border-3 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                <span>Loading video…</span>
+              </div>
+
+              <!-- Error Fallback Overlay -->
+              <div id="video-error-overlay" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center bg-stone-900/95 text-white font-mono text-xs space-y-3" aria-live="assertive">
+                <div class="text-3xl">⚠️</div>
+                <div class="font-bold text-sm text-orange-400">Video playback unavailable</div>
+                <p class="text-[11px] text-stone-300 max-w-xs leading-relaxed font-sans">
+                  The video could not load on your current network. Connect directly with Oluwafemi on WhatsApp!
+                </p>
+                <a href="https://wa.me/2349115742760" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg border border-black shadow-[2px_2px_0px_#000] inline-flex items-center gap-1.5 transition-transform active:translate-y-0.5">
+                  <span>💬 Chat on WhatsApp (0911 574 2760)</span>
+                </a>
+              </div>
+
+              <!-- Video Ended Overlay (End Card with CTAs) -->
+              <div id="video-ended-overlay" class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center p-6 bg-stone-950/95 text-white text-center space-y-3 animate-fade-in">
+                <div class="w-12 h-12 rounded-full bg-orange-600 border-2 border-white flex items-center justify-center text-xl shadow-md">
+                  🎉
+                </div>
+                <h4 class="font-mono font-bold text-base sm:text-lg text-white">
+                  Thanks for watching!
+                </h4>
+                <p class="text-xs text-stone-300 max-w-sm font-sans leading-relaxed">
+                  Ready to upgrade your website and turn online visitors into customers?
+                </p>
+                <div class="flex flex-wrap items-center justify-center gap-2.5 pt-1 font-mono text-xs">
+                  <a href="#special-offer" id="video-end-cta-discount" class="px-3.5 py-2 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-lg border border-black shadow-[2px_2px_0px_#000] transition-transform active:translate-y-0.5">
+                    Claim 10% Discount 🎁
+                  </a>
+                  <a href="#contact" id="video-end-cta-consult" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg border border-black shadow-[2px_2px_0px_#000] transition-transform active:translate-y-0.5">
+                    Book Free Consultation 📅
+                  </a>
+                  <button type="button" id="video-replay-btn" class="px-3 py-2 bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold rounded-lg border border-stone-600 transition-colors">
+                    Replay ↺
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom Sticker & Transcript Trigger -->
+            <div class="mt-3 flex items-center justify-between font-mono text-xs text-gray-700 pt-1">
+              <span class="flex items-center gap-1 text-[11px] text-gray-600 font-bold">
+                <span class="w-2 h-2 rounded-full bg-green-500"></span> 1080p HD · Cloudinary Stream
+              </span>
+              <button 
+                type="button" 
+                id="toggle-transcript-btn" 
+                class="inline-flex items-center gap-1 text-[11px] text-orange-600 hover:text-orange-700 font-bold underline cursor-pointer"
+                aria-expanded="false" 
+                aria-controls="video-transcript-box"
+              >
+                <span>📖 Read transcript</span>
+                <span id="transcript-toggle-icon" class="transition-transform duration-200">▾</span>
+              </button>
+            </div>
+
+            <!-- Collapsible Transcript Drawer -->
+            <div id="video-transcript-box" class="hidden mt-3 p-4 rounded-xl bg-amber-50/90 border border-amber-200 text-gray-800 font-sans text-xs leading-relaxed max-h-60 overflow-y-auto space-y-2">
+              <div class="font-mono font-bold text-gray-900 flex items-center justify-between pb-1 border-b border-amber-200/80">
+                <span>Spoken Transcript (Oluwafemi David):</span>
+                <span class="text-[10px] text-gray-500 font-normal">English (46s)</span>
+              </div>
+              <div id="video-transcript-content" class="whitespace-pre-line text-gray-700 leading-relaxed font-sans text-[11px] sm:text-xs">
+                <!-- Injected via VIDEO_CONFIG.transcript -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Right Side: Selling Points & CTA Buttons (5 cols desktop) -->
+        <div class="lg:col-span-5 space-y-5">
+          
+          <div class="space-y-4">
+            <!-- Point 1: Strong Security -->
+            <div class="p-4 rounded-xl border border-gray-300 bg-white/95 shadow-xs flex items-start gap-3">
+              <div class="w-9 h-9 rounded-lg bg-orange-100 border border-orange-300 flex items-center justify-center text-lg flex-shrink-0">
+                🛡️
+              </div>
+              <div>
+                <h4 class="font-mono font-bold text-sm text-gray-900">Strong Security</h4>
+                <p class="text-xs text-gray-600 mt-0.5 leading-relaxed font-sans">
+                  Sanitized inputs, secure database rules, and automated rate limiting to protect your customer data and stop attacks.
+                </p>
+              </div>
+            </div>
+
+            <!-- Point 2: Lightning Fast -->
+            <div class="p-4 rounded-xl border border-gray-300 bg-white/95 shadow-xs flex items-start gap-3">
+              <div class="w-9 h-9 rounded-lg bg-blue-100 border border-blue-300 flex items-center justify-center text-lg flex-shrink-0">
+                ⚡
+              </div>
+              <div>
+                <h4 class="font-mono font-bold text-sm text-gray-900">Fast Loading Speed</h4>
+                <p class="text-xs text-gray-600 mt-0.5 leading-relaxed font-sans">
+                  Sub-second response times, optimized assets, and 95+ Google Lighthouse scores that retain customers on mobile networks.
+                </p>
+              </div>
+            </div>
+
+            <!-- Point 3: Clean Design & Conversion -->
+            <div class="p-4 rounded-xl border border-gray-300 bg-white/95 shadow-xs flex items-start gap-3">
+              <div class="w-9 h-9 rounded-lg bg-emerald-100 border border-emerald-300 flex items-center justify-center text-lg flex-shrink-0">
+                🎨
+              </div>
+              <div>
+                <h4 class="font-mono font-bold text-sm text-gray-900">Clean Conversion Design</h4>
+                <p class="text-xs text-gray-600 mt-0.5 leading-relaxed font-sans">
+                  Polished typography and mobile-first layouts designed to guide visitors directly into inquiries and sales.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTAs Wired to Existing Flows -->
+          <div class="pt-2 flex flex-col sm:flex-row lg:flex-col gap-3">
+            <a 
+              href="#special-offer" 
+              id="video-primary-discount-cta" 
+              class="w-full text-center py-3 px-5 bg-orange-600 hover:bg-orange-500 text-white font-mono font-bold text-xs sm:text-sm rounded-xl border-2 border-black shadow-[4px_4px_0px_#000] transition-all active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Claim 10% Discount</span>
+              <span class="text-base">🎁</span>
+            </a>
+            <a 
+              href="#contact" 
+              id="video-secondary-consult-cta" 
+              class="w-full text-center py-3 px-5 bg-white hover:bg-stone-50 text-gray-900 font-mono font-bold text-xs sm:text-sm rounded-xl border-2 border-black shadow-[4px_4px_0px_#000] transition-all active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Book Free Consultation</span>
+              <span class="text-base">📅</span>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
 
 
     <!-- ============================================================
@@ -2094,6 +2345,11 @@
               </div>
               <div class="text-[11px] text-gray-500 font-mono mt-2 flex items-center gap-1">
                 <span>⏱️</span> Offer valid for the first 5 clients only. Once filled, standard pricing applies.
+              </div>
+              <div class="mt-2.5 pt-2 border-t border-orange-200/60">
+                <a href="#video-intro" class="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-orange-700 hover:text-orange-900 underline decoration-dotted transition-colors cursor-pointer">
+                  <span>▶ Watch me explain the offer in my intro video</span>
+                </a>
               </div>
             </div>
           </div>
@@ -2573,6 +2829,7 @@
             </div>
             <ul class="space-y-1.5 text-xs sm:text-sm font-mono text-stone-400">
               <li><a href="#hero" class="hover:text-white transition-colors">→ Home</a></li>
+              <li><a href="#video-intro" class="hover:text-white transition-colors">→ Meet Femi (Video)</a></li>
               <li><a href="#about" class="hover:text-white transition-colors">→ About Femi</a></li>
               <li><a href="#services" class="hover:text-white transition-colors">→ Services</a></li>
               <li><a href="#projects" class="hover:text-white transition-colors">→ Website Samples</a></li>
@@ -2895,6 +3152,9 @@
             <button type="button" class="chatbot-chip px-2.5 py-1 bg-stone-900 hover:bg-orange-600 hover:text-white text-orange-400 rounded-full border border-stone-700 text-[11px] font-mono transition-colors" data-prompt="How fast can you build and launch my website?">
               ⚡ Launch Timeline
             </button>
+            <button type="button" class="chatbot-chip px-2.5 py-1 bg-stone-900 hover:bg-orange-600 hover:text-white text-orange-400 rounded-full border border-stone-700 text-[11px] font-mono transition-colors" data-prompt="Can I watch your video introduction?">
+              ▶ Watch Video Intro
+            </button>
             <button type="button" class="chatbot-chip px-2.5 py-1 bg-stone-900 hover:bg-orange-600 hover:text-white text-orange-400 rounded-full border border-stone-700 text-[11px] font-mono transition-colors" data-prompt="Can I chat with Oluwafemi directly on WhatsApp?">
               💬 Direct WhatsApp
             </button>
@@ -2966,6 +3226,56 @@
 
 
   <!-- ============================================================
+       FLOATING MINI VIDEO PREVIEW BUBBLE (CORNER PLACEMENT: BOTTOM-LEFT)
+       Appears after scrolling past Meet Femi without playing
+       ============================================================ -->
+  <div 
+    id="mini-video-bubble" 
+    class="hidden fixed bottom-6 left-6 z-[950] max-w-[200px] bg-white/95 border-2 border-black rounded-2xl p-2.5 shadow-[5px_5px_0px_#000] text-xs font-mono transition-all duration-300"
+    role="complementary"
+    aria-label="Video introduction preview"
+  >
+    <div class="flex items-center justify-between pb-1 mb-1 border-b border-gray-200">
+      <div class="flex items-center gap-1.5 font-bold text-gray-900 text-[11px]">
+        <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+        <span>Meet Femi (46s)</span>
+      </div>
+      <button 
+        type="button"
+        id="mini-video-close-btn" 
+        class="text-gray-400 hover:text-black p-0.5 leading-none text-sm font-bold cursor-pointer"
+        aria-label="Dismiss video preview"
+      >&times;</button>
+    </div>
+    <div 
+      id="mini-video-thumbnail-trigger"
+      class="relative rounded-lg overflow-hidden border border-gray-300 aspect-video bg-black cursor-pointer group"
+      role="button"
+      tabindex="0"
+      aria-label="Open full video intro"
+    >
+      <img 
+        src="https://res.cloudinary.com/mdfuivxi/video/upload/so_2,w_400,q_auto,f_jpg/v1794214288/MY_intro_video.jpg" 
+        alt="Meet Femi video thumbnail" 
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform" 
+        loading="lazy"
+        onerror="this.src='./profile.jpg';"
+      />
+      <div class="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/20 transition-colors">
+        <div class="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center shadow-md">
+          <svg class="w-4 h-4 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="mt-1.5 text-center">
+      <button type="button" id="mini-video-text-trigger" class="text-[10px] text-orange-600 hover:underline font-bold cursor-pointer">
+        Watch 1-Min Intro &rarr;
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
        PRIVACY & COOKIE CONSENT STICKER (NDPA 2023 COMPLIANT)
        ============================================================ -->
   <div id="privacy-consent-banner" class="hidden fixed bottom-5 left-5 z-[99990] max-w-sm bg-[#fcfbf7] border-2 border-black rounded-xl p-4 shadow-[5px_5px_0px_#000] font-mono text-xs">
@@ -3008,6 +3318,7 @@
         <p><strong>What is tracked:</strong> Anonymous session identifiers, country and city (derived from serverless edge headers), device type, viewed sections, and button interactions (WhatsApp, call, form).</p>
         <p><strong>Weather-Responsive Theme:</strong> When permitted, approximate regional coordinates derived from edge headers are used once to adapt the page theme to local weather and daylight via Open-Meteo (<a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer" class="text-orange-600 underline">open-meteo.com</a>). No coordinates or IPs are ever stored.</p>
         <p><strong>What is NOT tracked:</strong> We never store plain IP addresses (salted SHA-256 hash only), exact GPS coordinates, or cross-site tracking cookies. No third-party ad networks or trackers are loaded.</p>
+        <p><strong>Media Hosting:</strong> The personal introduction video and media assets are delivered via Cloudinary CDN (<a href="https://cloudinary.com/" target="_blank" rel="noopener noreferrer" class="text-orange-600 underline">cloudinary.com</a>) using privacy-friendly delivery without tracking cookies.</p>
         <p><strong>Data Retention:</strong> Session and notification logs are automatically purged after 90 days.</p>
         <p><strong>Site Owner:</strong> Oluwafemi David Adekanola, Nigeria. Contact: <a href="mailto:davidbryght@gmail.com" class="text-orange-600 underline">davidbryght@gmail.com</a>.</p>
       </div>
@@ -3023,6 +3334,50 @@
        VANILLA JAVASCRIPT LOGIC
        ============================================================ -->
   <script type="module">
+    /**
+     * ==============================================================
+     * // EDIT: INTRO VIDEO & MULTIMEDIA CONFIGURATION
+     * Personal Intro Video for Oluwafemi David Adekanola
+     * ==============================================================
+     */
+    const VIDEO_SECTION_ENABLED = true;      // Set to false to instantly hide and disable the video section
+    const MINI_VIDEO_ENABLED = true;          // Set to false to disable floating corner mini preview bubble
+    const CHATBOT_VIDEO_CHIP_ENABLED = true;  // Set to false to hide video quick-reply chip in chatbot
+
+    const VIDEO_URL = "https://res.cloudinary.com/mdfuivxi/video/upload/q_auto/v1794214288/MY_intro_video.mp4";
+    const VIDEO_FALLBACK_URL = "https://res.cloudinary.com/mdfuivxi/video/upload/v1794214288/MY_intro_video.mp4";
+    const VIDEO_POSTER_URL = "https://res.cloudinary.com/mdfuivxi/video/upload/so_2,w_1000,q_auto,f_jpg/v1794214288/MY_intro_video.jpg";
+    const VIDEO_CAPTIONS_URL = "/captions.vtt";
+    const VIDEO_SECTION_BADGE = "say hello 👋";
+    const VIDEO_SECTION_HEADING = "Meet Femi, your full-stack developer";
+    const VIDEO_SECTION_SUBHEAD = "Watch my 1-minute intro: who I am, what I build, and how I can help your business grow.";
+    const VIDEO_TRANSCRIPT = `Hi there! I'm Oluwafemi David Adekanola, a full-stack website developer based in Nigeria.
+
+I build fast, beautiful, and secure websites that turn online visitors into paying customers.
+
+Whether you need a high-converting business website, an e-commerce store with Paystack or Flutterwave payments, or a custom full-stack web application with robust APIs, I handle everything from frontend to backend.
+
+Every project I deliver is built on three core pillars: rock-solid security, lightning-fast speed, and conversion-focused structure.
+
+Right now, I'm offering an exclusive 10% launch discount for my first 5 clients, plus a free 20-minute strategic consultation.
+
+Click the buttons below or chat with me on WhatsApp. Let's build something extraordinary together!`;
+
+    const VIDEO_CONFIG = {
+      enabled: VIDEO_SECTION_ENABLED,
+      miniBubbleEnabled: MINI_VIDEO_ENABLED,
+      chatbotChipEnabled: CHATBOT_VIDEO_CHIP_ENABLED,
+      videoUrl: VIDEO_URL,
+      fallbackVideoUrl: VIDEO_FALLBACK_URL,
+      posterUrl: VIDEO_POSTER_URL,
+      captionsUrl: VIDEO_CAPTIONS_URL,
+      badge: VIDEO_SECTION_BADGE,
+      heading: VIDEO_SECTION_HEADING,
+      subhead: VIDEO_SECTION_SUBHEAD,
+      transcript: VIDEO_TRANSCRIPT
+    };
+    window.VIDEO_CONFIG = VIDEO_CONFIG;
+
     /**
      * ==============================================================
      * // EDIT: PORTFOLIO STATS CONFIGURATION (ABOUT SECTION COUNTERS)
@@ -3821,6 +4176,7 @@
       initSpotsCounter();
       initSpecialOfferClaim();
       initStatsCounter();
+      initVideoIntroSection();
       initAccordion();
       initContactForm();
       initServiceQuoteFillers();
@@ -4069,6 +4425,306 @@
       }, { threshold: 0.3 });
 
       counters.forEach(counter => observer.observe(counter));
+    }
+
+    /**
+     * ==============================================================
+     * 19b. PERSONAL INTRO VIDEO SECTION CONTROLLER
+     * - Fully config-driven via VIDEO_CONFIG
+     * - Dynamic aspect-ratio detection (videoWidth & videoHeight on loadedmetadata)
+     * - Accessible custom play overlay & loading spinner
+     * - Progress milestones tracking (play, 25%, 50%, 75%, 100%, CTAs)
+     * - Auto-pause on scroll out (IntersectionObserver), tab switch & modals
+     * - End card with 10% discount and consultation CTAs
+     * - Data-saver detection
+     * - Collapsible transcript drawer
+     * - Floating mini preview bubble with dismissal memory
+     * ==============================================================
+     */
+    function initVideoIntroSection() {
+      const section = document.getElementById('video-intro');
+      const miniBubble = document.getElementById('mini-video-bubble');
+
+      // 1. Respect master enable/disable flag
+      if (!VIDEO_CONFIG || !VIDEO_CONFIG.enabled) {
+        if (section) section.classList.add('hidden');
+        if (miniBubble) miniBubble.classList.add('hidden');
+        document.getElementById('nav-link-video')?.classList.add('hidden');
+        document.getElementById('mobile-nav-link-video')?.classList.add('hidden');
+        document.getElementById('footer-link-video')?.classList.add('hidden');
+        return;
+      }
+
+      const video = document.getElementById('intro-video-element');
+      const playerWrapper = document.getElementById('video-player-wrapper');
+      const playOverlay = document.getElementById('video-play-overlay');
+      const playBtn = document.getElementById('video-play-btn');
+      const loadingOverlay = document.getElementById('video-loading-overlay');
+      const errorOverlay = document.getElementById('video-error-overlay');
+      const endedOverlay = document.getElementById('video-ended-overlay');
+      const replayBtn = document.getElementById('video-replay-btn');
+      const saveDataBadge = document.getElementById('video-save-data-badge');
+      const toggleTranscriptBtn = document.getElementById('toggle-transcript-btn');
+      const transcriptBox = document.getElementById('video-transcript-box');
+      const transcriptContent = document.getElementById('video-transcript-content');
+      const transcriptToggleIcon = document.getElementById('transcript-toggle-icon');
+      const miniCloseBtn = document.getElementById('mini-video-close-btn');
+      const miniThumbnailTrigger = document.getElementById('mini-video-thumbnail-trigger');
+
+      // 2. Inject transcript text from config
+      if (transcriptContent && VIDEO_CONFIG.transcript) {
+        transcriptContent.textContent = VIDEO_CONFIG.transcript;
+      }
+
+      // 3. Transcript Drawer Toggle
+      if (toggleTranscriptBtn && transcriptBox) {
+        toggleTranscriptBtn.addEventListener('click', () => {
+          const isHidden = transcriptBox.classList.contains('hidden');
+          if (isHidden) {
+            transcriptBox.classList.remove('hidden');
+            toggleTranscriptBtn.setAttribute('aria-expanded', 'true');
+            if (transcriptToggleIcon) transcriptToggleIcon.textContent = '▴';
+          } else {
+            transcriptBox.classList.add('hidden');
+            toggleTranscriptBtn.setAttribute('aria-expanded', 'false');
+            if (transcriptToggleIcon) transcriptToggleIcon.textContent = '▾';
+          }
+        });
+      }
+
+      // 4. Data Saver Detection
+      try {
+        if (navigator.connection && (navigator.connection.saveData || navigator.connection.effectiveType === '2g' || navigator.connection.effectiveType === 'slow-2g')) {
+          if (saveDataBadge) saveDataBadge.classList.remove('hidden');
+        }
+      } catch (e) {}
+
+      if (!video) return;
+
+      // 5. Dynamic Aspect Ratio Detection (loadedmetadata)
+      // Handles both horizontal (16:9) and vertical (9:16 or 4:5, max-height 80vh desktop)
+      video.addEventListener('loadedmetadata', () => {
+        const vw = video.videoWidth || 16;
+        const vh = video.videoHeight || 9;
+        const isVertical = vh > vw;
+
+        if (playerWrapper) {
+          playerWrapper.style.aspectRatio = `${vw} / ${vh}`;
+          if (isVertical) {
+            playerWrapper.classList.add('video-vertical-mode');
+          } else {
+            playerWrapper.classList.remove('video-vertical-mode');
+          }
+        }
+      });
+
+      // 6. Playback triggers & overlay management
+      function startPlayback() {
+        if (playOverlay) playOverlay.classList.add('hidden');
+        if (endedOverlay) endedOverlay.classList.add('hidden');
+        if (errorOverlay) errorOverlay.classList.add('hidden');
+        video.controls = true;
+
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.warn('Video playback catch:', err);
+          });
+        }
+
+        // Dismiss floating mini bubble since user is engaging with the main player
+        if (miniBubble) miniBubble.classList.add('hidden');
+        try {
+          sessionStorage.setItem('femi_mini_video_dismissed', 'true');
+        } catch (e) {}
+
+        // Log analytics event
+        if (typeof window.logVisitorAction === 'function') {
+          window.logVisitorAction('video_play', {
+            title: 'Oluwafemi Video Intro',
+            duration: video.duration || 46,
+            source: 'main_player'
+          });
+        }
+      }
+
+      if (playOverlay) playOverlay.addEventListener('click', startPlayback);
+      if (playBtn) {
+        playBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          startPlayback();
+        });
+      }
+
+      // 7. Buffering & loading indicators
+      video.addEventListener('waiting', () => {
+        if (loadingOverlay) loadingOverlay.classList.remove('hidden');
+      });
+      video.addEventListener('playing', () => {
+        if (loadingOverlay) loadingOverlay.classList.add('hidden');
+      });
+      video.addEventListener('canplay', () => {
+        if (loadingOverlay) loadingOverlay.classList.add('hidden');
+      });
+
+      // 8. Progress milestone analytics (25%, 50%, 75%)
+      let milestone25 = false;
+      let milestone50 = false;
+      let milestone75 = false;
+
+      video.addEventListener('timeupdate', () => {
+        if (!video.duration || video.duration <= 0) return;
+        const pct = (video.currentTime / video.duration) * 100;
+
+        if (!milestone25 && pct >= 25) {
+          milestone25 = true;
+          if (typeof window.logVisitorAction === 'function') {
+            window.logVisitorAction('video_25', { percent: 25, currentTime: Math.round(video.currentTime) });
+          }
+        }
+        if (!milestone50 && pct >= 50) {
+          milestone50 = true;
+          if (typeof window.logVisitorAction === 'function') {
+            window.logVisitorAction('video_50', { percent: 50, currentTime: Math.round(video.currentTime) });
+          }
+        }
+        if (!milestone75 && pct >= 75) {
+          milestone75 = true;
+          if (typeof window.logVisitorAction === 'function') {
+            window.logVisitorAction('video_75', { percent: 75, currentTime: Math.round(video.currentTime) });
+          }
+        }
+      });
+
+      // 9. Video Ended handling & End Card
+      video.addEventListener('ended', () => {
+        if (endedOverlay) endedOverlay.classList.remove('hidden');
+        if (typeof window.logVisitorAction === 'function') {
+          window.logVisitorAction('video_complete', {
+            title: 'Oluwafemi Video Intro',
+            duration: video.duration || 46
+          });
+        }
+      });
+
+      // Replay button
+      if (replayBtn) {
+        replayBtn.addEventListener('click', () => {
+          if (endedOverlay) endedOverlay.classList.add('hidden');
+          video.currentTime = 0;
+          milestone25 = false;
+          milestone50 = false;
+          milestone75 = false;
+          video.play().catch(() => {});
+        });
+      }
+
+      // End card CTAs analytics
+      const endCtaDiscount = document.getElementById('video-end-cta-discount');
+      if (endCtaDiscount) {
+        endCtaDiscount.addEventListener('click', () => {
+          if (typeof window.logVisitorAction === 'function') {
+            window.logVisitorAction('video_cta_discount_click', { action: 'claim_10_percent_discount' });
+          }
+        });
+      }
+
+      const endCtaConsult = document.getElementById('video-end-cta-consult');
+      if (endCtaConsult) {
+        endCtaConsult.addEventListener('click', () => {
+          if (typeof window.logVisitorAction === 'function') {
+            window.logVisitorAction('video_cta_consultation_click', { action: 'book_free_consultation' });
+          }
+        });
+      }
+
+      // 10. Network fallback & Error Overlay
+      let triedFallback = false;
+      video.addEventListener('error', () => {
+        if (!triedFallback && VIDEO_CONFIG.fallbackVideoUrl && video.src !== VIDEO_CONFIG.fallbackVideoUrl) {
+          triedFallback = true;
+          video.src = VIDEO_CONFIG.fallbackVideoUrl;
+          video.load();
+          return;
+        }
+        if (loadingOverlay) loadingOverlay.classList.add('hidden');
+        if (errorOverlay) errorOverlay.classList.remove('hidden');
+        if (typeof window.logVisitorAction === 'function') {
+          window.logVisitorAction('video_error', {
+            error: video.error?.message || 'Video stream could not load',
+            src: video.currentSrc
+          });
+        }
+      });
+
+      // 11. Auto-pause when scrolled out of view (IntersectionObserver)
+      if ('IntersectionObserver' in window && section) {
+        const viewObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting && !video.paused && !video.ended) {
+              video.pause();
+            }
+          });
+        }, { threshold: 0.2 });
+        viewObserver.observe(section);
+      }
+
+      // 12. Auto-pause when tab/window is hidden
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && !video.paused && !video.ended) {
+          video.pause();
+        }
+      });
+
+      // 13. Floating Mini Video Bubble (bottom-left)
+      if (miniBubble && VIDEO_CONFIG.miniBubbleEnabled) {
+        let isDismissed = false;
+        try {
+          isDismissed = sessionStorage.getItem('femi_mini_video_dismissed') === 'true';
+        } catch (e) {}
+
+        if (!isDismissed) {
+          const checkScrollMiniBubble = () => {
+            if (isDismissed || !video.paused) return;
+            const sectionRect = section.getBoundingClientRect();
+            // Once scrolled past the video section and video hasn't been played
+            if (sectionRect.bottom < 0 && video.currentTime === 0) {
+              miniBubble.classList.remove('hidden');
+            } else if (sectionRect.top > 0) {
+              miniBubble.classList.add('hidden');
+            }
+          };
+
+          window.addEventListener('scroll', checkScrollMiniBubble, { passive: true });
+
+          // Dismiss button
+          if (miniCloseBtn) {
+            miniCloseBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              miniBubble.classList.add('hidden');
+              isDismissed = true;
+              try {
+                sessionStorage.setItem('femi_mini_video_dismissed', 'true');
+              } catch (err) {}
+            });
+          }
+
+          // Click on thumbnail trigger scrolls up to video and plays
+          if (miniThumbnailTrigger) {
+            miniThumbnailTrigger.addEventListener('click', () => {
+              miniBubble.classList.add('hidden');
+              isDismissed = true;
+              try {
+                sessionStorage.setItem('femi_mini_video_dismissed', 'true');
+              } catch (err) {}
+              section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              setTimeout(() => {
+                startPlayback();
+              }, 400);
+            });
+          }
+        }
+      }
     }
 
     /**
@@ -4546,6 +5202,17 @@
       const q = (query || '').toLowerCase();
       const spots = typeof SPOTS_LEFT !== 'undefined' ? SPOTS_LEFT : 3;
 
+      if (q.includes('video') || q.includes('intro') || q.includes('watch') || q.includes('meet femi') || q.includes('see you') || q.includes('who is femi')) {
+        return {
+          text: `**Watch Oluwafemi's Personal Intro Video!** 🎬\n\nSee Femi speak directly about how he crafts secure, lightning-fast web applications, his 3 development pillars (Security, Speed, Clean Structure), and the active **10% launch discount**.\n\nClick below to jump directly to the video and watch now:`,
+          actions: [
+            { label: "▶ Jump to Video & Play", action: "scroll_video" },
+            { label: "Claim 10% Discount", action: "fill_form_discount" },
+            { label: "Chat on WhatsApp", action: "whatsapp" }
+          ]
+        };
+      }
+
       if (q.includes('price') || q.includes('cost') || q.includes('how much') || q.includes('rate') || q.includes('fee')) {
         return {
           text: `**Here are Oluwafemi's transparent rates:**\n\n- **Frontend Development:** ₦150,000 (With active 10% discount: **₦135,000**)\n- **Full-Stack Web App (Frontend + Backend):** ₦400,000 (With 10% discount: **₦360,000**)\n- **Custom Architectures / APIs:** Custom quote based on scope.\n\n*Payment terms:* 50% upfront deposit to commence, 50% on final client sign-off before deployment.\n\n🔥 **Notice:** Only **${spots} of 5 spots left** for the 10% launch discount!`,
@@ -4838,6 +5505,11 @@
       // Toggle Chatbot Window
       function openChatbotWidget() {
         widgetWindow.classList.remove('hidden');
+        // Auto-pause intro video if currently playing
+        const introVid = document.getElementById('intro-video-element');
+        if (introVid && !introVid.paused) {
+          introVid.pause();
+        }
         triggerBtn.setAttribute('aria-expanded', 'true');
         if (iconOpen) iconOpen.classList.add('hidden');
         if (iconClose) iconClose.classList.remove('hidden');
@@ -5069,6 +5741,24 @@
           closeChatbotWidget();
           const port = document.getElementById('portfolio');
           if (port) port.scrollIntoView({ behavior: 'smooth' });
+        } else if (action === 'scroll_video') {
+          closeChatbotWidget();
+          const vidSection = document.getElementById('video-intro');
+          if (vidSection) {
+            vidSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+              const playBtn = document.getElementById('video-play-btn');
+              const vidEl = document.getElementById('intro-video-element');
+              const playOverlay = document.getElementById('video-play-overlay');
+              if (playOverlay && !playOverlay.classList.contains('hidden')) {
+                playOverlay.click();
+              } else if (playBtn) {
+                playBtn.click();
+              } else if (vidEl && vidEl.paused) {
+                vidEl.play().catch(() => {});
+              }
+            }, 350);
+          }
         }
       }
 
@@ -5223,6 +5913,10 @@
 
       function openModal() {
         if (modal) modal.classList.remove('hidden');
+        const introVid = document.getElementById('intro-video-element');
+        if (introVid && !introVid.paused) {
+          introVid.pause();
+        }
       }
 
       function closeModal() {
