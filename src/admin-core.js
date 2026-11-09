@@ -393,9 +393,17 @@ function getAdminModalsHTML() {
       <!-- VIEW 1: SIGN IN -->
       <div id="auth-view-login">
         <div class="text-center pt-1 mb-4">
-          <div class="w-12 h-12 rounded-full bg-orange-100 border-2 border-orange-500 mx-auto flex items-center justify-center text-2xl mb-2">
-            🔐
+          <div class="w-12 h-12 rounded-xl bg-[#020817] border border-sky-400/60 shadow-[0_0_12px_rgba(47,140,255,0.35)] mx-auto flex items-center justify-center p-1 mb-2">
+            <img 
+              src="https://res.cloudinary.com/mdfuivxi/image/upload/c_crop,x_550,y_40,w_505,h_295/c_pad,w_64,h_64,b_rgb:020817/f_png,q_auto/v1794222347/Glassy_Neon_Developer_Logo_Splash.png" 
+              alt="Theveloper Digitals logo" 
+              class="w-full h-full object-contain" 
+              width="44" 
+              height="44"
+              onerror="this.onerror=null; this.src='/favicon-32x32.png';"
+            />
           </div>
+          <div class="font-mono font-bold text-[11px] text-sky-600 uppercase tracking-widest mb-0.5">Theveloper Digitals</div>
           <h3 id="auth-modal-title" class="text-xl font-bold font-mono text-gray-900">
             Private Authentication
           </h3>
